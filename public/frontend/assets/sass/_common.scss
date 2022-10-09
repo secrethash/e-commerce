@@ -1,0 +1,661 @@
+body {
+    font-family: $body-font;
+    font-size: 14px;
+    font-style: normal;
+    position: relative;
+    visibility: visible;
+    overflow-x: hidden;
+    color: $body-color;
+    font-weight: 400;
+    line-height: 1.428571429;
+    width: 100%;
+    background: #f7f7f7;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: $body-font;
+    font-weight: 700;
+    color: $heading-color;
+    margin:0;
+}
+
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    line-height: inherit;
+    margin: 0;
+}
+
+button, input {
+    overflow: visible;
+    border:0;
+    outline:none;
+    background:transparent;
+    padding:0;
+}
+button, input, optgroup, select, textarea {
+    margin: 0;
+    font-family: $body-font;
+    font-size: inherit;
+    line-height: inherit;
+    -webkit-transition: all .5s ease 0s;
+    -o-transition: all .5s ease 0s;
+    transition: all .5s ease 0s;
+    background-image:none!important;
+}
+
+button:focus {
+    outline: 0px dotted;
+    outline: 0px auto -webkit-focus-ring-color;
+}
+button:focus, input:focus, optgroup:focus, select:focus, textarea:focus {
+    outline: 0px dotted;
+    outline: 0px auto -webkit-focus-ring-color;
+}
+a:hover{
+    text-decoration:none;
+}
+a{
+    -webkit-transition: all 300ms linear;
+    -moz-transition: all 300ms linear;
+    -ms-transition: all 300ms linear;
+    -o-transition: all 300ms linear;
+    transition: all 300ms linear;
+    outline:0px none;
+    text-decoration: none;
+    color:#222;
+}
+
+ul, ol {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+}
+li{
+    display:inline-block;
+}
+p {
+    margin: 0;
+}
+i{
+    -webkit-transition: all 300ms ease-in-out;
+    -moz-transition: all 300ms ease-in-out;
+    -ms-transition: all 300ms ease-in-out;
+    -o-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
+}
+
+.container-inner{
+    padding:30px;
+    background-color: #fff;
+        @media #{$large-mobile}{
+           padding:30px 10px;
+        }
+}
+label {
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+.img-responsive{
+    max-width: 100%;
+    display: block;
+}
+.mb-0px{
+    margin-bottom:0!important;
+}
+.ptb-30px{
+    padding:30px 0;
+}
+.mtb-60px{
+    margin:60px 0;
+}
+.mtb-50px{
+    margin:50px 0;
+}
+.ptb-60px{
+    padding:60px 0;
+}
+.ptb-50px{
+    padding:50px 0;
+}
+.ptb-40px{
+    padding:40px 0;
+}
+
+.ptb-10px{
+    padding:10px 0;
+}
+.ptb-13px{
+    padding:13px 0;
+}
+.ptb-20px{
+    padding:20px 0;
+}
+.mt-30px{
+    margin-top:30px;
+}
+.mt-50px{
+    margin-top:50px;
+}
+.mt-20px{
+    margin-top:20px;
+}
+.mt-15px{
+    margin-top:15px;
+}
+.mt-7px{
+    margin-top: 7px;
+}
+.mt-40px{
+    margin-top:40px;
+}
+.mt-60px{
+    margin-top:60px;
+}
+.pt-60px{
+    padding-top:60px;
+}
+.pt-50px{
+    padding-top:50px;
+}
+.pb-30px{
+    padding-bottom:30px;
+}
+.pb-40px{
+    padding-bottom:40px;
+}
+.pb-50px{
+    padding-bottom:50px;
+}
+.mb-30px{
+    margin-bottom:30px;
+}
+.mb-20px{
+    margin-bottom:20px;
+}
+.mb-15px{
+    margin-bottom:15px;
+}
+.mb-10px{
+    margin-bottom:10px;
+}
+.mr-10px{
+    margin-right: 10px;
+}
+.ml-10px{
+    margin-left: 10px;
+}
+.mb-40px{
+    margin-bottom:40px;
+}
+.mb-50px{
+    margin-bottom:50px;
+}
+.mb-60px{
+    margin-bottom:60px;
+}
+.bg-blue{
+    background-color:#266cfb;
+}
+.bg-blue-deep{
+    background-color:#0562d6;
+}
+.bg-blue-light{
+    background-color:#146cda;
+}
+.border-top{
+    border-top:1px solid rgba(255,255,255,.1)!important;
+}
+.bg-white{
+    background-color:#fff;
+}
+.bg-black{
+    background-color:#222;
+}
+.bg-black{
+    background-color:#222;
+}
+.bg-red{
+  background-color:#ea1b25;
+}
+
+.color-gray{
+    color:#777777;
+}
+.color-black{
+    color:#222222;
+}
+.color-white{
+    color:#fff;
+}
+.theme-color{ 
+    color:$theme-color;
+ }
+ .color-yellow{
+    color: #fab311;
+ }
+.mr-20px{
+    margin-right:20px
+}
+.ml-20px{
+    margin-left: 20px;
+}
+.mr-30px{
+    margin-right:30px !important;
+}
+.custom-col{
+    padding:0;
+}
+.pl-60px{
+    padding-left:60px;
+        @media #{$large-mobile}{
+           padding-left:30px;
+        }
+        @media #{$extra-mini-mobile}{
+           padding-left:0px;
+        }
+}
+.pl-45px{
+    padding-left:45px;
+        @media #{$large-mobile}{
+           padding-left:15px;
+        }
+        @media #{$extra-mini-mobile}{
+           padding-left:0px;
+        }
+}
+.padding-30px{
+    padding:30px;
+        @media #{$desktop-device}{
+           padding:20px;
+        }
+}
+
+
+
+
+
+
+.mr-120px{
+    margin-right:120px;
+}
+.single-slide .slider-content-1 * {
+    -webkit-animation-duration: 1.3s;
+    animation-duration: 1.3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+.single-slide.slick-active .slider-animated-1 h1 {
+    animation: slideInDown 1.5s linear alternate; 
+    -webkit-animation: slideInDown 1.5s linear alternate;
+    -moz-animation: slideInDown 1.5s linear alternate;
+}
+.single-slide.slick-active .slider-animated-2 h1 {
+    animation: bounceIn 1.5s linear alternate; 
+    -webkit-animation: bounceIn 1.5s linear alternate;
+    -moz-animation: bounceIn 1.5s linear alternate;
+}
+.single-slide.slick-active .slider-animated-3 h1 {
+    animation: rotateInDownRight 1.5s linear alternate; 
+    -webkit-animation: rotateInDownRight 1.5s linear alternate;
+    -moz-animation: rotateInDownRight 1.5s linear alternate;
+}
+
+.single-slide.slick-active .slider-animated-2 a {
+    animation: slideInUp 0.5s linear alternate; 
+    -webkit-animation: slideInUp 0.5s linear alternate;
+    -moz-animation: slideInUp 0.5s linear alternate;
+}
+.single-slide.slick-active .slider-animated-3 a {
+    animation: slideInUp 0.5s linear alternate; 
+    -webkit-animation: slideInUp 0.5s linear alternate;
+    -moz-animation: slideInUp 0.5s linear alternate;
+}
+
+.single-slide.slick-active .slider-animated-1 a {
+    animation: slideInUp 0.5s linear alternate; 
+    -webkit-animation: slideInUp 0.5s linear alternate;
+    -moz-animation: slideInUp 0.5s linear alternate;
+}
+.single-slide.slick-active .slider-animated-1 p {
+    animation: slideInDown 1.5s linear alternate; 
+    -webkit-animation: slideInDown 1.5s linear alternate;
+    -moz-animation: slideInDown 1.5s linear alternate;
+}
+.single-slide.slick-active .slider-animated-2 p {
+    animation: bounceIn 1.5s linear alternate; 
+    -webkit-animation: bounceIn 1.5s linear alternate;
+    -moz-animation: bounceIn 1.5s linear alternate;
+}
+.single-slide.slick-active .slider-animated-3 p {
+    animation: fadeInRight 1.5s linear alternate; 
+    -webkit-animation: fadeInRight 1.5s linear alternate;
+    -moz-animation: fadeInRight 1.5s linear alternate;
+}
+.single-slide.slick-active .slider-animated-2 span.title{
+    animation: zoomIn 1.5s linear alternate; 
+    -webkit-animation: zoomIn 1.5s linear alternate;
+    -moz-animation: zoomIn 1.5s linear alternate;
+}
+.single-slide.slick-active .slider-animated-1 span.title{
+    animation: rollIn 1.5s linear alternate; 
+    -webkit-animation: rollIn 1.5s linear alternate;
+    -moz-animation: rollIn 1.5s linear alternate;
+}
+.single-slide.slick-active .slider-animated-3 span.title{
+    animation: fadeInLeft 1.5s linear alternate; 
+    -webkit-animation: fadeInLeft 1.5s linear alternate;
+    -moz-animation: fadeInLeft 1.5s linear alternate;
+}
+
+
+.banner7-content.slider-1 .banner7-readmore{
+    animation: slideInUp 0.5s linear alternate; 
+    -webkit-animation: slideInUp 0.5s linear alternate;
+    -moz-animation: slideInUp 0.5s linear alternate;
+}
+.banner7-content.slider-2 .banner7-readmore{
+    animation: slideInUp 0.5s linear alternate; 
+    -webkit-animation: slideInUp 0.5s linear alternate;
+    -moz-animation: slideInUp 0.5s linear alternate;
+}
+.banner7-content.slider-3 .banner7-readmore{
+    animation: slideInUp 0.5s linear alternate; 
+    -webkit-animation: slideInUp 0.5s linear alternate;
+    -moz-animation: slideInUp 0.5s linear alternate;
+}
+.banner7-content.slider-2 .title1{ 
+    animation: zoomIn 1s linear alternate; 
+    -webkit-animation: zoomIn 1s linear alternate;
+    -moz-animation: zoomIn 1s linear alternate;
+}
+.banner7-content.slider-1 .title1{ 
+    animation: rollIn 1s linear alternate; 
+    -webkit-animation: rollIn 1s linear alternate;
+    -moz-animation: rollIn 1s linear alternate;
+}
+.banner7-content.slider-3 .title1{ 
+    animation: fadeInLeft 1s linear alternate; 
+    -webkit-animation: fadeInLeft 1s linear alternate;
+    -moz-animation: fadeInLeft 1s linear alternate;
+}
+.banner7-content.slider-1 .banner7-des {
+    animation: slideInDown 2s linear alternate; 
+    -webkit-animation: slideInDown 2s linear alternate;
+    -moz-animation: slideInDown 2s linear alternate;
+}
+.banner7-content.slider-2 .banner7-des{
+    animation: bounceIn 2s linear alternate; 
+    -webkit-animation: bounceIn 2s linear alternate;
+    -moz-animation: bounceIn 2s linear alternate;
+}
+.banner7-content.slider-3 .banner7-des{
+    animation: fadeInRight 1.5s linear alternate; 
+    -webkit-animation: fadeInRight 1.5s linear alternate;
+    -moz-animation: fadeInRight 1.5s linear alternate;
+}
+.banner7-content.slider-1 .sub-title  {
+    animation: slideInDown 2s linear alternate; 
+    -webkit-animation: slideInDown 2s linear alternate;
+    -moz-animation: slideInDown 2s linear alternate;
+}
+.banner7-content.slider-2 .sub-title {
+    animation: bounceIn 2s linear alternate; 
+    -webkit-animation: bounceIn 2s linear alternate;
+    -moz-animation: bounceIn 2s linear alternate;
+}
+.banner7-content.slider-3 .sub-title {
+    animation: rotateInDownRight 2s linear alternate; 
+    -webkit-animation: rotateInDownRight 2s linear alternate;
+    -moz-animation: rotateInDownRight 2s linear alternate;
+}
+
+/********** Section Title***********/
+
+    .section-title {
+        position: relative;
+        margin-bottom:30px;
+    & h2{
+        position: relative;
+        text-transform: uppercase;
+        font-size: 24px;
+        margin: 0;
+        display: inline-block;
+        vertical-align: top;
+        font-weight: 400;
+        padding-left: 39px;
+        line-height: 20px;
+        @media #{$small-mobile}{
+            font-size: 18px;
+            line-height: 18px;
+        }
+        & span{
+            font-weight: 500;
+        }
+    }
+        &:before{
+        content: "";
+        width: 30px;
+        height: 2px;
+        background: #ea1b25;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -1px;
+        }
+        &.style-2{
+            margin-bottom:0px;
+            padding:30px 0;
+            background-color:#fff;
+            & h2{
+                font-size: 18px;
+                font-weight: 500;
+                padding-left: 20px;
+                span{ 
+                    font-weight: 500;
+                }
+            }
+            &:before{
+                display: none;
+            }
+            &:after{
+                content: "";
+                position: absolute;
+                top: auto;
+                bottom: 10px;
+                height: 1px;
+                left: 20px;
+                right: 20px;
+                background: rgba(0,0,0,0.07);
+            }
+        }
+}
+
+.sticky-nav.menu_fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99;
+    -webkit-animation: sticky 1s;
+    -moz-animation: sticky 1s;
+    -o-animation: sticky 1s;
+    animation: sticky 1s;
+    -webkit-box-shadow: 2px 4px 8px rgba(51, 51, 51, 0.25);
+    -moz-box-shadow: 2px 4px 8px rgba(51, 51, 51, 0.25);
+    box-shadow: 2px 4px 8px rgba(51, 51, 51, 0.25);
+    padding:10px 0;
+    border:0;
+}
+.sticky-nav.menu_fixed.white-bg{
+    background-color:#fff;
+}
+.sticky-nav.menu_fixed.padding-0px{
+    padding:0px;
+}
+.sticky-nav.menu_fixed.header-style-3{
+    padding:5px 0;
+}
+
+@-webkit-keyframes sticky {
+    0%{
+        -webkit-transform: translateY(-100%);
+        transform: translateY(-100%)
+    }
+    100%{
+        -webkit-transform: translateY(0%);
+        transform: translateY(0%)
+    }
+}
+
+@keyframes sticky {
+    0%{
+        -webkit-transform: translateY(-100%);
+        transform: translateY(-100%)
+    }
+    100%{
+        -webkit-transform: translateY(0%);
+        transform: translateY(0%)
+    }
+}
+
+
+
+#scrollUp {
+    width: 50px;
+    height: 50px;
+    background-color: $theme-color;
+    color: #fff;
+    right: 20px;
+    bottom: 60px;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 50px;
+    z-index: 9811!important;
+    font-size: 32px;
+    line-height: 50px;
+    &:hover{
+        background: #333;
+        color: #fff;
+        box-shadow: 0 0 20px #fff;
+    }
+}
+
+.tab-content .tab-pane {
+display: block;
+overflow: hidden;
+height: 0;
+visibility: hidden;
+max-width: 100%;
+opacity: 0;
+}
+.tab-content .tab-pane.active {
+height: auto;
+visibility: visible;
+opacity: 1;
+overflow: visible;
+-webkit-animation: slickZoomIn 1s;
+-moz-animation: slickZoomIn 1s;
+-o-animation: slickZoomIn 1s;
+animation: slickZoomIn 1s;
+}
+
+.shop-category-area{
+    .tab-content{
+         .tab-pane{
+            &.active{
+                -webkit-animation: none;
+                -moz-animation: none;
+                -o-animation: none;
+                animation: none;
+            }
+         }
+    }
+}
+
+
+
+
+.animation{
+    -webkit-animation-duration: 0.3s;
+    animation-duration: 0.3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+ @-webkit-keyframes slideDownIn {
+     0% {
+         
+         -webkit-transform: translateY(-20px);
+     }
+     100% {
+         
+         -webkit-transform: translateY(0);
+     }
+     
+     0% {
+         -webkit-transform: translateY(-20);
+     }
+}
+
+@keyframes slideDownIn {
+    0% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+    0% {
+        transform: translateY(-20px);
+    }
+}
+
+.slideDownIn {
+    -webkit-animation-name: slideDownIn;
+    animation-name: slideDownIn;
+}
+
+ @-webkit-keyframes slideUpIn {
+     0% {
+         
+         -webkit-transform: translateY(20px);
+     }
+     100% {
+         
+         -webkit-transform: translateY(0);
+     }
+     
+     0% {
+         -webkit-transform: translateY(20px);
+     }
+}
+
+@keyframes slideUpIn {
+    0% {
+        transform: translateY(20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+    0% {
+        transform: translateY(20px);
+    }
+}
+
+.slideUpIn {
+    -webkit-animation-name: slideUpIn;
+    animation-name: slideUpIn;
+}
+
+:focus {
+    outline: -webkit-focus-ring-color auto 0px;
+    outline:0px none;
+}

@@ -1,0 +1,129 @@
+// Subscribe Style
+.newsletter-area{
+	.newsletter-group{
+			    background: url(../images/subscrib-bg/bkg_newsletter.jpg) top left;
+    			padding: 55px;
+    			@media #{$large-mobile}{
+    				padding: 40px;
+    			}
+	 			@media #{$small-mobile}{
+	 				padding: 35px;
+	 			}
+	 			@media #{$extra-small-mobile}{
+	 				padding: 15px;
+	 			}
+			.inner{
+    			    padding: 45px 30px;
+    				background: #fff url(../images/subscrib-bg/bkg_newsletter1.jpg) right bottom no-repeat;
+
+	 			@media #{$extra-small-mobile}{
+	 				padding: 15px;
+	 			}
+			.newletter-subscribe-container{
+					max-width: 430px;
+				.newletter-subscribe{
+					.section-title{
+						margin-bottom: 20px;
+						h2{
+							text-transform: capitalize;
+						}
+					}
+					p{
+					    margin: 0;
+						line-height: 24px;
+					}
+					.subscribe-form {
+						margin: 10px 0px 30px 0px;
+						.email{
+							display: inline-block;
+						    vertical-align: top;
+						    padding: 10px 20px;
+						    padding-right: 135px;
+						    line-height: 30px;
+						    height: 50px;
+						    color: #777;
+						    font-size: 14px;
+						    width: 100%;
+						    font-weight: 300;
+						    text-transform: capitalize;
+						    border: 0;
+						    background: #f0f0f0;
+						    border-radius: 5px;
+						    -webkit-border-radius: 5px;
+						    text-align: left;
+						    box-shadow: none;
+						    -webkit-box-shadow: none;
+						    @media #{$small-mobile}{
+						    	    padding-right: 73px;
+						    }
+						}
+						.mc-news {
+						    position: absolute;
+						    left: -5000px;
+						}
+						.button {
+						    line-height: 50px;
+						    padding: 0 20px;
+						    font-size: 14px;
+						    color: #fff;
+						    background: #ea1b25;
+						    font-weight: 500;
+						    position: absolute;
+						    text-transform: uppercase;
+						    right: 0;
+						    top: 0;
+						    border-radius: 5px;
+						    -webkit-border-radius: 5px;
+						    	@media #{$small-mobile}{
+						    		padding: 0 15px;
+						    	}
+						    span{
+						    	@media #{$small-mobile}{
+						    		display: none;
+						    	}
+						    }
+						    i{
+						    	display: none;
+						    	@media #{$small-mobile}{
+						    		    display: block;
+									    padding: 0;
+									    line-height: 50px;
+									    font-size: 24px;
+									    color: #fff;
+						    	}
+						    }
+						    &:hover{
+						    	color: #222;
+						    	i{
+						    		color:#222;
+						    	}
+						    }
+						}
+					}
+				}
+			}
+		}
+	}
+	.social-info {
+		@media #{$small-mobile}{
+		padding-right: 30px;
+		}
+		ul{
+			&.link-follow {
+				li {
+					a{
+						color: #777;
+						&:hover{
+							color:$theme-color;
+						}
+					}
+				}
+			}
+		}
+	}
+	.testimonial-area{
+		 .testimonial-slider-wrapper{
+		 	margin-top: 0;
+		 }
+	}
+}

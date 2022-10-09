@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Shop\{
+    HomeController,
+    ListingController,
+};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +17,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', HomeController::class)->name('home');
+Route::prefix('shop')->name('shop.')->group(function () {
+    Route::get('/', ListingController::class)->name('index');
+    Route::get('/category/{category}', ListingController::class)->name('category');
+    Route::get('/{product}', function(){})->name('product');
+});
+
+Route::get('test/menu', function() {
+    return \App\Services\Menus::shopCategories();
 });

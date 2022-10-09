@@ -1,6 +1,7 @@
 <?php
 
 use Shopper\Framework\Http\Livewire;
+use App\Http\Livewire\Console;
 
 return [
 
@@ -18,6 +19,7 @@ return [
 
     'blade' => [
         //
+        // 'brands.create' => 'livewire.console.brands.create',
     ],
 
     /*
@@ -38,8 +40,11 @@ return [
         'account.two-factor' => Livewire\Account\TwoFactor::class,
 
         'brands.browse' => Livewire\Brands\Browse::class,
-        'brands.create' => Livewire\Brands\Create::class,
-        'brands.edit' => Livewire\Brands\Edit::class,
+        'brands.create' => Console\Brands\Create::class,
+        'brands.edit' => Console\Brands\Edit::class,
+        // ! [REPLACED]
+        // 'brands.create' => Livewire\Brands\Create::class,
+        // 'brands.edit' => Livewire\Brands\Edit::class,
 
         'categories.browse' => Livewire\Categories\Browse::class,
         'categories.create' => Livewire\Categories\Create::class,
@@ -100,7 +105,8 @@ return [
         'orders.show' => Livewire\Orders\Show::class,
 
         'products.browse' => Livewire\Products\Browse::class,
-        'products.create' => Livewire\Products\Create::class,
+        // 'products.create' => Livewire\Products\Create::class,
+        'products.create' => Console\Products\Create::class,
         'products.edit' => Livewire\Products\Edit::class,
         'products.form.attributes' => Livewire\Products\Form\Attributes::class,
         'products.form.edit' => Livewire\Products\Form\Edit::class,

@@ -16,6 +16,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'tagline' => env('APP_TAGLINE', 'The PHP Framework for web artisans'),
 
     /*
     |--------------------------------------------------------------------------

@@ -123,7 +123,8 @@ return [
          * `\Shopper\Framework\Models\Shop\Product\Brand` model.
          */
 
-        'brand' => \Shopper\Framework\Models\Shop\Product\Brand::class,
+        'brand' => \App\Models\Brand::class,
+        // 'brand' => \Shopper\Framework\Models\Shop\Product\Brand::class,
 
         /*
          * Eloquent model should be used to retrieve your categories. Of course,
@@ -154,6 +155,7 @@ return [
          */
 
         'product' => \Shopper\Framework\Models\Shop\Product\Product::class,
+        // 'product' => \App\Models\Product::class,
 
     ],
 

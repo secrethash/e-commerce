@@ -51,7 +51,7 @@ services:
     memcached:
         image: 'memcached:alpine'
         ports:
-            - '11211:11211'
+            - '${FORWARD_MEMCACHED_PORT:-11211}:11211'
         networks:
             - sail
     redis:
