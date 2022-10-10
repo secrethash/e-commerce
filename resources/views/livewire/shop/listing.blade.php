@@ -23,9 +23,8 @@
             <div class="row">
                 <div class="col-lg-9 order-lg-last col-md-12 order-md-first">
 
-
                     <!-- Shop Top Area Start -->
-                    <div class="shop-top-bar">
+                    <div class="shop-top-bar mb-2">
                         <!-- Left Side start -->
                         <div class="shop-tab nav">
                             <a @class([
@@ -74,6 +73,17 @@
                         <!-- Right Side End -->
                     </div>
                     <!-- Shop Top Area End -->
+
+                    @if ($resetFilter)
+                        <!-- Reset Filters -->
+                        <div class="d-block mb-3 me-2 text-end">
+                            <a href="{{ route('shop.index') }}" class="btn btn-small btn-dark rounded-pill">
+                                <x-heroicon-o-x-circle width="18" />
+                                {{ __('Reset Filter') }}
+                            </a>
+                        </div>
+                        <!-- Reset Filters -->
+                    @endif
 
                     <!-- Shop Bottom Area Start -->
                     <div class="shop-bottom-area mt-35">
@@ -139,7 +149,7 @@
                         <!-- Shop Tab Content End -->
                         <!--  Pagination Area Start -->
                         <div class="pro-pagination-style mtb-50px">
-                            {{-- <div class="pages">
+                            <div class="pages">
                                 <ul>
                                     <li>
                                         <a class="prev" href="#">|<i class="ion-ios-arrow-left"></i></a>
@@ -162,8 +172,8 @@
                             </div>
                             <div class="toolbar-amaount">
                                 <p>Showing 1 to 9 of 20 (3 Pages)</p>
-                            </div> --}}
-                            {{ $products->links() }}
+                            </div>
+                            {{-- {{ $products->links() }} --}}
                         </div>
                         <!--  Pagination Area End -->
                     </div>
@@ -179,125 +189,60 @@
                         </x-shop.sidebar.categories>
                         <!-- Sidebar single item -->
                         <div class="sidebar-widget-group bg-white mt-20">
-                            <div class="sidebar-widget mt-20">
-                            <h3 class="sidebar-title">FILLTER BY PRICE</h3>
+                            {{-- <div class="sidebar-widget mt-20">
+                                <h3 class="sidebar-title">FILLTER BY PRICE</h3>
                                 <div class="price-filter">
                                     <div id="slider-range"></div>
                                     <div class="price-slider-amount">
                                         <input type="text" id="amount" name="price" placeholder="Add Your Price" />
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- Sidebar single item -->
                             <div class="sidebar-widget mt-20">
-                                <h3 class="sidebar-title">MANUFACTURER</h3>
+                                <h3 class="sidebar-title">{{ __('Car Brands') }}</h3>
                                 <div class="sidebar-widget-list">
                                     <ul>
-                                        <li>
-                                            <div class="sidebar-widget-list-left">
-                                                <input type="checkbox" /> <a href="#">Christian Dior<span>(6)</span> </a>
-                                                <span class="checkmark"></span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="sidebar-widget-list-left">
-                                                <input type="checkbox" value="" /> <a href="#">Diesel<span>(10)</span></a>
-                                                <span class="checkmark"></span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="sidebar-widget-list-left">
-                                                <input type="checkbox" value="" /> <a href="#">ferragamo<span>(13)</span> </a>
-                                                <span class="checkmark"></span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="sidebar-widget-list-left">
-                                                <input type="checkbox" value="" /> <a href="#">hermes<span>(17)</span> </a>
-                                                <span class="checkmark"></span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="sidebar-widget-list-left">
-                                                <input type="checkbox" value="" /> <a href="#">louis vuitton<span>(16)</span> </a>
-                                                <span class="checkmark"></span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="sidebar-widget-list-left">
-                                                <input type="checkbox" value="" /> <a href="#">Tommy Hilfiger<span>(0)</span> </a>
-                                                <span class="checkmark"></span>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="sidebar-widget-list-left">
-                                                <input type="checkbox" value="" /> <a href="#">Versace<span>(0)</span> </a>
-                                                <span class="checkmark"></span>
-                                            </div>
-                                        </li>
+                                        {{-- <li>{{ var_export($brands) }}</li> --}}
+                                        @foreach ($carBrands as $carBrand)
+                                            <li>
+                                                {{-- <div class="sidebar-widget-list-left"> --}}
+                                                    <div class="form-check">
+                                                        <input class="form-check-input"
+                                                            type="checkbox"
+                                                            id="car-brand-{{$carBrand->slug}}"
+                                                            value="{{$carBrand->slug}}"
+                                                            wire:model="selectedBrands">
+                                                        <label class="form-check-label" for="car-brand-{{$carBrand->slug}}">
+                                                            {{$carBrand->name}}
+                                                        </label>
+                                                    </div>
+                                                {{-- </div> --}}
+                                            </li>
+                                        @endforeach
                                     </ul>
                                 </div>
                             </div>
                             <!-- Sidebar single item -->
                             <div class="sidebar-widget mt-30 b-b-0">
-                                <h3 class="sidebar-title">SELECT BY COLOR</h3>
-                                <div class="sidebar-widget-list-column">
-                                    <div class="sidebar-widget-list">
-                                        <ul>
+                                <h3 class="sidebar-title">{{ __('Aftermarket Brands') }}</h3>
+                                <div class="sidebar-widget-list">
+                                    <ul>
+                                        @foreach ($aftermarketBrands as $aftermarketBrand)
                                             <li>
-                                                <div class="sidebar-widget-list-left">
-                                                    <input type="checkbox" /> <a href="#">Black<span>(6)</span> </a>
-                                                    <span class="checkmark"></span>
+                                                <div class="form-check">
+                                                    <input class="form-check-input"
+                                                        type="checkbox"
+                                                        id="aftermarket-brand-{{$aftermarketBrand->slug}}"
+                                                        value="{{$aftermarketBrand->slug}}"
+                                                        wire:model="selectedBrands">
+                                                    <label class="form-check-label" for="aftermarket-brand-{{$aftermarketBrand->slug}}">
+                                                        {{$aftermarketBrand->name}}
+                                                    </label>
                                                 </div>
                                             </li>
-                                            <li>
-                                                <div class="sidebar-widget-list-left">
-                                                    <input type="checkbox" value="" /> <a href="#">Blue<span>(7)</span></a>
-                                                    <span class="checkmark"></span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="sidebar-widget-list-left">
-                                                    <input type="checkbox" value="" /> <a href="#">Brown<span>(4)</span> </a>
-                                                    <span class="checkmark"></span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="sidebar-widget-list-left">
-                                                    <input type="checkbox" value="" /> <a href="#">Green<span>(9)</span> </a>
-                                                    <span class="checkmark"></span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="sidebar-widget-list">
-                                        <ul>
-                                            <li>
-                                                <div class="sidebar-widget-list-left">
-                                                    <input type="checkbox" /> <a href="#">Pink<span>(7)</span> </a>
-                                                    <span class="checkmark"></span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="sidebar-widget-list-left">
-                                                    <input type="checkbox" value="" /> <a href="#">Red<span>(7)</span></a>
-                                                    <span class="checkmark"></span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="sidebar-widget-list-left">
-                                                    <input type="checkbox" value="" /> <a href="#">White<span>(9)</span> </a>
-                                                    <span class="checkmark"></span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="sidebar-widget-list-left">
-                                                    <input type="checkbox" value="" /> <a href="#">Yellow<span>(10)</span> </a>
-                                                    <span class="checkmark"></span>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                        @endforeach
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -309,3 +254,11 @@
     </div>
     <!-- Shop Category Area End -->
 </div>
+
+@push('lw-scripts')
+    <script type="text/javascript">
+        // $('input[name="carbrands[]"]').on('change', function(e) {
+        //     @this.call('', $(e.target).val());
+        // })
+    </script>
+@endpush
