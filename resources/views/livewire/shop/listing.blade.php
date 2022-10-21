@@ -110,7 +110,7 @@
                                         @endif
                                     @endforeach
                                     <x-shop.layouts.x1.item :image="$image" :hover="$hover" :new="$product->published_at > now()->subDays(15)" :name="$product->name"
-                                        :ratings="$product->ratingPercent()" currency="" :price="$product->formattedPrice" link="#" :description="$product->description" />
+                                        :ratings="$product->ratingPercent()" currency="" :price="$product->formattedPrice" :link="route('shop.product', $product->slug)" :description="$product->description" />
                                 @empty
                                     <x-shop.layouts.blank />
                                 @endforelse
@@ -139,7 +139,7 @@
                                         @endif
                                     @endforeach
                                     <x-shop.layouts.x3.item :image="$image" :hover="$hover" :new="$product->published_at > now()->subDays(15)" :name="$product->name"
-                                        :ratings="$product->ratingPercent()" currency="" :price="$product->formattedPrice" link="#" />
+                                        :ratings="$product->ratingPercent()" currency="" :price="$product->formattedPrice" :link="route('shop.product', $product->slug)" />
                                 @empty
                                     <x-shop.layouts.blank />
                                 @endforelse

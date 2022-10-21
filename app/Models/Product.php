@@ -18,4 +18,19 @@ class Product extends ShopperProduct implements HasMedia, ReviewRateable
     {
         return $query->where('featured', true);
     }
+
+    public function stars(): Attribute
+    {
+        return Attribute::get(fn():int  => round($this->ratingPercent()));
+    }
+
+    public function starsEmpty(): Attribute
+    {
+        return Attribute::get(fn():int => (5 - $this->stars));
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

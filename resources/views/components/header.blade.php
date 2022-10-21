@@ -23,15 +23,34 @@
                     <ul class="menu-nav">
                         <li>
                             <div class="dropdown">
-                                <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false"><i
-                                        class="icon-myaccount ion-android-person"></i> <span>My Account</span> <i
-                                        class="ion-ios-arrow-down"></i></button>
+                                @guest
+                                    <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false" class="d-flex align-items-center justify-content-between">
+                                        {{-- <i class="icon-myaccount ion-android-person"></i> --}}
+                                        <x-ri-login-circle-fill width="20" class="me-1" />
+                                        <span>Login / Signup</span>
+                                        <i class="ion-ios-arrow-down"></i>
+                                    </button>
 
-                                <ul class="dropdown-menu animation slideDownIn" aria-labelledby="dropdownMenuButton">
-                                    <li><a href="login.html">Register</a></li>
-                                    <li><a href="login.html">Login</a></li>
-                                </ul>
+                                    <ul class="dropdown-menu animation slideDownIn" aria-labelledby="dropdownMenuButton">
+                                        <li><a href="{{route('register')}}">Register</a></li>
+                                        <li><a href="{{route('login')}}">Login</a></li>
+                                    </ul>
+                                @endguest
+                                @auth
+                                    <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false" class="d-flex align-items-center justify-content-between">
+                                        {{-- <i class="icon-myaccount ion-android-person"></i> --}}
+                                        <x-ri-user-smile-fill width="20" class="me-1" />
+                                        <span>Hello, {{ auth()->user()->first_name }}</span>
+                                        <i class="ion-ios-arrow-down"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu animation slideDownIn" aria-labelledby="dropdownMenuButton">
+                                            <li><a href="#">My Account</a></li>
+                                            <li><a href="{{route('logout.link')}}">Logout</a></li>
+                                    </ul>
+                                @endauth
                             </div>
                         </li>
 

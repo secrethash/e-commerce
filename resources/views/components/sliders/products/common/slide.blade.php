@@ -63,7 +63,7 @@
                 @for ($i = 0; $stars < $i; $i++)
                     <i class="ion-android-star"></i>
                 @endfor
-                @for ($j = 0; $blank_stars < $j; $j++)
+                @for ($j = 0; $blank_stars > $j; $j++)
                     <i class="ion-android-star color-gray"></i>
                 @endfor
             </div>

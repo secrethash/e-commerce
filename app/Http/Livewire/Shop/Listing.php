@@ -29,6 +29,8 @@ class Listing extends Component
 
     public Collection $categories;
 
+    protected string $multiDelimiter = ',';
+
     /**
      * Selected Category
      *
@@ -57,7 +59,7 @@ class Listing extends Component
             ->aftermarket()
             ->orderBy('name')
             ->get();
-        $this->selectedBrands = !blank($this->brands) ? explode('+', $this->brands) : [];
+        $this->selectedBrands = !blank($this->brands) ? explode($this->multiDelimiter, $this->brands) : [];
     }
 
     public function changeLayout($layout): void
@@ -71,7 +73,8 @@ class Listing extends Component
 
     public function updatedSelectedBrands($value)
     {
-        $this->brands = implode('+', $this->selectedBrands);
+        $this->brands = implode($this->multiDelimiter, $this->selectedBrands);
+        // $this->brands = urldecode($this->brands);
     }
 
     protected function filter()
@@ -81,7 +84,7 @@ class Listing extends Component
             return Product::publish()->paginate(9)->withQueryString();
         }
 
-        $brands = !blank($this->brands) ? explode('+', $this->brands) : [];
+        $brands = !blank($this->brands) ? explode($this->multiDelimiter, $this->brands) : [];
 
         if ($this->category && $this->category->is_enabled) {
             $products = $this->category->products();
@@ -90,7 +93,7 @@ class Listing extends Component
         if (count($brands) >= 1) {
             $brandIds = [];
             foreach ($brands as $brand) {
-                $brandIds[] = Brand::whereSlug($brand)->first()->id;
+                $brandIds[] = Brand::whereSlug($brand)->first()?->id;
             }
 
             if (!isset($products) OR !$products) {
@@ -119,7 +122,7 @@ class Listing extends Component
 
     public function render()
     {
-        // dd($this->category->is_enabled);
+        // dd($this->selectedBrands);
         return view('livewire.shop.listing', [
             'products' => $this->filter(),
             'resetFilter' => $this->shouldResetFilter(),

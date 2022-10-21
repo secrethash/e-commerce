@@ -77,7 +77,7 @@
     <!-- Brands Slider Area Start -->
     <x-sliders.brands.text title="Car <span>Brands</span>">
         @foreach ($brands as $brand)
-            <x-sliders.brands.text.slide :name="$brand->name" link="#" />
+            <x-sliders.brands.text.slide :name="$brand->name" :link="route('shop.index', ['brands'=>$brand->slug])" />
         @endforeach
     </x-sliders.brands.text>
     <!-- Brands Slider Area End -->
@@ -85,7 +85,7 @@
     <!-- Brands Slider Area Start -->
     <x-sliders.brands.text title="Aftermarket <span>Brands</span>">
         @foreach ($aftermarket as $afb)
-            <x-sliders.brands.text.slide :name="$afb->name" link="#" />
+            <x-sliders.brands.text.slide :name="$afb->name" :link="route('shop.index', ['brands'=>$afb->slug])" />
         @endforeach
     </x-sliders.brands.text>
     <!-- Brands Slider Area End -->
@@ -109,7 +109,7 @@
                 @endif
             @endforeach
             <x-sliders.products.new-arrivals.slide :image="$newArrivalImage" :hover="$newArrivalHover" :new="true" :name="$newArrival->name"
-                :ratings="$newArrival->ratingPercent()" currency="" :price="$newArrival->formattedPrice" link="#" />
+                :ratings="$newArrival->ratingPercent()" currency="" :price="$newArrival->formattedPrice" :link="route('shop.product', $newArrival->slug)" />
         @endforeach
     </x-sliders.products.new-arrivals>
     <!-- New Arrival Area End -->
@@ -177,7 +177,7 @@
                                     @endif
                                 @endforeach
                                 <x-sliders.products.featured.slide :image="$featImage" :hover="$featHover" :new="$feat->published_at > now()->subDays(15)" :name="$feat->name"
-                                    :ratings="$feat->ratingPercent()" currency="" :price="$feat->formattedPrice" link="#" />
+                                    :ratings="$feat->ratingPercent()" currency="" :price="$feat->formattedPrice" :link="route('shop.product', $feat->slug)" />
                             @endforeach
                         </x-sliders.products.featured>
                     @endif
@@ -496,7 +496,7 @@
                                     <x-sliders.products.best-sellers.slide :image="$bestSellerImage" :hover="$bestSellerHover"
                                         :name="$bestSeller->name" discount="25%" :ratings="$bestSeller->ratingPercent()" currency=""
                                         :price="$bestSeller->formattedPrice" :floats="false" {{-- :flags="false" --}} :cart="false"
-                                        link="#" />
+                                        :link="route('shop.product', $bestSeller->slug)" />
                                 @endforeach
                             </x-sliders.products.best-sellers.wrapper>
                         @endforeach
@@ -1824,7 +1824,7 @@
     <!-- Brand area start -->
     <x-sliders.brands.image>
         @foreach ($allBrands as $abrand)
-            <x-sliders.brands.image.slide href="#" :src="$abrand->getFirstMediaUrl('uploads')" :alt="$abrand->slug" />
+            <x-sliders.brands.image.slide :href="route('shop.index', ['brands' => $abrand->slug])" :src="$abrand->getFirstMediaUrl('uploads')" :alt="$abrand->slug" />
         @endforeach
     </x-sliders.brands.image>
     {{-- <div class="brand-area mb-60px">
