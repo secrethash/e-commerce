@@ -208,13 +208,13 @@
 
             <!-- Header Tools Start -->
             <div class="col-auto">
-                <div class="header-tools justify-content-end">
-                    <div class="cart-info d-flex align-self-center">
-                        <a title="wishlist" href="#offcanvas-wishlist" class="heart offcanvas-toggle"
-                            data-number="3"><i class="icon-heart"></i></a>
-                        <a title="cart" href="#offcanvas-cart" class="bag offcanvas-toggle" data-number="3"><i
-                                class="icon-shopping-cart"></i><span>£30.00</span></a>
+                <div class="header-tools d-flex justify-content-end align-items-center">
+                    <div class="cart-info d-flex align-self-center me-3">
+                        <a title="wishlist" href="#offcanvas-wishlist" class="heart offcanvas-toggle me-0" data-number="3">
+                            <i class="icon-heart"></i>
+                        </a>
                     </div>
+                    @livewire('component.shop.cart', ['for' => 'mobile'])
                 </div>
             </div>
             <!-- Header Tools End -->

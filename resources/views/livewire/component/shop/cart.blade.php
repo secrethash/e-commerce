@@ -1,14 +1,14 @@
 <div>
     <!--Cart info Start -->
     <div class="cart-info d-flex align-self-center">
-        <a title="cart" href="#offcanvas-cart" class="bag offcanvas-toggle" data-number="{{$cart->products->count()}}">
+        <a title="cart" href="#offcanvas-cart-{{$for}}" class="bag offcanvas-toggle" data-number="{{$cart->products->count()}}">
             <i class="icon-shopping-cart"></i>
             <span>{{ $formattedTotal }}</span>
         </a>
     </div>
     <!--Cart info End -->
     <!-- OffCanvas Cart Start -->
-    <div id="offcanvas-cart" class="offcanvas offcanvas-cart">
+    <div id="offcanvas-cart-{{$for}}" class="offcanvas offcanvas-cart">
         <div class="inner">
             <div class="head">
                 <span class="title">Cart</span>
@@ -21,7 +21,7 @@
                             <a href="{{route('shop.product', $product->slug)}}" class="image"><img
                                     src="{{$product->getMedia('uploads')->first()->getUrl('thumb200x200')}}"
                                     alt="{{ $product->name }}"></a>
-                            <div class="content">
+                            <div class="content pe-2 pe-md-3">
                                 <a href="{{route('shop.product', $product->slug)}}" class="title">{{ $product->name }}</a>
                                 <span class="quantity-price">{{$product->pivot->quantity}} x <span class="amount">{{$product->formattedPrice}}</span></span>
                                 <a href="#" class="remove" wire:click.prevent='removeProduct({{$product->id}})'>

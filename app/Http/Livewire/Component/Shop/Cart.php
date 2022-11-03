@@ -16,7 +16,7 @@ class Cart extends Component
 
     public CartModel $cart;
 
-    // public int $subtotal = 0;
+    public string $for = 'desktop';
     // public string $formattedSubtotal;
 
     // public int $total = 0;
