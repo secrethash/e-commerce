@@ -11,6 +11,7 @@
     'orignal' => null, # Old Price (if price dropped)
     'link', # Link to Product's Page
     'flags' => true, # Display Flags
+    'product',
 ])
 
 @php
@@ -72,22 +73,26 @@
                                             </ul>
                                         </div>
                                         {{-- <div class="in-stock">Availability: <span>299 In Stock</span></div> --}}
-                                        <div class="cart-btn">
+                                        {{-- <div class="cart-btn">
                                             <a href="#" class="add-to-curt" title="Add to cart">{{ __('Add to cart') }}</a>
-                                        </div>
+                                        </div> --}}
+                                        @livewire('actions.add-to-cart', [
+                                            'product' => $product,
+                                            'buttonType' => 'curt',
+                                        ])
                                         <div class="add-to-link">
                                             <ul>
                                                 <li>
                                                     <a href="#" title="Add to Wishlist"><i class="icon-heart"></i></a>
                                                 </li>
-                                                <li>
+                                                {{-- <li>
                                                     <a href="#" title="Add to compare"><i class="icon-repeat"></i></a>
-                                                </li>
-                                                <li>
+                                                </li> --}}
+                                                {{-- <li>
                                                     <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                                         <i class="icon-eye"></i>
                                                     </a>
-                                                </li>
+                                                </li> --}}
                                             </ul>
                                         </div>
                                     </div>

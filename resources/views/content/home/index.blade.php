@@ -109,7 +109,8 @@
                 @endif
             @endforeach
             <x-sliders.products.new-arrivals.slide :image="$newArrivalImage" :hover="$newArrivalHover" :new="true" :name="$newArrival->name"
-                :ratings="$newArrival->ratingPercent()" currency="" :price="$newArrival->formattedPrice" :link="route('shop.product', $newArrival->slug)" />
+                :ratings="$newArrival->ratingPercent()" currency="" :price="$newArrival->formattedPrice"
+                :link="route('shop.product', $newArrival->slug)" :product="$newArrival" />
         @endforeach
     </x-sliders.products.new-arrivals>
     <!-- New Arrival Area End -->
@@ -177,7 +178,7 @@
                                     @endif
                                 @endforeach
                                 <x-sliders.products.featured.slide :image="$featImage" :hover="$featHover" :new="$feat->published_at > now()->subDays(15)" :name="$feat->name"
-                                    :ratings="$feat->ratingPercent()" currency="" :price="$feat->formattedPrice" :link="route('shop.product', $feat->slug)" />
+                                    :ratings="$feat->ratingPercent()" currency="" :price="$feat->formattedPrice" :link="route('shop.product', $feat->slug)" :product="$feat" />
                             @endforeach
                         </x-sliders.products.featured>
                     @endif
@@ -496,7 +497,7 @@
                                     <x-sliders.products.best-sellers.slide :image="$bestSellerImage" :hover="$bestSellerHover"
                                         :name="$bestSeller->name" discount="25%" :ratings="$bestSeller->ratingPercent()" currency=""
                                         :price="$bestSeller->formattedPrice" :floats="false" {{-- :flags="false" --}} :cart="false"
-                                        :link="route('shop.product', $bestSeller->slug)" />
+                                        :link="route('shop.product', $bestSeller->slug)" :product="$bestSeller" />
                                 @endforeach
                             </x-sliders.products.best-sellers.wrapper>
                         @endforeach
@@ -566,7 +567,7 @@
     </div>
     <!-- Custom Block Area End -->
     <!-- Category Tab Slider Area Start -->
-    <div class="category-tab-slider-area mb-60px">
+    {{-- <div class="category-tab-slider-area mb-60px">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -1663,7 +1664,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Category Tab Slider Area End -->
     <!-- Blog Area Start -->
     {{-- <div class="main-blog-area mb-60px">

@@ -13,6 +13,7 @@
     'floats' => true, # Display Floating Buttons
     'flags' => true, # Display Flags
     'cart' => true, # Display Add to Cart Button
+    'product',
 ])
 
 @php
@@ -77,9 +78,12 @@
             </div>
         </div>
         @if ($cart)
-            <div class="cart-btn">
+            {{-- <div class="cart-btn">
                 <a href="#" class="add-to-cart" title="Add to cart"><i class="icon-shopping-cart"></i></a>
-            </div>
+            </div> --}}
+            @livewire('actions.add-to-cart', [
+                'product' => $product,
+            ])
         @endif
         @if ($countdown)
             <div class="clockdiv d-flex">

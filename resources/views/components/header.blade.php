@@ -85,16 +85,34 @@
                         <ul class="menu-nav">
                             <li>
                                 <div class="dropdown">
-                                    <button type="button" id="dropdownMenuButton-1" data-bs-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false"><i
-                                            class="icon-myaccount ion-android-person"></i> <span>My Account</span>
-                                        <i class="ion-ios-arrow-down"></i></button>
+                                    @guest
+                                        <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false" class="d-flex align-items-center justify-content-between">
+                                            {{-- <i class="icon-myaccount ion-android-person"></i> --}}
+                                            <x-ri-login-circle-fill width="20" class="me-1" />
+                                            <span>Login / Signup</span>
+                                            <i class="ion-ios-arrow-down"></i>
+                                        </button>
 
-                                    <ul class="dropdown-menu animation slideDownIn"
-                                        aria-labelledby="dropdownMenuButton-1">
-                                        <li><a href="login.html">Register</a></li>
-                                        <li><a href="login.html">Login</a></li>
-                                    </ul>
+                                        <ul class="dropdown-menu animation slideDownIn" aria-labelledby="dropdownMenuButton">
+                                            <li><a href="{{route('register')}}">Register</a></li>
+                                            <li><a href="{{route('login')}}">Login</a></li>
+                                        </ul>
+                                    @endguest
+                                    @auth
+                                        <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false" class="d-flex align-items-center justify-content-between">
+                                            {{-- <i class="icon-myaccount ion-android-person"></i> --}}
+                                            <x-ri-user-smile-fill width="20" class="me-1" />
+                                            <span>Hello, {{ auth()->user()->first_name }}</span>
+                                            <i class="ion-ios-arrow-down"></i>
+                                        </button>
+
+                                        <ul class="dropdown-menu animation slideDownIn" aria-labelledby="dropdownMenuButton">
+                                                <li><a href="#">My Account</a></li>
+                                                <li><a href="{{route('logout.link')}}">Logout</a></li>
+                                        </ul>
+                                    @endauth
                                 </div>
                             </li>
 
@@ -125,16 +143,17 @@
                             </form>
                         </div>
                         <!--Cart info Start -->
-                        <div class="header-tools d-flex">
-                            <div class="cart-info d-flex align-self-center">
-                                <a title="wishlist" href="#offcanvas-wishlist" class="heart offcanvas-toggle"
-                                    data-number="3"><i class="icon-heart"></i></a>
-                                <a title="cart" href="#offcanvas-cart" class="bag offcanvas-toggle" data-number="3"><i
-                                        class="icon-shopping-cart"></i><span>£30.00</span></a>
+                        <div class="header-tools d-flex align-items-center">
+                            <div class="cart-info d-flex align-self-center me-3">
+                                <a title="wishlist" href="#offcanvas-wishlist" class="heart offcanvas-toggle me-0" data-number="3">
+                                    <i class="icon-heart"></i>
+                                </a>
                             </div>
+                            @livewire('component.shop.cart')
                         </div>
+                        <!--Cart info End -->
+                        {{-- @livewire('component.shop.cart') --}}
                     </div>
-                    <!--Cart info End -->
                 </div>
             </div>
         </div>
@@ -295,79 +314,9 @@
 </div>
 <!-- OffCanvas Wishlist End -->
 
-<!-- OffCanvas Cart Start -->
-<div id="offcanvas-cart" class="offcanvas offcanvas-cart">
-    <div class="inner">
-        <div class="head">
-            <span class="title">Cart</span>
-            <button class="offcanvas-close">×</button>
-        </div>
-        <div class="body customScroll">
-            <ul class="minicart-product-list">
-                <li>
-                    <a href="single-product.html" class="image"><img
-                            src="{{ asset('frontend/assets/images/product-image/1.jpg') }}"
-                            alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="single-product.html" class="title">Walnut Cutting Board</a>
-                        <span class="quantity-price">1 x <span class="amount">£91.86</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
-                <li>
-                    <a href="single-product.html" class="image"><img
-                            src="{{ asset('frontend/assets/images/product-image/2.jpg') }}"
-                            alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="single-product.html" class="title">Lucky Wooden Elephant</a>
-                        <span class="quantity-price">1 x <span class="amount">£453.28</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
-                <li>
-                    <a href="single-product.html" class="image"><img
-                            src="{{ asset('frontend/assets/images/product-image/3.jpg') }}"
-                            alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="single-product.html" class="title">Fish Cut Out Set</a>
-                        <span class="quantity-price">1 x <span class="amount">£87.34</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="foot">
-            <div class="sub-total">
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td class="text-left">Sub-Total :</td>
-                            <td class="text-right">£523.30</td>
-                        </tr>
-                        <tr>
-                            <td class="text-left">Eco Tax (-2.00) :</td>
-                            <td class="text-right">£4.52</td>
-                        </tr>
-                        <tr>
-                            <td class="text-left">VAT (20%) :</td>
-                            <td class="text-right">£104.66</td>
-                        </tr>
-                        <tr>
-                            <td class="text-left">Total :</td>
-                            <td class="text-right theme-color">£632.48</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="buttons">
-                <a href="cart.html" class="btn btn-dark btn-hover-primary mb-30px">view cart</a>
-                <a href="checkout.html" class="btn btn-outline-dark current-btn">checkout</a>
-            </div>
-            <p class="minicart-message">Free Shipping on All Orders Over $100!</p>
-        </div>
-    </div>
-</div>
-<!-- OffCanvas Cart End -->
+{{-- <!-- OffCanvas Cart Start -->
+
+<!-- OffCanvas Cart End --> --}}
 
 <!-- OffCanvas Search Start -->
 <div id="offcanvas-mobile-menu" class="offcanvas offcanvas-mobile-menu">

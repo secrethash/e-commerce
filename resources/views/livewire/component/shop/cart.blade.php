@@ -1,0 +1,79 @@
+<div>
+    <!--Cart info Start -->
+    <div class="cart-info d-flex align-self-center">
+        <a title="cart" href="#offcanvas-cart" class="bag offcanvas-toggle" data-number="{{$cart->products->count()}}">
+            <i class="icon-shopping-cart"></i>
+            <span>{{ $formattedTotal }}</span>
+        </a>
+    </div>
+    <!--Cart info End -->
+    <!-- OffCanvas Cart Start -->
+    <div id="offcanvas-cart" class="offcanvas offcanvas-cart">
+        <div class="inner">
+            <div class="head">
+                <span class="title">Cart</span>
+                <button class="offcanvas-close">×</button>
+            </div>
+            <div class="body customScroll">
+                <ul class="minicart-product-list">
+                    @forelse ($products as $product)
+                        <li>
+                            <a href="{{route('shop.product', $product->slug)}}" class="image"><img
+                                    src="{{$product->getMedia('uploads')->first()->getUrl('thumb200x200')}}"
+                                    alt="{{ $product->name }}"></a>
+                            <div class="content">
+                                <a href="{{route('shop.product', $product->slug)}}" class="title">{{ $product->name }}</a>
+                                <span class="quantity-price">{{$product->pivot->quantity}} x <span class="amount">{{$product->formattedPrice}}</span></span>
+                                <a href="#" class="remove">×</a>
+                            </div>
+                        </li>
+                    @empty
+                        <div class="alert alert-warning text-center" role="alert">
+                            <h4 class="alert-heading"><x-heroicon-s-exclamation width="36" /></h4>
+                            <h4 class="alert-heading">Cart Empty</h4>
+                            <p class="mt-1 lead">It looks lonely here.</p>
+                            <hr>
+                            <a class="btn btn-dark w-100" href="{{route('shop.index')}}" role="button">
+                                <x-heroicon-o-shopping-cart width="18" />
+                                Shop
+                            </a>
+                            <p class="mt-3"><x-heroicon-s-question-mark-circle width="18" /> Add products to your cart from our shop.</p>
+                        </div>
+                    @endforelse
+                </ul>
+            </div>
+            @if($products->count() >= 1)
+                <div class="foot">
+                    <div class="sub-total">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td class="text-left">Sub-Total :</td>
+                                    <td class="text-right">{{$formattedSubtotal}}</td>
+                                </tr>
+                                {{-- <tr>
+                                    <td class="text-left">Eco Tax (-2.00) :</td>
+                                    <td class="text-right">£4.52</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">VAT (20%) :</td>
+                                    <td class="text-right">£104.66</td>
+                                </tr> --}}
+                                <tr>
+                                    <td class="text-left">Total :</td>
+                                    <td class="text-right theme-color">{{$formattedTotal}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="buttons">
+                        <a href="{{ route('shop.cart') }}" class="btn btn-dark btn-hover-primary mb-30px">view cart</a>
+                        <a href="{{ route('shop.cart') }}" class="btn btn-outline-dark current-btn">checkout</a>
+                    </div>
+                    {{-- <p class="minicart-message">Free Shipping on All Orders Over $100!</p> --}}
+                </div>
+            @endif
+        </div>
+    </div>
+    <!-- OffCanvas Cart End -->
+</div>

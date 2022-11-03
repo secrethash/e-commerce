@@ -16,10 +16,9 @@ return [
     'discount_use' => '{1} Limit of 1 use|[2,*] Limit of :count uses',
 
     'dashboard' => [
-        'welcome_message' => 'Welcome to <span>Shopper</span> Dashboard',
-        'header' => 'Start with the basic for your online store',
-        'description' => ' To begin building your new store with Laravel Shopper, we recommend starting with these steps. The framework allows you to create
-                           your store and configure it exactly as you want. You can make <span>integrations</span> to go faster if you want.',
+        'welcome_message' => 'Welcome to <span>'.config('app.name').'</span> Dashboard',
+        'header' => 'Manage your online ecommerce store.',
+        'description' => ' Welcome to <span>'.config('app.name').' - '.config('app.tagline').'</span>. Manage Products, Brands, Categories, Collection and more right from this Dashboard.',
         'cards' => [
             'doc_title' => 'Documentation',
             'doc_description' => 'Get to know Laravel Shopper by understanding its capabilities the right way, whether you are new to the framework or have already worked on it. This documentation is made for you.',

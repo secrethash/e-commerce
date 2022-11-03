@@ -103,14 +103,18 @@
                         <div class="pro-details-list">
                             <p>{{Str::of($product->description)->inlineMarkdown(['html_input' => 'strip'])->words(20)}}</p>
                         </div>
-                        <div class="pro-details-quality mt-0px">
+                        {{-- <div class="pro-details-quality mt-0px">
                             <div class="cart-plus-minus">
                                 <input class="cart-plus-minus-box" type="text" name="qtybutton" value="1" />
                             </div>
                             <div class="pro-details-cart btn-hover">
                                 <a href="#"> Add To Cart</a>
                             </div>
-                        </div>
+                        </div> --}}
+                        @livewire('actions.add-to-cart', [
+                            'product' => $product,
+                            'buttonType' => 'product',
+                        ])
                         <div class="pro-details-wish-com">
                             <div class="pro-details-wishlist">
                                 <a href="#"><i class="icon-heart"></i>Add to wishlist</a>
@@ -1052,8 +1056,10 @@
                     @endphp
                 @endif
             @endforeach
-            <x-sliders.products.new-arrivals.slide :image="$mainImage" :hover="$imageHover" :new="true" :name="$related->name"
-                :ratings="$related->ratingPercent()" currency="" :price="$related->formattedPrice" :link="route('shop.product', $related->slug)" />
+            <x-sliders.products.new-arrivals.slide :image="$mainImage" :hover="$imageHover"
+                :new="true" :name="$related->name" :ratings="$related->ratingPercent()"
+                currency="" :price="$related->formattedPrice" :product="$related"
+                :link="route('shop.product', $related->slug)" />
         @endforeach
     </x-sliders.products.new-arrivals>
 @endif

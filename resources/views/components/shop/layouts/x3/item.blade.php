@@ -13,6 +13,7 @@
     'floats' => true, # Display Floating Buttons
     'flags' => true, # Display Flags
     'cart' => true, # Display Add to Cart Button
+    'product',
 ])
 
 

@@ -1,23 +1,13 @@
 <?php
 
 use App\Http\Controllers\Shop\{
+    CheckoutController,
     HomeController,
     ListingController,
     ProductController,
 };
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 //*-> Home Routes
 Route::get('/', HomeController::class)->name('home');
@@ -29,6 +19,7 @@ Route::get('/home', function() {
 Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/', ListingController::class)->name('index');
     Route::get('/category/{category}', ListingController::class)->name('category');
+    Route::get('/cart', [CheckoutController::class, 'cart'])->name('cart');
     Route::get('/{product}', ProductController::class)->name('product');
 });
 
