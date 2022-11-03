@@ -1,5 +1,6 @@
 *
-!./public/
+!*/
+!public/**
 !.gitignore
-!./uploads/
-!./avatars/
+!uploads/**
+!avatars/**
