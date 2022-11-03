@@ -24,7 +24,12 @@
                             <div class="content">
                                 <a href="{{route('shop.product', $product->slug)}}" class="title">{{ $product->name }}</a>
                                 <span class="quantity-price">{{$product->pivot->quantity}} x <span class="amount">{{$product->formattedPrice}}</span></span>
-                                <a href="#" class="remove">×</a>
+                                <a href="#" class="remove" wire:click.prevent='removeProduct({{$product->id}})'>
+                                    <x-heroicon-s-x width="18" wire:loading.remove wire:target='removeProduct' />
+                                    <div class="spinner-border spinner-border-sm me-2" role="status" wire:loading wire:target='removeProduct'>
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </a>
                             </div>
                         </li>
                     @empty

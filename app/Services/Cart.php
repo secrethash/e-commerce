@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Cart as CartModel;
 use App\Models\User;
 use Auth;
+use Illuminate\Database\Eloquent\Collection;
 use Session;
 use Shopper\Framework\Models\Shop\Product\Product;
 
@@ -79,15 +80,61 @@ class Cart {
             $cart->products()->updateExistingPivot($product->id, [
                 'quantity' => $cart->products()->find($product->id)->pivot->quantity + 1,
             ]);
+            return true;
         } else {
             $cart->products()->attach($product->id, [
                 'quantity' => $quantity,
             ]);
+            return true;
         }
 
-        return true;
+        return false;
     }
 
+    /**
+     * Remove an Item from the cart
+     *
+     * @param \Shopper\Framework\Models\Shop\Product\Product|\Illuminate\Database\Eloquent\Collection|array $products
+     * @param \App\Models\Cart|null $cart
+     * @return boolean
+     */
+    public static function remove(Product|Collection|array $products, ?CartModel $cart = null): bool
+    {
+        $cart = $cart ?? static::fetch();
+
+        if ($products instanceof Product) {
+            $cart->products()->detach($products->id);
+            return true;
+        } elseif ($products instanceof Collection) {
+            $cart->products()->detach($products->pluck('id'));
+            return true;
+        } elseif (is_array($products)) {
+            $cart->products()->detach($products);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Empty Cart
+     *
+     * @param \App\Models\Cart|null $cart
+     * @return boolean
+     */
+    public static function empty(?CartModel $cart = null): bool
+    {
+        $cart = $cart ?? static::fetch();
+        return static::remove($cart->products);
+    }
+
+    /**
+     * Checks if cart has item
+     *
+     * @param \Shopper\Framework\Models\Shop\Product\Product $product
+     * @param \App\Models\Cart|null $cart
+     * @return boolean
+     */
     public static function hasItem(Product $product, ?CartModel $cart = null): bool
     {
         $cart = $cart ?? self::fetch();

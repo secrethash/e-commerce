@@ -48,20 +48,31 @@
                                                     <td class="product-price-cart"><span class="amount">{{$product->formattedPrice}}</span></td>
                                                     <td class="product-quantity px-5">
                                                         <div class="input-group">
-                                                            <button class="btn btn-outline-danger" type="button">
-                                                                -
+                                                            <button class="btn btn-outline-danger" type="button" wire:click.prevent='decrementQuantity({{$product->id}}, {{$product->pivot->quantity}})'>
+                                                                <x-heroicon-s-minus width="18" wire:loading.remove wire:target='decrementQuantity' />
+                                                                <div class="spinner-grow spinner-grow-sm" role="status" wire:loading wire:target='decrementQuantity'>
+                                                                    <span class="visually-hidden">Loading...</span>
+                                                                </div>
                                                             </button>
                                                             <input class="form-control text-center" type="text" name="quantity"
-                                                                value="{{$product->pivot->quantity}}" />
-                                                            <button class="btn btn-outline-danger" type="button">
-                                                                +
+                                                                value="{{$product?->pivot->quantity}}" disabled />
+                                                            <button class="btn btn-outline-danger" type="button" wire:click.prevent='incrementQuantity({{$product->id}})'>
+                                                                <x-heroicon-s-plus width="18" wire:loading.remove wire:target='incrementQuantity' />
+                                                                <div class="spinner-grow spinner-grow-sm" role="status" wire:loading wire:target='incrementQuantity'>
+                                                                    <span class="visually-hidden">Loading...</span>
+                                                                </div>
                                                             </button>
                                                         </div>
                                                     </td>
                                                     <td class="product-subtotal">{{price_quantity_format($product->price_amount, $product->pivot->quantity)}}</td>
                                                     <td class="product-remove">
                                                         {{-- <a href="#"><i class="fa fa-pencil-alt"></i></a> --}}
-                                                        <a href="#"><i class="fa fa-times"></i></a>
+                                                        <a href="#" wire:click.prevent='removeProduct({{$product->id}})' wire:loading.remove>
+                                                            <i class="fa fa-times"></i>
+                                                        </a>
+                                                        <div class="spinner-border spinner-border-sm" role="status" wire:loading wire:target='removeProduct'>
+                                                            <span class="visually-hidden">Loading...</span>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -72,18 +83,23 @@
                                     <div class="col-lg-12">
                                         <div class="cart-shiping-update-wrapper">
                                             <div class="cart-shiping-update">
-                                                <a href="#">Continue Shopping</a>
+                                                <a href="{{route('shop.index')}}">Continue Shopping</a>
                                             </div>
                                             <div class="cart-clear">
-                                                <button>Update Shopping Cart</button>
-                                                <a href="#">Clear Shopping Cart</a>
+                                                {{-- <button>Update Shopping Cart</button> --}}
+                                                <a href="#" wire:click.prevent='clearCart'>
+                                                    <div class="spinner-grow spinner-grow-sm me-2" role="status" wire:loading wire:target='clearCart'>
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                    Clear Shopping Cart
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </form>
                             <div class="row">
-                                <div class="col-lg-4 col-md-6 mb-lm-30px">
+                                {{-- <div class="col-lg-4 col-md-6 mb-lm-30px">
                                     <div class="cart-tax">
                                         <div class="title-wrap">
                                             <h4 class="cart-bottom-title section-bg-gray">Estimate Shipping And Tax</h4>
@@ -125,8 +141,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 mb-lm-30px">
+                                </div> --}}
+                                {{-- <div class="col-lg-4 col-md-6 mb-lm-30px">
                                     <div class="discount-code-wrapper">
                                         <div class="title-wrap">
                                             <h4 class="cart-bottom-title section-bg-gray">Use Coupon Code</h4>
@@ -139,7 +155,9 @@
                                             </form>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
+                                <div class="col-lg-4 col-md-6 mb-lm-30px"></div>
+                                <div class="col-lg-4 col-md-6 mb-lm-30px"></div>
                                 <div class="col-lg-4 col-md-12 mt-md-30px">
                                     <div class="grand-totall">
                                         <div class="title-wrap">

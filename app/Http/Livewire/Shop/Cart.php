@@ -27,16 +27,39 @@ class Cart extends Component
     public function incrementQuantity($productId): void
     {
         CartService::add(Product::find($productId));
-        $this->cart = $this->cart->fresh(['products']);
-        $this->processAmounts();
+        $this->refreshCart();
     }
 
     public function decrementQuantity($productId, $current): void
     {
-        $this->cart->products()->updateExistingPivot($productId, [
-            'quantity' => $current - 1,
-        ]);
+        if ($current > 1) {
+            $this->cart->products()->updateExistingPivot($productId, [
+                'quantity' => $current - 1,
+            ]);
+        } else {
+            CartService::remove([$productId]);
+        }
+        $this->refreshCart();
+    }
+
+    public function removeProduct($productId): void
+    {
+        CartService::remove([$productId]);
+        $this->refreshCart();
+    }
+
+    public function clearCart(): void
+    {
+        CartService::empty($this->cart);
+        $this->refreshCart();
+    }
+
+    public function refreshCart(): void
+    {
+        $this->cart = $this->cart->fresh(['products']);
+        $this->products = $this->cart->products;
         $this->processAmounts();
+        $this->emit('refresh-cart');
     }
 
     public function render()

@@ -34,6 +34,12 @@ class Cart extends Component
         $this->processAmounts();
     }
 
+    public function removeProduct($productId): void
+    {
+        CartService::remove([$productId]);
+        $this->refreshCart();
+    }
+
     public function refreshCart(): void
     {
         $this->products = $this->cart->fresh()->products;
