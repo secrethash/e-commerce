@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Component\Shop;
 
 use App\Http\Livewire\Traits\HasAmounts;
+use App\Http\Livewire\Traits\InteractsWithCart;
 use App\Models\Cart as CartModel;
 use App\Services\Cart as CartService;
 use Illuminate\Database\Eloquent\Collection;
@@ -11,6 +12,9 @@ use Livewire\Component;
 class Cart extends Component
 {
     use HasAmounts;
+    use InteractsWithCart {
+        refreshCart as baseRefreshCart;
+    }
 
     public Collection $products;
 
@@ -24,7 +28,10 @@ class Cart extends Component
 
     public string $currency;
 
-    protected $listeners = ['refresh-cart' => 'refreshCart'];
+    protected $listeners = [
+        'refresh-cart' => 'refreshCart',
+        'refresh-amount' => 'processAmounts',
+    ];
 
     public function mount(): void
     {
@@ -37,13 +44,13 @@ class Cart extends Component
     public function removeProduct($productId): void
     {
         CartService::remove([$productId]);
-        $this->refreshCart();
+        $this->needsCartRefresh();
     }
 
     public function refreshCart(): void
     {
-        $this->products = $this->cart->fresh()->products;
-        $this->processAmounts();
+        $this->baseRefreshCart();
+        $this->products = $this->cart->products;
     }
 
     public function render()

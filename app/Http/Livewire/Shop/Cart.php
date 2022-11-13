@@ -3,19 +3,29 @@
 namespace App\Http\Livewire\Shop;
 
 use App\Http\Livewire\Traits\HasAmounts;
+use App\Http\Livewire\Traits\InteractsWithCart;
 use App\Models\Cart as Model;
 use App\Services\Cart as CartService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
-use Shopper\Framework\Models\Shop\Product\Product;
+// use Shopper\Framework\Models\Shop\Product\Product;
+use App\Models\Product;
 
 class Cart extends Component
 {
     use HasAmounts;
+    use InteractsWithCart {
+        refreshCart as baseRefreshCart;
+    }
 
     public Model $cart;
 
     public Collection $products;
+
+    protected $listeners = [
+        'refresh-cart' => 'refreshCart',
+        'refresh-amount' => 'processAmounts',
+    ];
 
     public function mount()
     {
@@ -27,7 +37,8 @@ class Cart extends Component
     public function incrementQuantity($productId): void
     {
         CartService::add(Product::find($productId));
-        $this->refreshCart();
+
+        $this->needsCartRefresh();
     }
 
     public function decrementQuantity($productId, $current): void
@@ -39,27 +50,28 @@ class Cart extends Component
         } else {
             CartService::remove([$productId]);
         }
-        $this->refreshCart();
+
+        $this->needsCartRefresh();
     }
 
     public function removeProduct($productId): void
     {
         CartService::remove([$productId]);
-        $this->refreshCart();
+
+        $this->needsCartRefresh();
     }
 
     public function clearCart(): void
     {
         CartService::empty($this->cart);
-        $this->refreshCart();
+
+        $this->needsCartRefresh();
     }
 
     public function refreshCart(): void
     {
-        $this->cart = $this->cart->fresh(['products']);
+        $this->baseRefreshCart();
         $this->products = $this->cart->products;
-        $this->processAmounts();
-        $this->emit('refresh-cart');
     }
 
     public function render()

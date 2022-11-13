@@ -73,7 +73,7 @@
                     </div>
                     <div class="buttons">
                         <a href="{{ route('shop.cart') }}" class="btn btn-dark btn-hover-primary mb-30px">view cart</a>
-                        <a href="{{ route('shop.cart') }}" class="btn btn-outline-dark current-btn">checkout</a>
+                        <a href="{{ route('shop.checkout') }}" class="btn btn-outline-dark current-btn">checkout</a>
                     </div>
                     {{-- <p class="minicart-message">Free Shipping on All Orders Over $100!</p> --}}
                 </div>

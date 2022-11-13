@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Services\Cart as CartService;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
@@ -22,9 +24,16 @@ class CheckoutController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function checkout(?Cart $cart = null)
     {
-        //
+        $cart = CartService::fetch();
+        // $cart = $cart ?? CartService::fetch();
+
+        if(CartService::isEmpty($cart)) {
+            return redirect()->route('shop.cart');
+        }
+
+        return view('content.shop.checkout', compact('cart'));
     }
 
     /**

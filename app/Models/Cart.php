@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Shopper\Framework\Models\Shop\Product\Product;
+// use Shopper\Framework\Models\Shop\Product\Product;
+use App\Models\Product;
 use Str;
 
 class Cart extends Model

@@ -8,7 +8,8 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Shopper\Framework\Models\Shop\Product\Brand as ProductBrand;
 use Shopper\Framework\Models\Shop\Product\Category;
-use Shopper\Framework\Models\Shop\Product\Product;
+// use Shopper\Framework\Models\Shop\Product\Product;
+use App\Models\Product;
 
 class Listing extends Component
 {

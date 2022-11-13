@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Shopper\Framework\Models\User\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Shopper\Framework\Models\User\Role;
 
 class User extends Authenticatable
 {
@@ -45,6 +46,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(fn(self $user) => $user->assignRole(config('shopper.system.users.default_role')));
+    }
 
     public function carts(): HasMany
     {

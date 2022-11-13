@@ -92,14 +92,14 @@ return [
         ],
         [
             'name' => 'Legal',
-            'description' => 'Manage your store\'s legal pages such as privacy, terms.',
+            'description' => 'Manage your store’s legal pages such as privacy, terms.',
             'icon' => 'heroicon-o-lock-closed',
             'route' => 'shopper.settings.legal',
             'permission' => null,
         ],
         [
             'name' => 'Banners',
-            'description' => 'Manage your store\'s Banners for Sliders & Advertisements.',
+            'description' => 'Manage your store’s Banners for Sliders & Advertisements.',
             'icon' => 'heroicon-o-photograph',
             // 'route' => 'shopper.custom.settings.banners',
             'route' => null,

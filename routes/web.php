@@ -20,6 +20,7 @@ Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/', ListingController::class)->name('index');
     Route::get('/category/{category}', ListingController::class)->name('category');
     Route::get('/cart', [CheckoutController::class, 'cart'])->name('cart');
+    Route::get('/checkout/{cart?}', [CheckoutController::class, 'checkout'])->name('checkout');
     Route::get('/{product}', ProductController::class)->name('product');
 });
 

@@ -40,23 +40,26 @@
                                         <tbody>
                                             @foreach ($products as $product)
                                                 <tr>
-                                                    <td class="product-thumbnail">
-                                                        <a href="{{route('shop.product', $product->slug)}}"><img class="img-responsive"
-                                                                src="{{$product->getMedia('uploads')->first()->getUrl('thumb200x200')}}" alt="" /></a>
+                                                    <td class="product-thumbnail pe-3">
+                                                        <a href="{{route('shop.product', $product->slug)}}">
+                                                            <img class="img-responsive" style="min-width: 60px;"
+                                                                src="{{$product->getMedia('uploads')->first()->getUrl('thumb200x200')}}"
+                                                                alt="" />
+                                                        </a>
                                                     </td>
                                                     <td class="product-name"><a href="{{route('shop.product', $product->slug)}}">{{$product->name}}</a></td>
                                                     <td class="product-price-cart"><span class="amount">{{$product->formattedPrice}}</span></td>
-                                                    <td class="product-quantity px-5">
+                                                    <td class="product-quantity px-md-5">
                                                         <div class="input-group">
-                                                            <button class="btn btn-outline-danger" type="button" wire:click.prevent='decrementQuantity({{$product->id}}, {{$product->pivot->quantity}})'>
+                                                            <button class="btn btn-outline-danger btn-sm" type="button" wire:click.prevent='decrementQuantity({{$product->id}}, {{$product->pivot->quantity}})'>
                                                                 <x-heroicon-s-minus width="18" wire:loading.remove wire:target='decrementQuantity' />
                                                                 <div class="spinner-grow spinner-grow-sm" role="status" wire:loading wire:target='decrementQuantity'>
                                                                     <span class="visually-hidden">Loading...</span>
                                                                 </div>
                                                             </button>
-                                                            <input class="form-control text-center" type="text" name="quantity"
+                                                            <input class="form-control text-center bg-danger text-white fw-bolder" type="text" name="quantity"
                                                                 value="{{$product?->pivot->quantity}}" disabled />
-                                                            <button class="btn btn-outline-danger" type="button" wire:click.prevent='incrementQuantity({{$product->id}})'>
+                                                            <button class="btn btn-outline-danger btn-sm" type="button" wire:click.prevent='incrementQuantity({{$product->id}})'>
                                                                 <x-heroicon-s-plus width="18" wire:loading.remove wire:target='incrementQuantity' />
                                                                 <div class="spinner-grow spinner-grow-sm" role="status" wire:loading wire:target='incrementQuantity'>
                                                                     <span class="visually-hidden">Loading...</span>
@@ -172,7 +175,7 @@
                                             </ul>
                                         </div>
                                         <h4 class="grand-totall-title">Grand Total <span>{{$formattedTotal}}</span></h4>
-                                        <a href="#">Proceed to Checkout</a>
+                                        <a href="{{ route('shop.checkout') }}">Proceed to Checkout</a>
                                     </div>
                                 </div>
                             </div>

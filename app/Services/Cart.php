@@ -49,7 +49,8 @@ class Cart {
                 if (!$cart) {
                     $cart = (new self())->make()->cart;
                 }
-                $user->carts()->associate($cart);
+                $cart->user()->associate($user);
+                // $user->carts()->associate($cart);
             } elseif ($cart && $user->carts->count() >= 1 && $cart->isNot($user->carts->first())) {
                 $cart->delete();
                 $cart = $user->carts->first();
@@ -159,6 +160,11 @@ class Cart {
     public static function total(CartModel $cart): int
     {
         return static::subtotal($cart);
+    }
+
+    public static function isEmpty(CartModel $cart): bool
+    {
+        return $cart->products()->count() < 1;
     }
 
 }

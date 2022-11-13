@@ -4,7 +4,8 @@ namespace App\Http\Livewire\Shop;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
-use Shopper\Framework\Models\Shop\Product\Product as Model;
+// use Shopper\Framework\Models\Shop\Product\Product as Model;
+use App\Models\Product as Model;
 use Livewire\Component;
 
 class Product extends Component

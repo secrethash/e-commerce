@@ -6,7 +6,8 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Shopper\Framework\Models\Shop\Order\OrderItem;
-use Shopper\Framework\Models\Shop\Product\Product;
+// use Shopper\Framework\Models\Shop\Product\Product;
+use App\Models\Product;
 
 class Products {
 
@@ -21,7 +22,7 @@ class Products {
     public static function featured(int $limit = 10): Collection
     {
         return Product::publish()
-            ->whereFeatured(true)
+            ->featured()
             ->limit($limit)
             ->get();
     }

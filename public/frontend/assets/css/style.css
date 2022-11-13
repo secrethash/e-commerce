@@ -108,6 +108,9 @@ button, input, optgroup, select, textarea {
   line-height: inherit;
   -webkit-transition: all 0.5s ease 0s;
   transition: all 0.5s ease 0s;
+}
+
+button:not(.btn), input:not(.form-control,.form-check-input), optgroup, select:not(.form-select), textarea:not(.form-control) {
   background-image: none !important;
 }
 

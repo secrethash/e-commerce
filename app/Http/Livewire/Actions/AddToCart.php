@@ -4,7 +4,8 @@ namespace App\Http\Livewire\Actions;
 
 use App\Services\Cart;
 use Livewire\Component;
-use Shopper\Framework\Models\Shop\Product\Product;
+// use Shopper\Framework\Models\Shop\Product\Product;
+use App\Models\Product;
 
 class AddToCart extends Component
 {

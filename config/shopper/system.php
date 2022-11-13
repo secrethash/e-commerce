@@ -154,8 +154,8 @@ return [
          * `\Shopper\Framework\Models\Shop\Product\Product` model.
          */
 
-        'product' => \Shopper\Framework\Models\Shop\Product\Product::class,
-        // 'product' => \App\Models\Product::class,
+        // 'product' => \Shopper\Framework\Models\Shop\Product\Product::class,
+        'product' => \App\Models\Product::class,
 
     ],
 
