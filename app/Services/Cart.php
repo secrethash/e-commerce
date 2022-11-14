@@ -7,6 +7,7 @@ use App\Models\User;
 use Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Session;
+use Shopper\Framework\Models\Shop\Carrier;
 use Shopper\Framework\Models\Shop\Product\Product;
 
 class Cart {
@@ -146,7 +147,22 @@ class Cart {
         return false;
     }
 
-    public static function subtotal(CartModel $cart): int
+    public static function shippingMethod(CartModel $cart, Carrier|string|null $carrier = null): ?Carrier
+    {
+        if (!is_null($carrier)) {
+            if (is_string($carrier)) {
+                $carrier = Carrier::whereSlug($carrier)->first();
+            } elseif (!$carrier instanceof Carrier) {
+                throw trigger_error('Invalid Carrier Format provided!', E_CORE_ERROR);
+            }
+            $cart->shipping()->associate($carrier);
+            $cart->save();
+        }
+
+        return $cart->shipping;
+    }
+
+    public static function subtotal(CartModel $cart): float
     {
         $subtotal = 0;
 
@@ -157,9 +173,22 @@ class Cart {
         return $subtotal;
     }
 
-    public static function total(CartModel $cart): int
+    public static function shippingTotal(CartModel $cart): float
     {
-        return static::subtotal($cart);
+        if (static::isEmpty($cart)) {
+            return 0;
+        }
+
+        $shipping = $cart->shipping?->shipping_amount;
+        return $shipping ? $shipping / 100 : 0;
+    }
+
+    public static function total(CartModel $cart): float
+    {
+        $subtotal = static::subtotal($cart);
+        $shipping = static::shippingTotal($cart);
+
+        return $subtotal + $shipping;
     }
 
     public static function isEmpty(CartModel $cart): bool

@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Services\Cart as CartService;
+use Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
+use Shopper\Framework\Models\Shop\Order\Order;
 
 class CheckoutController extends Controller
 {
@@ -42,9 +45,18 @@ class CheckoutController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function success($orderNumber)
     {
-        //
+        $order = null;
+        try {
+            $order = decrypt($orderNumber);
+        } catch (DecryptException $e) {
+            abort('404');
+        }
+
+        $order = Order::where('number', $order)->first();
+
+        return view('content.shop.order.success', compact('order'));
     }
 
     /**

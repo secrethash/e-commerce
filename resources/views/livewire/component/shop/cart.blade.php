@@ -56,11 +56,11 @@
                                     <td class="text-left">Sub-Total :</td>
                                     <td class="text-right">{{$formattedSubtotal}}</td>
                                 </tr>
-                                {{-- <tr>
-                                    <td class="text-left">Eco Tax (-2.00) :</td>
-                                    <td class="text-right">£4.52</td>
-                                </tr>
                                 <tr>
+                                    <td class="text-left">Shipping :</td>
+                                    <td class="text-right">{{$formattedShippingTotal}}</td>
+                                </tr>
+                                {{-- <tr>
                                     <td class="text-left">VAT (20%) :</td>
                                     <td class="text-right">£104.66</td>
                                 </tr> --}}

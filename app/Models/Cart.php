@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 // use Shopper\Framework\Models\Shop\Product\Product;
 use App\Models\Product;
+use Shopper\Framework\Models\Shop\Carrier;
 use Str;
 
 class Cart extends Model
@@ -55,6 +56,16 @@ class Cart extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Cart Shipping
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shipping(): BelongsTo
+    {
+        return $this->belongsTo(Carrier::class, 'carrier_id');
     }
 
     /**

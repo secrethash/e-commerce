@@ -302,14 +302,53 @@
                                     </div>
                                     <div class="your-order-bottom">
                                         <ul>
-                                            <li class="your-order-shipping">Shipping</li>
-                                            <li>Free shipping</li>
+                                            <li class="your-order-shipping">
+                                                <div class="d-block">
+                                                    Shipping
+                                                </div>
+                                                <div class="d-block text-center">
+                                                    @if ($shippingTotal <= 0)
+                                                        <small class="badge bg-success rounded-0">
+                                                            {{'Free'}}
+                                                        </small>
+                                                    @endif
+                                                </div>
+                                            </li>
+                                            <li>
+                                                @foreach ($carriers as $carrier)
+                                                    <div class="d-block form-check">
+                                                        <label for="carrier-{{$carrier->slug}}" class="form-check-label">
+                                                            {{$carrier->name}}
+                                                            @if($carrier->shipping_amount > 0)
+                                                                <span class="fw-bolder">
+                                                                    {{price_formatted($carrier->shipping_amount)}}
+                                                                </span>
+                                                            @else
+                                                                <span class="badge bg-success rounded-0">
+                                                                    {{'Free'}}
+                                                                </span>
+                                                            @endif
+                                                        </label>
+                                                        <input type="radio" class="form-check-input" name="shipping_method" id="carrier-{{$carrier->slug}}" value="{{$carrier->slug}}" wire:model='selectedCarrier' />
+                                                    </div>
+                                                @endforeach
+                                                <div class="d-block mt-2 text-danger fw-bolder text-end">
+                                                    @if ($shippingTotal > 0)
+                                                        {{$formattedShippingTotal}}
+                                                    @endif
+                                                </div>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="your-order-total">
                                         <ul>
                                             <li class="order-total">Total</li>
-                                            <li>{{ $formattedTotal }}</li>
+                                            <li>
+                                                <div class="spinner-border spinner-border-sm text-danger me-2" role="status" wire:loading>
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                                <span wire:loading.remove>{{ $formattedTotal }}</span>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>

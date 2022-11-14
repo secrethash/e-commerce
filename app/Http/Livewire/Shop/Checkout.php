@@ -11,9 +11,11 @@ use App\Services\Cart as CartService;
 use Auth;
 use Hash;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Component;
 use Shopper\Framework\Facades\Shopper;
+use Shopper\Framework\Models\Shop\Carrier;
 use Shopper\Framework\Models\Shop\Order\Order;
 use Shopper\Framework\Models\Shop\Order\OrderItem;
 use Shopper\Framework\Models\Shop\PaymentMethod;
@@ -38,6 +40,10 @@ class Checkout extends Component
     public Collection $addresses;
 
     public Collection $countries;
+
+    public Collection $carriers;
+
+    public $selectedCarrier;
 
     public string $password = '';
 
@@ -66,7 +72,8 @@ class Checkout extends Component
             'user' => ['array'],
             'user.email' => ['required_if:createUser,1'],
             'password' => ['required_if:createUser,1', Password::min(8)->numbers()->symbols()->mixedCase()],
-            'selectedPaymentMethod' => ['required', 'exists:payment_methods,slug']
+            'selectedPaymentMethod' => ['required', 'exists:payment_methods,slug'],
+            'selectedCarrier' => ['required', 'exists:carriers,slug'],
         ];
     }
 
@@ -78,6 +85,9 @@ class Checkout extends Component
         $this->selectedPaymentMethod = $this->paymentMethods->first()?->slug;
         $this->selectAddress();
         $this->countries = Country::all();
+        $this->carriers = Carrier::where('is_enabled', true)->get();
+        $this->selectedCarrier = $this->cart->shipping?->slug ?? $this->carriers->first()?->slug;
+        $this->calculateShipping();
     }
 
     protected function selectUser(): void
@@ -174,7 +184,18 @@ class Checkout extends Component
         $this->selectedPaymentMethod = $method;
     }
 
-    public function submit(): void
+    public function updatedSelectedCarrier(): void
+    {
+        $this->calculateShipping();
+    }
+
+    public function calculateShipping(): void
+    {
+        CartService::shippingMethod($this->cart, $this->selectedCarrier);
+        $this->processAmounts();
+    }
+
+    public function submit()
     {
         //? 1. Validate
         $this->validate();
@@ -195,19 +216,21 @@ class Checkout extends Component
         $this->shippingAddress->save();
 
         //? 4. Process Order
-        $this->processOrder();
+        $order = $this->processOrder();
 
         //? 5. Clear Cart and Redirect
         CartService::empty($this->cart);
         $this->needsCartRefresh();
 
+        return redirect()->route('shop.checkout.success', encrypt($order->number));
+
     }
 
-    private function processOrder(): void
+    private function processOrder(): Order
     {
         //? 1. Create Order
         //? 2. Create Order Items & associate them to Order
-        $this->processOrderItems($this->createOrder());
+        return $this->processOrderItems($this->createOrder());
     }
 
     private function createOrder(): Order
@@ -218,6 +241,8 @@ class Checkout extends Component
             'number' => order_number(),
             'price_amount' => $this->total * 100,
             'currency' => $this->currency,
+            'shipping_total' => $this->shippingTotal,
+            'shipping_method' => $this->selectedCarrier,
         ]);
         $order->customer()->associate($this->user);
         $order->paymentMethod()->associate($paymentMethod);
@@ -227,13 +252,14 @@ class Checkout extends Component
         return $order;
     }
 
-    private function processOrderItems(Order $order): void
+    private function processOrderItems(Order $order): Order
     {
         foreach ($this->cart->products as $product) {
             $item = $this->createOrderItem($product);
             $item->order()->associate($order);
             $item->save();
         }
+        return $order;
     }
 
     private function createOrderItem($product): OrderItem

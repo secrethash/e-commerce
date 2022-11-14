@@ -168,11 +168,40 @@
                                         </div>
                                         <h5>Products Total <span>{{$formattedTotal}}</span></h5>
                                         <div class="total-shipping">
-                                            <h5>Shipping Methods</h5>
-                                            <ul>
-                                                <li><input type="checkbox" /> Standard <span>£20.00</span></li>
-                                                <li><input type="checkbox" /> Express <span>£30.00</span></li>
-                                            </ul>
+                                            <h5 class="mb-3">
+                                                Shipping Methods
+                                                <span class="text-end" wire:loading.remove wire:target='selectedCarrier'>
+                                                    @if ($shippingTotal <= 0)
+                                                        <small class="badge bg-success rounded-0">
+                                                            {{'Free'}}
+                                                        </small>
+                                                    @else
+                                                        {{$formattedShippingTotal}}
+                                                    @endif
+                                                </span>
+                                                <span>
+                                                    <div class="spinner-border spinner-border-sm text-danger me-2" role="status" wire:loading wire:target='selectedCarrier'>
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </span>
+                                            </h5>
+                                            @foreach ($carriers as $carrier)
+                                                <div class="d-block mb-1">
+                                                    <input type="radio" class="form-check-input" name="shipping_method" id="carrier-{{$carrier->slug}}" value="{{$carrier->slug}}" wire:model='selectedCarrier' />
+                                                    <label for="carrier-{{$carrier->slug}}" class="form-check-label ms-2">
+                                                        {{$carrier->name}}
+                                                        @if($carrier->shipping_amount > 0)
+                                                            <span class="fw-bolder">
+                                                                {{price_formatted($carrier->shipping_amount)}}
+                                                            </span>
+                                                        @else
+                                                            <span class="badge bg-success rounded-0">
+                                                                {{'Free'}}
+                                                            </span>
+                                                        @endif
+                                                    </label>
+                                                </div>
+                                            @endforeach
                                         </div>
                                         <h4 class="grand-totall-title">Grand Total <span>{{$formattedTotal}}</span></h4>
                                         <a href="{{ route('shop.checkout') }}">Proceed to Checkout</a>

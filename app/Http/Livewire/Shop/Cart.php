@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 // use Shopper\Framework\Models\Shop\Product\Product;
 use App\Models\Product;
+use Shopper\Framework\Models\Shop\Carrier;
 
 class Cart extends Component
 {
@@ -22,9 +23,17 @@ class Cart extends Component
 
     public Collection $products;
 
+    public Collection $carriers;
+
+    public $selectedCarrier;
+
     protected $listeners = [
         'refresh-cart' => 'refreshCart',
         'refresh-amount' => 'processAmounts',
+    ];
+
+    protected $rules = [
+        'selectedCarrier' => ['required', 'exists:carriers,slug'],
     ];
 
     public function mount()
@@ -32,6 +41,9 @@ class Cart extends Component
         $this->cart = CartService::fetch();
         $this->products = $this->cart->products;
         $this->processAmounts();
+        $this->carriers = Carrier::where('is_enabled', true)->get();
+        $this->selectedCarrier = $this->cart->shipping?->slug ?? $this->carriers->first()?->slug;
+        $this->calculateShipping();
     }
 
     public function incrementQuantity($productId): void
@@ -72,6 +84,17 @@ class Cart extends Component
     {
         $this->baseRefreshCart();
         $this->products = $this->cart->products;
+    }
+
+    public function updatedSelectedCarrier(): void
+    {
+        $this->calculateShipping();
+    }
+
+    public function calculateShipping(): void
+    {
+        CartService::shippingMethod($this->cart, $this->selectedCarrier);
+        $this->needsCartRefresh();
     }
 
     public function render()

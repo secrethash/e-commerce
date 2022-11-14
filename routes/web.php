@@ -20,14 +20,15 @@ Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/', ListingController::class)->name('index');
     Route::get('/category/{category}', ListingController::class)->name('category');
     Route::get('/cart', [CheckoutController::class, 'cart'])->name('cart');
+    Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/{cart?}', [CheckoutController::class, 'checkout'])->name('checkout');
     Route::get('/{product}', ProductController::class)->name('product');
 });
 
 //!-> Test Routes
-Route::get('test/menu', function() {
-    // return \App\Services\Menus::shopCategories();
-});
+// Route::get('test/order-success', function() {
+//     return view('content.shop.order.success');
+// });
 
 //*-> Authentication Routes
 require __DIR__.'/auth.php';
