@@ -26,13 +26,14 @@
                             <h3>Billing Details</h3>
                             @guest
                                 <div class="form-check form-switch">
-                                    <input class="checkout-toggle2 form-check-input"
+                                    <input class="form-check-input"
                                         type="checkbox"
+                                        name="createAccount"
                                         role="switch"
-                                        id="create-account-toggle"
+                                        id="create-account"
                                         checked
-                                        wire:model='createUser'>
-                                    <label class="form-check-label" for="create-account-toggle">Create an Account</label>
+                                        wire:model='createAccount'>
+                                    <label class="form-check-label" for="create-account">Create an Account</label>
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <span class="me-1"><x-heroicon-s-question-mark-circle width="18" /> Already have an account? </span>
@@ -64,6 +65,57 @@
                                         <label for="last_name">Last Name</label>
                                     </div>
                                 </div>
+                                @guest
+                                    @if($createAccount)
+                                        <div class="col-12 mb-20px animate__animated animate__fadeIn" style="display: block;">
+                                            <fieldset class="custom-fieldset">
+                                                <legend class="custom-fieldset ms-0">
+                                                    <x-heroicon-s-plus-circle width="20" />
+                                                    Account
+                                                </legend>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="form-floating">
+                                                            <input placeholder="Email address"
+                                                                type="email"
+                                                                class="form-control @error('user.email'){{'is-invalid'}}@enderror"
+                                                                name="email"
+                                                                id="email"
+                                                                wire:model.defer='user.email'
+                                                                autocomplete="email" />
+                                                            <label for="email">Email</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6 form-floating">
+                                                        <div class="form-floating">
+                                                            <input placeholder="Password"
+                                                                type="password"
+                                                                class="form-control @error('user.password'){{'is-invalid'}}@enderror"
+                                                                name="password"
+                                                                id="password"
+                                                                wire:model.defer='password'
+                                                                autocomplete="new-password" />
+                                                            <label for="password">Password</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    @else
+                                        <div class="col-12 mb-20px animate__animated animate__fadeIn">
+                                            <div class="form-floating">
+                                                <input placeholder="Email address"
+                                                    type="email"
+                                                    class="form-control @error('user.email'){{'is-invalid'}}@enderror"
+                                                    name="email"
+                                                    id="email"
+                                                    wire:model.defer='user.email'
+                                                    autocomplete="email" />
+                                                <label for="email">Email</label>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endguest
                                 <div class="col-lg-12">
                                     <div class="form-floating mb-20px">
                                         <input type="text" class="form-control @error('address.company_name'){{'is-invalid'}}@enderror"
@@ -148,45 +200,7 @@
                                     {{-- </div> --}}
                                 </div>
                             </div>
-                            @guest
-                                <div class="checkout-account-toggle open-toggle2 mb-30 mt-20px" style="display: block;">
-                                    <div class="row">
-                                        <div class="col-12 mb-3">
-                                            <h5 class="text-dark text-uppercase">
-                                                <x-heroicon-s-plus-circle width="26" />
-                                                New Account
-                                            </h5>
-                                        </div>
-                                        <div class="col-12 col-md-6">
-                                            <div class="form-floating">
-                                                <input placeholder="Email address"
-                                                    type="email"
-                                                    class="form-control @error('user.email'){{'is-invalid'}}@enderror"
-                                                    name="email"
-                                                    id="email"
-                                                    wire:model.defer='user.email'
-                                                    autocomplete="email" />
-                                                <label for="email">Email</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6 form-floating">
-                                            <div class="form-floating">
-                                                <input placeholder="Password"
-                                                    type="password"
-                                                    class="form-control @error('user.password'){{'is-invalid'}}@enderror"
-                                                    name="password"
-                                                    id="password"
-                                                    wire:model.defer='password'
-                                                    autocomplete="new-password" />
-                                                <label for="password">Password</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- <button class="btn-hover checkout-btn" type="submit">
-                                        register
-                                    </button> --}}
-                                </div>
-                            @endguest
+
                             {{-- <div class="additional-info-wrap">
                                 <h4>Additional information</h4>
                                 <div class="additional-info">
@@ -392,6 +406,16 @@
                                                                 <label for="payment_method_{{$paymentMethod->slug}}" class="form-check-label"> Select {{$paymentMethod->title}}</label>
                                                             </div>
                                                             <p>{{$paymentMethod->description}}</p>
+                                                            <div class="mt-2">
+                                                                @if ($selectedCarrier === $storePickup && $address->country)
+                                                                    <label for="store_location">Select Pickup Store</label>
+                                                                    <select name="store_location" id="store_location" class="form-select">
+                                                                        @foreach ($locations as $location)
+                                                                            <option value="{{$location->id}}">{{$location->name}}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                @endif
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

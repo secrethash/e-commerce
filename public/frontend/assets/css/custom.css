@@ -208,6 +208,24 @@
     display: block;
 }
 
+/**********************************
+* Custom Fieldset
+**********************************/
+fieldset.custom-fieldset {
+    border:1px solid rgba(108, 117, 125, 0.4);
+    padding: 0.571rem 1rem;
+    margin-bottom: 1.5em;
+    border-radius: 0.357rem;
+}
+legend.custom-fieldset {
+    width: unset;
+    float: unset;
+    padding: 0.2em 0.5em;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /* .slick-list {
     display: flex !important;
     justify-content: center !important;

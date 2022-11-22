@@ -58,4 +58,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
+
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->first_name
+            ? $this->first_name . ' ' . $this->last_name
+            : ($this->last_name) ?? '';
+    }
 }

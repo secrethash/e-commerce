@@ -8,7 +8,7 @@ use Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Session;
 use Shopper\Framework\Models\Shop\Carrier;
-use Shopper\Framework\Models\Shop\Product\Product;
+use App\Models\Product;
 
 class Cart {
 

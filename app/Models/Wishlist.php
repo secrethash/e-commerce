@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Enums\Visibility;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +14,20 @@ use Str;
 class Wishlist extends Model
 {
     use HasFactory;
+    use HasUuids;
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_default' => 'bool',
+    ];
+
+    protected $guarded = [
+        'id'
+    ];
 
     /**
      * Perform any actions required after the model boots.
@@ -21,9 +36,25 @@ class Wishlist extends Model
      */
     protected static function booted()
     {
-        static::creating(fn(Model $model) => $model->forceFill([
-            'uuid' => Str::uuid(),
-        ]));
+        self::bootHasUuids();
+        static::created(function(self $model) {
+            if ($model->is_default) {
+                $model->user->wishlists()
+                    ->whereNotIn('id', [$model->id])
+                    ->update(['is_default' => false]);
+            }
+        });
+    }
+
+    /**
+     * Scope a query to only include popular users.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDefault($query)
+    {
+        return $query->where('is_default', true);
     }
 
     /**
@@ -54,5 +85,15 @@ class Wishlist extends Model
     public function shareable(): Attribute
     {
         return Attribute::make(fn():bool => ($this->visibility !== Visibility::PRIVATE));
+    }
+
+    /**
+     * Columns which will contain Unique IDs
+     *
+     * @return void
+     */
+    public function uniqueIds()
+    {
+        return ['uuid'];
     }
 }

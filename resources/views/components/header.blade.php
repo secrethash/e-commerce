@@ -144,11 +144,12 @@
                         </div>
                         <!--Cart info Start -->
                         <div class="header-tools d-flex align-items-center">
-                            <div class="cart-info d-flex align-self-center me-3">
+                            {{-- <div class="cart-info d-flex align-self-center me-3">
                                 <a title="wishlist" href="#offcanvas-wishlist" class="heart offcanvas-toggle me-0" data-number="3">
                                     <i class="icon-heart"></i>
                                 </a>
-                            </div>
+                            </div> --}}
+                            @livewire('component.shop.wishlist')
                             @livewire('component.shop.cart')
                         </div>
                         <!--Cart info End -->
@@ -209,11 +210,12 @@
             <!-- Header Tools Start -->
             <div class="col-auto">
                 <div class="header-tools d-flex justify-content-end align-items-center">
-                    <div class="cart-info d-flex align-self-center me-3">
+                    {{-- <div class="cart-info d-flex align-self-center me-3">
                         <a title="wishlist" href="#offcanvas-wishlist" class="heart offcanvas-toggle me-0" data-number="3">
                             <i class="icon-heart"></i>
                         </a>
-                    </div>
+                    </div> --}}
+                    @livewire('component.shop.wishlist', ['for' => 'mobile'])
                     @livewire('component.shop.cart', ['for' => 'mobile'])
                 </div>
             </div>
@@ -265,7 +267,7 @@
 </div>
 <!-- Mobile Header Section End -->
 <!-- OffCanvas Wishlist Start -->
-<div id="offcanvas-wishlist" class="offcanvas offcanvas-wishlist">
+{{-- <div id="offcanvas-wishlist" class="offcanvas offcanvas-wishlist">
     <div class="inner">
         <div class="head">
             <span class="title">Wishlist</span>
@@ -311,7 +313,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 <!-- OffCanvas Wishlist End -->
 
 {{-- <!-- OffCanvas Cart Start -->

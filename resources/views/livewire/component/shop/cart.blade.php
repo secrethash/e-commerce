@@ -42,7 +42,12 @@
                                 <x-heroicon-o-shopping-cart width="18" />
                                 Shop
                             </a>
-                            <p class="mt-3"><x-heroicon-s-question-mark-circle width="18" /> Add products to your cart from our shop.</p>
+                            <div class="mt-3 d-flex align-items-center">
+                                <x-heroicon-s-question-mark-circle width="18" />
+                                <p class="mt-3">
+                                    Add products to your cart from our shop.
+                                </p>
+                            </div>
                         </div>
                     @endforelse
                 </ul>

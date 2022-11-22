@@ -13,9 +13,11 @@ use Hash;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Rules\RequiredIf;
 use Livewire\Component;
 use Shopper\Framework\Facades\Shopper;
 use Shopper\Framework\Models\Shop\Carrier;
+use Shopper\Framework\Models\Shop\Inventory\Inventory;
 use Shopper\Framework\Models\Shop\Order\Order;
 use Shopper\Framework\Models\Shop\Order\OrderItem;
 use Shopper\Framework\Models\Shop\PaymentMethod;
@@ -45,9 +47,14 @@ class Checkout extends Component
 
     public $selectedCarrier;
 
+    public string $storePickup = 'store-pickup';
+
+    public Collection $locations;
+
     public string $password = '';
 
     public bool $createUser = true;
+    public $createAccount = true;
 
     public string $selectedPaymentMethod;
 
@@ -69,11 +76,13 @@ class Checkout extends Component
             'address.city' => ['required', 'string'],
             'address.zipcode' => ['required', 'string'],
             'address.phone_number' => ['required', 'numeric'],
+            'createAccount' => [],
             'user' => ['array'],
-            'user.email' => ['required_if:createUser,1'],
-            'password' => ['required_if:createUser,1', Password::min(8)->numbers()->symbols()->mixedCase()],
+            'user.email' => ['required_with:createAccount'],
+            'password' => ['required_with:createAccount', Password::min(8)->numbers()->symbols()->mixedCase()],
             'selectedPaymentMethod' => ['required', 'exists:payment_methods,slug'],
             'selectedCarrier' => ['required', 'exists:carriers,slug'],
+            'store_location' => ['required_if:selectedCarrier,'.$this->storePickup],
         ];
     }
 
@@ -85,9 +94,17 @@ class Checkout extends Component
         $this->selectedPaymentMethod = $this->paymentMethods->first()?->slug;
         $this->selectAddress();
         $this->countries = Country::all();
+        $this->locations = Inventory::where('country_id', $this->address->country?->id)->get();
         $this->carriers = Carrier::where('is_enabled', true)->get();
         $this->selectedCarrier = $this->cart->shipping?->slug ?? $this->carriers->first()?->slug;
         $this->calculateShipping();
+    }
+
+    public function updatedAddress(): void
+    {
+        if ($this->address->country) {
+            $this->locations = Inventory::where('country_id', $this->address->country?->id)->get();
+        }
     }
 
     protected function selectUser(): void
@@ -202,6 +219,8 @@ class Checkout extends Component
 
         //? 2. Create User
         if ($this->createUser) {
+            $this->user->first_name = $this->address->first_name;
+            $this->user->last_name = $this->address->last_name;
             $this->user->password = Hash::make($this->password);
             $this->user->save();
         }

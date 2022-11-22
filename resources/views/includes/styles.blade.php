@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{asset('frontend/assets/css/plugins/animate.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/assets/css/plugins/jquery-ui.min.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/assets/css/plugins/slick.css')}}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
     {{-- <link rel="stylesheet" href="{{asset('frontend/assets/css/vendor/vendor.min.css')}}" />
     <link rel="stylesheet" href="{{asset('frontend/assets/css/plugins/plugins.min.css')}}" />

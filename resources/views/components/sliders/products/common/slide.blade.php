@@ -36,6 +36,9 @@
                         {{-- <li>
                             <a href="wishlist.html" title="Add to Wishlist"><i class="icon-heart"></i></a>
                         </li> --}}
+                        @livewire('actions.add-to-wishlist', [
+                            'product' => $product
+                        ])
                         {{-- <li>
                             <a href="compare.html" title="Add to compare"><i class="icon-repeat"></i></a>
                         </li> --}}
