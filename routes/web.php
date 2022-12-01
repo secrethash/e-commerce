@@ -6,9 +6,13 @@ use App\Http\Controllers\Shop\{
     ListingController,
     ProductController,
 };
+use App\Http\Controllers\User\AccountController;
 use App\Http\Livewire\Shop\Wishlist;
+use App\Http\Livewire\User\Account;
+use Beier\FilamentPages\Http\Controllers\FilamentPageController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Fluent;
 
 //*-> Home Routes
 Route::get('/', HomeController::class)->name('home');
@@ -28,10 +32,22 @@ Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/{product}', ProductController::class)->name('product');
 });
 
+Route::prefix('user')->name('user.')
+    ->controller(AccountController::class)
+    ->middleware(['auth'])
+    ->group(function () {
+    Route::get('orders', 'orders')->name('orders');
+    Route::get('account', Account::class)->name('account');
+});
+
 //!-> Test Routes
-// Route::get('test/order-success', function() {
-//     return view('content.shop.order.success');
+// Route::get('test/dynamic-menu', function() {
+//     $menu = RyanChandler\FilamentNavigation\Facades\FilamentNavigation::get('main-menu');
+//     $item = new Fluent($menu->items[array_key_last($menu->items)]);
+//     dd($item->label, $item->children, $item, $item->children ? true : false);
 // });
 
 //*-> Authentication Routes
 require __DIR__.'/auth.php';
+
+Route::get('/{filamentPage}', [FilamentPageController::class, 'show']);

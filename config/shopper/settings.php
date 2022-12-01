@@ -105,5 +105,12 @@ return [
             'route' => null,
             'permission' => null,
         ],
+        [
+            'name' => 'Admin',
+            'description' => 'Manage your store’s Layouts and Frontend.',
+            'icon' => 'heroicon-o-shield-check',
+            'route' => 'filament.pages.dashboard',
+            'permission' => 'can_view_backend',
+        ],
     ],
 ];

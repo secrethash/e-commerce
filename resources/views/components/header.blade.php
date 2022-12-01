@@ -47,7 +47,8 @@
                                     </button>
 
                                     <ul class="dropdown-menu animation slideDownIn" aria-labelledby="dropdownMenuButton">
-                                            <li><a href="#">My Account</a></li>
+                                            <li><a href="{{route('user.account')}}">My Account</a></li>
+                                            <li><a href="{{route('user.orders')}}">Order History</a></li>
                                             <li><a href="{{route('logout.link')}}">Logout</a></li>
                                     </ul>
                                 @endauth
@@ -109,7 +110,8 @@
                                         </button>
 
                                         <ul class="dropdown-menu animation slideDownIn" aria-labelledby="dropdownMenuButton">
-                                                <li><a href="#">My Account</a></li>
+                                                <li><a href="{{route('user.account')}}">My Account</a></li>
+                                                <li><a href="{{route('user.orders')}}">Order History</a></li>
                                                 <li><a href="{{route('logout.link')}}">Logout</a></li>
                                         </ul>
                                     @endauth
