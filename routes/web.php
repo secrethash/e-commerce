@@ -9,6 +9,7 @@ use App\Http\Controllers\Shop\{
 use App\Http\Controllers\User\AccountController;
 use App\Http\Livewire\Shop\Wishlist;
 use App\Http\Livewire\User\Account;
+use App\Mail\OrderConfirmed;
 use Beier\FilamentPages\Http\Controllers\FilamentPageController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +27,6 @@ Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/category/{category}', ListingController::class)->name('category');
     Route::get('/cart', [CheckoutController::class, 'cart'])->name('cart');
     Route::get('/wishlist', Wishlist::class)->name('wishlist')->middleware(['auth']);
-    // Route::get('/wishlist', [CheckoutController::class, 'wishlist'])->name('wishlist')->middleware(['auth']);
     Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/{cart?}', [CheckoutController::class, 'checkout'])->name('checkout');
     Route::get('/{product}', ProductController::class)->name('product');
@@ -37,8 +37,13 @@ Route::prefix('user')->name('user.')
     ->middleware(['auth'])
     ->group(function () {
     Route::get('orders', 'orders')->name('orders');
+    Route::get('orders/{order}', 'orders')->name('orders.view');
     Route::get('account', Account::class)->name('account');
 });
+
+Route::get(config('shopper.system.dashboard'), function() {
+    return redirect()->route('shopper.dashboard');
+})->middleware(['auth']);
 
 //!-> Test Routes
 // Route::get('test/dynamic-menu', function() {
@@ -46,8 +51,15 @@ Route::prefix('user')->name('user.')
 //     $item = new Fluent($menu->items[array_key_last($menu->items)]);
 //     dd($item->label, $item->children, $item, $item->children ? true : false);
 // });
+// Route::get('test/mail', function() {
+//     $order = Shopper\Framework\Models\Shop\Order\Order::latest()->first();
+//     return new OrderConfirmed($order, new \Illuminate\Support\Fluent());
+// });
+// Route::get('test/blade-components', function () {
+//     return \Blade::getClassComponentAliases();
+// });
 
 //*-> Authentication Routes
 require __DIR__.'/auth.php';
 
-Route::get('/{filamentPage}', [FilamentPageController::class, 'show']);
+Route::get('/{filamentPage}', [FilamentPageController::class, 'show'])->name('pages');

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Traits;
 
 use App\Services\Cart;
+use Illuminate\Support\Fluent;
 use Shopper\Framework\Models\Traits\HasPrice;
 
 /**
@@ -32,5 +33,23 @@ trait HasAmounts
         $this->formattedTotal = $this->formattedPrice($this->total * 100);
         $this->formattedSubtotal = $this->formattedPrice($this->subtotal * 100);
         $this->formattedShippingTotal = $this->formattedPrice($this->shippingTotal * 100);
+    }
+
+    public function getFluentAmounts(): Fluent
+    {
+        return new Fluent($this->getAmounts());
+    }
+
+    public function getAmounts(): array
+    {
+        return [
+            'subtotal' => $this->subtotal,
+            'formattedSubtotal' =>$this->formattedSubtotal,
+            'total' => $this->total,
+            'formattedTotal' =>$this->formattedTotal,
+            'shippingTotal' => $this->shippingTotal,
+            'formattedShippingTotal' =>$this->formattedShippingTotal,
+            'currency' =>$this->currency,
+        ];
     }
 }

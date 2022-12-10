@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Models\Testimonial;
 use App\Services\Products;
 use Illuminate\Http\Request;
 // use Shopper\Framework\Models\Shop\Product\Product;
@@ -26,6 +27,7 @@ class HomeController extends Controller
         $aftermarket = Brand::enabled()->aftermarket()->get();
         // $featured = Product::publish()->featured()->get();
         $featured = Products::featured();
+        $testimonials = Testimonial::active()->get();
         // $reviews
 
         return view('content.home.index', compact(
@@ -35,6 +37,7 @@ class HomeController extends Controller
             'aftermarket',
             'allBrands',
             'featured',
+            'testimonials',
         ));
     }
 }

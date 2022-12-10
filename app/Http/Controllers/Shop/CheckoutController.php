@@ -33,7 +33,13 @@ class CheckoutController extends Controller
         // $cart = $cart ?? CartService::fetch();
 
         if(CartService::isEmpty($cart)) {
-            return redirect()->route('shop.cart');
+            return redirect()->route('shop.cart')->with('notice', [
+                [
+                    'type' => 'danger',
+                    'heading' => 'Cart is Empty!',
+                    'message' => 'No Products in your cart. Please add some products to your cart then proceed to checkout.',
+                ]
+            ]);
         }
 
         return view('content.shop.checkout', compact('cart'));

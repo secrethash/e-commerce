@@ -2,6 +2,10 @@
 
 namespace App\Http\Livewire\Component\Shop;
 
+use App\Http\Livewire\Common\Notice\CanNotify;
+use App\Http\Livewire\Common\Reloads\ReloadsAfterBoot;
+use App\Http\Livewire\Common\Reloads\ReloadsElements;
+use App\Http\Livewire\Common\Reloads\ShouldReloadElements;
 use App\Http\Livewire\Traits\HasAmounts;
 use App\Http\Livewire\Traits\InteractsWithCart;
 use App\Models\Cart as CartModel;
@@ -9,12 +13,16 @@ use App\Services\Cart as CartService;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 
-class Cart extends Component
+class Cart extends Component implements ShouldReloadElements
 {
-    use HasAmounts;
+    use HasAmounts, CanNotify, ReloadsElements;
     use InteractsWithCart {
         refreshCart as baseRefreshCart;
     }
+
+    public $elements = [
+        'cart-component',
+    ];
 
     public Collection $products;
 
@@ -45,12 +53,14 @@ class Cart extends Component
     {
         CartService::remove([$productId]);
         $this->needsCartRefresh();
+        $this->notify('warning', 'Product Removed!', 'Product has been removed from your cart!');
     }
 
     public function refreshCart(): void
     {
         $this->baseRefreshCart();
         $this->products = $this->cart->products;
+        // $this->reloadElements();
     }
 
     public function render()

@@ -2,6 +2,7 @@
 
 use Shopper\Framework\Http\Livewire;
 use App\Http\Livewire\Console;
+use App\View\Components;
 
 return [
 
@@ -20,6 +21,14 @@ return [
     'blade' => [
         //
         // 'brands.create' => 'livewire.console.brands.create',
+        // 'layouts.footer' => [
+        //     'class' => Components\Layouts\Footer::class,
+        //     'alias' => null,
+        // ],
+        // [
+        //     'alias' => null,
+        //     'class' => Components\LearnMore::class,
+        // ],
     ],
 
     /*
@@ -154,6 +163,8 @@ return [
         'tables.orders-table' => Livewire\Tables\OrdersTable::class,
         'tables.products-table' => Livewire\Tables\ProductsTable::class,
         'tables.reviews-table' => Livewire\Tables\ReviewsTable::class,
+
+        // 'learn-more' => ConsoleComponents\LearnMore::class,
     ],
 
     /*

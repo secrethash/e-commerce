@@ -87,7 +87,8 @@ return [
     'auth' => [
         'guard' => env('FILAMENT_AUTH_GUARD', 'web'),
         'pages' => [
-            'login' => \Filament\Http\Livewire\Auth\Login::class,
+            'login' => [\Shopper\Framework\Http\Controllers\Auth\LoginController::class, 'showLoginForm'],
+            // 'login' => \Filament\Http\Livewire\Auth\Login::class,
         ],
     ],
 

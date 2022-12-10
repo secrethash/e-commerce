@@ -12,6 +12,7 @@
     'link', # Link to Product's Page
     'flags' => true, # Display Flags
     'product',
+    'key' => null,
 ])
 
 @php
@@ -20,7 +21,7 @@
 @endphp
 
     <div class="shop-list-wrap scroll-zoom">
-        <div class="slider-single-item">
+        <div class="slider-single-item" @if ($key) wire:key='{{$key}}' @endif>
             <div class="row list-product m-0px">
                 <div class="col-md-12 padding-0px product-inner">
                     <div class="row">

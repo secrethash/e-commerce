@@ -106,7 +106,11 @@
                         <h2>Order Placed <span class="fw-light">Successfully!</span></h2>
                     </div>
                     <div class="mb-3">
-                        <p>Perfect {{$order->customer->first_name}}, your order has been placed successfully. Your Order ID is: <span class="badge bg-success p-2 rounded-0">{{$order->number}}</span></p>
+                        <p>Perfect <strong>{{$order->customer->first_name}}</strong>, your order has been placed successfully.</p>
+                        <h5 class="lead mt-3">Your Order ID is:</h5>
+                        <h3 class="mb-4">
+                            <span class="badge bg-success p-2 rounded-0">{{$order->number}}</span>
+                        </h3>
                     </div>
                     <div class="mb-3">
                         <a href="{{ route('shop.index') }}" class="btn btn-dark">

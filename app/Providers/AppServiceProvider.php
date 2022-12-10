@@ -3,13 +3,17 @@
 namespace App\Providers;
 
 use App\Models\Brand;
+use App\Models\Enums\UsedFor;
 use App\Services\Menus;
+use Beier\FilamentPages\Models\FilamentPage;
+use Blade;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\Compilers\BladeCompiler;
 use RyanChandler\FilamentNavigation\Facades\FilamentNavigation;
 use Shopper\Framework\Models\Shop\Product\Category;
 
@@ -33,6 +37,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrapFive();
+
+        View::share('customMenu', fn (): Menus => new Menus());
+        View::share('usedForEnum', fn ($from): UsedFor => UsedFor::from($from));
+
         Filament::serving(function () {
             // Using Vite
             // Filament::registerViteTheme('resources/css/filament.css');
@@ -52,6 +60,12 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
+        $this->registerNavigationTypes();
+
+    }
+
+    protected function registerNavigationTypes(): void
+    {
         FilamentNavigation::addItemType('Category link', [
             Select::make('category_id')
                 ->label('Category')
@@ -74,6 +88,14 @@ class AppServiceProvider extends ServiceProvider
                 ->searchable()
                 ->options(function () {
                     return Brand::aftermarket()->pluck('name', 'slug');
+                })
+        ]);
+        FilamentNavigation::addItemType('Dynamic Pages', [
+            Select::make('dynamic_pages')
+                ->label('Page')
+                ->searchable()
+                ->options(function () {
+                    return FilamentPage::all()->pluck('title', 'slug');
                 })
         ]);
     }

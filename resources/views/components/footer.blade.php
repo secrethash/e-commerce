@@ -53,10 +53,15 @@
                                 <h4 class="footer-herading">Follow Us:</h4>
                                 <div class="social-info">
                                     <ul class="link-follow">
-                                        <li><a class="facebook ion-social-facebook" title="Facebook" href="#"><span>facebook</span></a></li>
-                                        <li><a class="twitter ion-social-twitter" title="Twitter" href="#"><span>twitter</span></a></li>
-                                        <li><a class="google ion-social-googleplus-outline" title="Google" href="#"><span>google </span></a></li>
-                                        <li><a class="youtube ion-social-youtube" title="Youtube" href="#"><span>youtube </span></a></li>
+                                        @if(!blank(shopper_setting('shop_facebook_link')))
+                                            <li><a class="facebook ion-social-facebook" title="Facebook" href="{{shopper_setting('shop_facebook_link')}}"><span>facebook</span></a></li>
+                                        @endif
+                                        @if(!blank(shopper_setting('shop_twitter_link')))
+                                            <li><a class="twitter ion-social-twitter" title="Twitter" href="{{shopper_setting('shop_twitter_link')}}"><span>twitter</span></a></li>
+                                        @endif
+                                        @if(!blank(shopper_setting('shop_instagram_link')))
+                                            <li><a class="instagram ion-social-instagram-outline" title="Instagram" href="{{shopper_setting('shop_instagram_link')}}"><span>instagram </span></a></li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
@@ -66,22 +71,8 @@
                                 <h4 class="footer-herading">CUSTOM LINKS</h4>
                                 <div class="footer-links">
                                     <div class="footer-row">
-                                        <ul class="align-items-center">
-                                            <li><a href="about">About Us</a></li>
-                                            <li><a href="#">Delivery Information</a></li>
-                                            <li><a href="#">Privacy Policy</a></li>
-                                            <li><a href="#">Terms & Conditions</a></li>
-                                            <li><a href="contact">Contact Us</a></li>
-                                            <li><a href="#">Site Map</a></li>
-                                            <li><a href="#">Order History</a></li>
-                                        </ul>
-                                        <ul class="align-items-center">
-                                            <li><a href="#">Brands</a></li>
-                                            <li><a href="#">Gift Certificates</a></li>
-                                            <li><a href="#">Affiliate</a></li>
-                                            <li><a href="#">Specials</a></li>
-                                            <li><a href="#">Returns</a></li>
-                                        </ul>
+                                        {!! $customMenu()->footer() !!}
+                                        {!! $customMenu()->footer(true) !!}
                                     </div>
                                 </div>
                             </div>
@@ -93,7 +84,8 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="footer-social-icon d-flex">
+                            {{-- Application Links --}}
+                            {{-- <div class="footer-social-icon d-flex">
                                 <div class="heading-info">free app:</div>
                                 <div class="social-icon">
                                     <ul>
@@ -105,7 +97,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="col-md-6">
                             <div class="footer-paymet-warp d-flex">
@@ -122,22 +114,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="tag-content">
-                                <ul>
-                                    <li><a href="#">Online Shopping</a></li>
-                                    <li><a href="#">Promotions</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                    <li><a href="#">Site Map</a></li>
-                                    <li><a href="#">Orders And Returns</a></li>
-                                    <li><a href="#">Support</a></li>
-                                    <li><a href="#">Contact Us </a></li>
-                                    <li><a href="#">Most Populars</a></li>
-                                    <li><a href="#">New Arrivals</a></li>
-                                    <li><a href="#">Payments</a></li>
-                                    <li><a href="#">Special</a></li>
-                                    <li><a href="#">Products</a></li>
-                                    <li><a href="#">Manufacturers</a></li>
-                                    <li><a href="#">Shipping Payments</a></li>
-                                </ul>
+                                {!! $customMenu()->footer_horizontal() !!}
                             </div>
                         </div>
                     </div>
@@ -151,125 +128,3 @@
         </div>
     </div>
     <!-- Footer Area End -->
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12 col-xs-12 mb-lm-100px mb-sm-30px">
-                            <div class="quickview-wrapper">
-                                 <!-- slider -->
-                                  <div class="gallery-top">
-                                      <div class="single-slide">
-                                            <img class="img-responsive m-auto" src="{{asset('frontend/assets/images/product-image/8.jpg')}}" alt="">
-                                      </div>
-                                      <div class="single-slide">
-                                            <img class="img-responsive m-auto" src="{{asset('frontend/assets/images/product-image/14.jpg')}}" alt="">
-                                      </div>
-                                      <div class="single-slide">
-                                            <img class="img-responsive m-auto" src="{{asset('frontend/assets/images/product-image/15.jpg')}}" alt="">
-                                      </div>
-                                      <div class="single-slide">
-                                            <img class="img-responsive m-auto" src="{{asset('frontend/assets/images/product-image/11.jpg')}}" alt="">
-                                      </div>
-                                      <div class="single-slide">
-                                            <img class="img-responsive m-auto" src="{{asset('frontend/assets/images/product-image/19.jpg')}}" alt="">
-                                      </div>
-                                  </div>
-                                  <div class=" gallery-thumbs">
-                                      <div class="single-slide">
-                                            <img class="img-responsive m-auto" src="{{asset('frontend/assets/images/product-image/8.jpg')}}" alt="">
-                                      </div>
-                                      <div class="single-slide">
-                                            <img class="img-responsive m-auto" src="{{asset('frontend/assets/images/product-image/14.jpg')}}" alt="">
-                                      </div>
-                                      <div class="single-slide">
-                                            <img class="img-responsive m-auto" src="{{asset('frontend/assets/images/product-image/15.jpg')}}" alt="">
-                                      </div>
-                                      <div class="single-slide">
-                                            <img class="img-responsive m-auto" src="{{asset('frontend/assets/images/product-image/11.jpg')}}" alt="">
-                                      </div>
-                                      <div class="single-slide">
-                                            <img class="img-responsive m-auto" src="{{asset('frontend/assets/images/product-image/19.jpg')}}" alt="">
-                                      </div>
-                                  </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            <div class="product-details-content quickview-content">
-                                <h2>Originals Kaval Windbr</h2>
-                                <p class="reference">Reference:<span> demo_17</span></p>
-                                <div class="pro-details-rating-wrap">
-                                    <div class="rating-product">
-                                        <i class="ion-android-star"></i>
-                                        <i class="ion-android-star"></i>
-                                        <i class="ion-android-star"></i>
-                                        <i class="ion-android-star"></i>
-                                        <i class="ion-android-star"></i>
-                                    </div>
-                                    <span class="read-review"><a class="reviews" href="#">Read reviews (1)</a></span>
-                                </div>
-                                <div class="pricing-meta">
-                                    <ul>
-                                        <li class="old-price not-cut">€18.90</li>
-                                    </ul>
-                                </div>
-                                <p class="quickview-para">Lorem ipsum dolor sit amet, consectetur adipisic elit eiusm tempor incidid ut labore et dolore magna aliqua. Ut enim ad minim venialo quis nostrud exercitation ullamco</p>
-                                <div class="pro-details-size-color">
-                                    <div class="pro-details-color-wrap">
-                                        <span>Color</span>
-                                        <div class="pro-details-color-content">
-                                            <ul>
-                                                <li class="blue"></li>
-                                                <li class="maroon active"></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="pro-details-quality">
-                                    <div class="cart-plus-minus">
-                                        <input class="cart-plus-minus-box" type="text" name="qtybutton" value="1" />
-                                    </div>
-                                    <div class="pro-details-cart btn-hover">
-                                        <a href="#"> + Add To Cart</a>
-                                    </div>
-                                </div>
-                                <div class="pro-details-wish-com">
-                                    <div class="pro-details-wishlist">
-                                        <a href="wishlist"><i class="ion-android-favorite-outline"></i>Add to wishlist</a>
-                                    </div>
-                                    <div class="pro-details-compare">
-                                        <a href="compare"><i class="ion-ios-shuffle-strong"></i>Add to compare</a>
-                                    </div>
-                                </div>
-                                <div class="pro-details-social-info">
-                                    <span>Share</span>
-                                    <div class="social-info">
-                                        <ul>
-                                            <li>
-                                                <a href="#"><i class="ion-social-facebook"></i></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="ion-social-twitter"></i></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="ion-social-google"></i></a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="ion-social-instagram"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal end -->

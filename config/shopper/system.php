@@ -13,6 +13,8 @@ return [
 
     'brand' => 'images/logo-square.svg',
 
+    'dashboard' => env('SHOPPER_DASHBOARD_PREFIX', 'admin'),
+
     /*
     |--------------------------------------------------------------------------
     | Shopper Locale Configuration

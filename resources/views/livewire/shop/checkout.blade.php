@@ -33,7 +33,12 @@
                                         id="create-account"
                                         checked
                                         wire:model='createAccount'>
-                                    <label class="form-check-label" for="create-account">Create an Account</label>
+                                    <label class="form-check-label" for="create-account">
+                                        Create an Account
+                                        <div class="spinner-border spinner-border-sm text-danger ms-2" role="status" wire:loading>
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </label>
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <span class="me-1"><x-heroicon-s-question-mark-circle width="18" /> Already have an account? </span>
@@ -45,8 +50,21 @@
                         </div>
                         <div class="">
                             <div class="row">
-                                <div class="col-lg-6 col-md-6">
-                                    <div class="form-floating mb-20px">
+                                @if ($errors->any())
+                                    <div class="col-12 mb-40px">
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            Please Fix these <strong>Validation Errors</strong>:
+                                            <ul>
+                                                @foreach ($errors->all() as $error)
+                                                    <li><strong>{{$loop->index + 1}}.</strong> {{$error}}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                @endif
+                                <div class="col-lg-6 col-md-6 mb-20px">
+                                    <div class="form-floating">
                                         <input type="text" class="form-control @error('address.first_name'){{'is-invalid'}}@enderror"
                                             name="first_name"
                                             id="first_name"
@@ -54,9 +72,14 @@
                                             autocomplete="name" />
                                         <label for="first_name">First Name</label>
                                     </div>
+                                    @error('address.first_name')
+                                        <span class="invalid-feedback show" role="alert">
+                                            <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
-                                <div class="col-lg-6 col-md-6">
-                                    <div class="form-floating mb-20px">
+                                <div class="col-lg-6 col-md-6 mb-20px">
+                                    <div class="form-floating">
                                         <input type="text" class="form-control @error('address.last_name'){{'is-invalid'}}@enderror"
                                             name="last_name"
                                             id="last_name"
@@ -64,6 +87,11 @@
                                             autocomplete="family-name" />
                                         <label for="last_name">Last Name</label>
                                     </div>
+                                    @error('address.last_name')
+                                        <span class="invalid-feedback show" role="alert">
+                                            <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                                 @guest
                                     @if($createAccount)
@@ -85,18 +113,28 @@
                                                                 autocomplete="email" />
                                                             <label for="email">Email</label>
                                                         </div>
+                                                        @error('user.email')
+                                                            <span class="invalid-feedback show" role="alert">
+                                                                <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
                                                     </div>
                                                     <div class="col-12 col-md-6 form-floating">
                                                         <div class="form-floating">
                                                             <input placeholder="Password"
                                                                 type="password"
-                                                                class="form-control @error('user.password'){{'is-invalid'}}@enderror"
+                                                                class="form-control @error('password'){{'is-invalid'}}@enderror"
                                                                 name="password"
                                                                 id="password"
                                                                 wire:model.defer='password'
                                                                 autocomplete="new-password" />
                                                             <label for="password">Password</label>
                                                         </div>
+                                                        @error('password')
+                                                            <span class="invalid-feedback show" role="alert">
+                                                                <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -113,11 +151,16 @@
                                                     autocomplete="email" />
                                                 <label for="email">Email</label>
                                             </div>
+                                            @error('user.email')
+                                                <span class="invalid-feedback show" role="alert">
+                                                    <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                         </div>
                                     @endif
                                 @endguest
-                                <div class="col-lg-12">
-                                    <div class="form-floating mb-20px">
+                                <div class="col-lg-12 mb-20px">
+                                    <div class="form-floating">
                                         <input type="text" class="form-control @error('address.company_name'){{'is-invalid'}}@enderror"
                                             name="company_name"
                                             id="company_name"
@@ -125,9 +168,14 @@
                                             autocomplete="organization" />
                                         <label for="company_name">Company Name</label>
                                     </div>
+                                    @error('address.company_name')
+                                        <span class="invalid-feedback show" role="alert">
+                                            <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
-                                <div class="col-lg-12">
-                                    <div class="form-floating mb-20px">
+                                <div class="col-lg-12 mb-20px">
+                                    <div class="form-floating">
                                         <select class="form-select @error('address.country_id'){{'is-invalid'}}@enderror"
                                             wire:model='address.country_id'
                                             name="country"
@@ -139,9 +187,14 @@
                                         </select>
                                         <label for="country">Country</label>
                                     </div>
+                                    @error('address.country_id')
+                                        <span class="invalid-feedback show" role="alert">
+                                            <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-floating mb-20px">
+                                <div class="col-12 col-md-6 mb-20px">
+                                    <div class="form-floating">
                                         <input class="form-control @error('address.street_address'){{'is-invalid'}}@enderror"
                                             placeholder="House number and street name"
                                             type="text"
@@ -151,9 +204,14 @@
                                             autocomplete="address-line1" />
                                         <label for="street_address">Address Line 1</label>
                                     </div>
+                                    @error('address.street_address')
+                                        <span class="invalid-feedback show" role="alert">
+                                            <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-floating mb-20px">
+                                <div class="col-12 col-md-6 mb-20px">
+                                    <div class="form-floating">
                                         <input name="street_address_plus" class="form-control @error('address.street_address_plus'){{'is-invalid'}}@enderror"
                                             placeholder="Apartment, suite, unit etc."
                                             type="text"
@@ -162,18 +220,28 @@
                                             autocomplete="address-line2" />
                                         <label for="street_address_plus">Address Line 2</label>
                                     </div>
+                                    @error('address.street_address_plus')
+                                        <span class="invalid-feedback show" role="alert">
+                                            <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-floating mb-20px">
+                                <div class="col-12 col-md-6 mb-20px">
+                                    <div class="form-floating">
                                         <input type="text" class="form-control @error('address.city'){{'is-invalid'}}@enderror"
                                             name="city"
                                             id="city"
                                             wire:model.defer='address.city' />
                                         <label for="city">Town / City / State</label>
                                     </div>
+                                    @error('address.city')
+                                        <span class="invalid-feedback show" role="alert">
+                                            <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="form-floating mb-20px">
+                                <div class="col-12 col-md-6 mb-20px">
+                                    <div class="form-floating">
                                         <input type="text" name="zipcode"
                                             class="form-control @error('address.zipcode'){{'is-invalid'}}@enderror"
                                             id="zipcode"
@@ -181,110 +249,36 @@
                                             autocomplete="postal-code" />
                                         <label for="zipcode">Postcode / ZIP</label>
                                     </div>
+                                    @error('address.zipcode')
+                                        <span class="invalid-feedback show" role="alert">
+                                            <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                                 <div class="col-12 mb-20px">
-                                    {{-- <div class="form-floating"> --}}
-                                        {{-- <label for="phone_number">Phone</label> --}}
-                                        <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-text bg-transparent placeholder-glow">
                                             @if($address->country)
-                                                <div class="input-group-text bg-transparent">{{$address->country?->flag}}</div>
+                                                {{$selectedCountry?->flag}}
+                                            @else
+                                                <span class="placeholder px-2"></span>
                                             @endif
-                                            <input type="tel"
-                                                name="phone_number"
-                                                id="phone_number"
-                                                placeholder="Phone Number"
-                                                class="form-control py-3 @error('address.phone_number'){{'is-invalid'}}@enderror"
-                                                wire:model.defer='address.phone_number'
-                                                autocomplete="mobile" />
                                         </div>
-                                    {{-- </div> --}}
+                                        <input type="tel"
+                                            name="phone_number"
+                                            id="phone_number"
+                                            placeholder="Phone Number"
+                                            class="form-control py-3 @error('address.phone_number'){{'is-invalid'}}@enderror"
+                                            wire:model.defer='address.phone_number'
+                                            autocomplete="mobile" />
+                                    </div>
+                                    @error('address.phone_number')
+                                        <span class="invalid-feedback show" role="alert">
+                                            <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
-
-                            {{-- <div class="additional-info-wrap">
-                                <h4>Additional information</h4>
-                                <div class="additional-info">
-                                    <label>Order notes</label>
-                                    <textarea placeholder="Notes about your order, e.g. special notes for delivery. " name="message"></textarea>
-                                </div>
-                            </div> --}}
-                            {{-- <div class="checkout-account mt-25">
-                                <input class="checkout-toggle" type="checkbox" />
-                                <label>Ship to a different address?</label>
-                            </div>
-                            <div class="different-address open-toggle mt-30px">
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="form-floating mb-20px">
-                                            <label>First Name</label>
-                                            <input type="text" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="form-floating mb-20px">
-                                            <label>Last Name</label>
-                                            <input type="text" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div class="form-floating mb-20px">
-                                            <label>Company Name</label>
-                                            <input type="text" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div class="billing-select mb-20px">
-                                            <label>Country</label>
-                                            <select>
-                                                <option>Select a country</option>
-                                                <option>Azerbaijan</option>
-                                                <option>Bahamas</option>
-                                                <option>Bahrain</option>
-                                                <option>Bangladesh</option>
-                                                <option>Barbados</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div class="form-floating mb-20px">
-                                            <label>Street Address</label>
-                                            <input class="billing-address" placeholder="House number and street name"
-                                                type="text" />
-                                            <input placeholder="Apartment, suite, unit etc." type="text" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div class="form-floating mb-20px">
-                                            <label>Town / City</label>
-                                            <input type="text" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="form-floating mb-20px">
-                                            <label>State / County</label>
-                                            <input type="text" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="form-floating mb-20px">
-                                            <label>Postcode / ZIP</label>
-                                            <input type="text" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="form-floating mb-20px">
-                                            <label>Phone</label>
-                                            <input type="text" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="form-floating mb-20px">
-                                            <label>Email Address</label>
-                                            <input type="text" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
                     <div class="col-lg-5 mt-md-30px mt-lm-30px ">
@@ -310,8 +304,6 @@
                                                     </span>
                                                 </li>
                                             @endforeach
-                                            {{-- <li><span class="order-middle-left">Product Name X 1</span> <span
-                                                    class="order-price">$329 </span></li> --}}
                                         </ul>
                                     </div>
                                     <div class="your-order-bottom">
@@ -337,13 +329,23 @@
                                                                 <span class="fw-bolder">
                                                                     {{price_formatted($carrier->shipping_amount)}}
                                                                 </span>
+                                                            @elseif ($carrier->slug === $storePickup && $locations->count() <= 0)
+                                                                <span class="badge bg-secondary rounded-0">
+                                                                    {{'Not Available'}}
+                                                                </span>
                                                             @else
                                                                 <span class="badge bg-success rounded-0">
                                                                     {{'Free'}}
                                                                 </span>
                                                             @endif
                                                         </label>
-                                                        <input type="radio" class="form-check-input" name="shipping_method" id="carrier-{{$carrier->slug}}" value="{{$carrier->slug}}" wire:model='selectedCarrier' />
+                                                        <input type="radio"
+                                                            class="form-check-input"
+                                                            name="shipping_method"
+                                                            value="{{$carrier->slug}}"
+                                                            wire:model='selectedCarrier'
+                                                            @disabled($carrier->slug === $storePickup && $locations->count() <= 0)
+                                                            id="carrier-{{$carrier->slug}}" />
                                                     </div>
                                                 @endforeach
                                                 <div class="d-block mt-2 text-danger fw-bolder text-end">
@@ -366,7 +368,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="payment-method">
+                                <div class="payment-method mb-3">
                                     <div class="mb-3">
                                         <h3>Choose a Payment Mode</h3>
                                     </div>
@@ -406,16 +408,6 @@
                                                                 <label for="payment_method_{{$paymentMethod->slug}}" class="form-check-label"> Select {{$paymentMethod->title}}</label>
                                                             </div>
                                                             <p>{{$paymentMethod->description}}</p>
-                                                            <div class="mt-2">
-                                                                @if ($selectedCarrier === $storePickup && $address->country)
-                                                                    <label for="store_location">Select Pickup Store</label>
-                                                                    <select name="store_location" id="store_location" class="form-select">
-                                                                        @foreach ($locations as $location)
-                                                                            <option value="{{$location->id}}">{{$location->name}}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                @endif
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -423,6 +415,27 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if ($selectedCarrier === $storePickup && $address->country)
+                                    <hr class="my-4" />
+                                    <div class="my-3">
+                                        <h3>Choose a Pickup Point</h3>
+                                        <label for="store_location">Select Pickup Location</label>
+                                        <select name="store_location"
+                                            id="store_location"
+                                            class="form-select @error('store_location'){{'is-invalid'}}@enderror"
+                                            wire:model="store_location">
+                                            <option value="Select an option"></option>
+                                            @foreach ($locations as $location)
+                                                <option value="{{$location->id}}">{{$location->name}}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('store_location')
+                                            <span class="invalid-feedback show" role="alert">
+                                                <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                @endif
                             </div>
                             <div class="Place-order mt-25">
                                 <button class="btn btn-lg btn-danger w-100 d-inline-flex justify-content-center align-items-center"

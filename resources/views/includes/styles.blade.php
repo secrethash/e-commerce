@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{asset('frontend/assets/css/vendor/linearicon.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/assets/css/vendor/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/assets/css/vendor/plaza-icon.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
     <!-- Plugins CSS (All Plugins Files) -->
     <link rel="stylesheet" href="{{asset('frontend/assets/css/plugins/animate.css')}}">

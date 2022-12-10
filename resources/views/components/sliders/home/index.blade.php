@@ -1,3 +1,4 @@
+{{-- {!! $slot !!} --}}
 
 <!-- Slider Start -->
 <div class="slider-area">

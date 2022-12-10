@@ -5,6 +5,8 @@
     'content',
     'animation' => 0,
     'position' => 'start',
+    'button' => 'Shop Now',
+    'action',
 ])
 
 <!-- Single Slider  -->
@@ -26,7 +28,7 @@
             ])>{!! $subtitle !!}</span>
             <h1 class="animated color-white">{!! $title !!}</h1>
             <p class="animated color-white">{!! $content !!}</p>
-            <a href="{{$attributes->get('button-action')}}" class="shop-btn animated">{{$attributes->get('button-text')}}</a>
+            <a href="{{$action}}" class="shop-btn animated">{{$button}}</a>
         </div>
     </div>
 </div>

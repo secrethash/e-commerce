@@ -162,6 +162,9 @@
                         </div>
                     </div>
                 @endforelse
+                <div class="col-12 my-4">
+                    {!! $orders->links() !!}
+                </div>
             </div>
 
         </div>

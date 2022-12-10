@@ -41,7 +41,7 @@
                                                     <td class="product-thumbnail pe-3">
                                                         <a href="{{route('shop.product', $product->slug)}}">
                                                             <img class="img-responsive" style="min-width: 60px;"
-                                                                src="{{$product->getMedia('uploads')->first()->getUrl('thumb200x200')}}"
+                                                                src="{{product_images($product)->thumb}}"
                                                                 alt="" />
                                                         </a>
                                                     </td>

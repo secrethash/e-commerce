@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Shop;
 
+use App\Http\Livewire\Common\Notice\CanNotify;
 use App\Http\Livewire\Traits\HasAmounts;
 use App\Http\Livewire\Traits\InteractsWithCart;
 use App\Models\Cart as Model;
@@ -14,7 +15,7 @@ use Shopper\Framework\Models\Shop\Carrier;
 
 class Cart extends Component
 {
-    use HasAmounts;
+    use HasAmounts, CanNotify;
     use InteractsWithCart {
         refreshCart as baseRefreshCart;
     }
@@ -51,6 +52,7 @@ class Cart extends Component
         CartService::add(Product::find($productId));
 
         $this->needsCartRefresh();
+        $this->notify('success', 'Quantity Updated!', 'Product Quantity has been updated in your cart!');
     }
 
     public function decrementQuantity($productId, $current): void
@@ -64,6 +66,7 @@ class Cart extends Component
         }
 
         $this->needsCartRefresh();
+        $this->notify('success', 'Quantity Updated!', 'Product Quantity has been updated in your cart!');
     }
 
     public function removeProduct($productId): void
@@ -71,6 +74,7 @@ class Cart extends Component
         CartService::remove([$productId]);
 
         $this->needsCartRefresh();
+        $this->notify('warning', 'Product Removed!', 'Product has been removed from your cart!');
     }
 
     public function clearCart(): void
@@ -78,6 +82,7 @@ class Cart extends Component
         CartService::empty($this->cart);
 
         $this->needsCartRefresh();
+        $this->notify('warning', 'Cart Cleared!', 'All Products have been removed from your cart!');
     }
 
     public function refreshCart(): void
@@ -95,6 +100,7 @@ class Cart extends Component
     {
         CartService::shippingMethod($this->cart, $this->selectedCarrier);
         $this->needsCartRefresh();
+        $this->notify('success', 'Shipping Updated!', 'The shipping method has been updated!');
     }
 
     public function render()
