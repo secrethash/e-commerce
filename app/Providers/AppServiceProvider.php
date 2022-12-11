@@ -6,14 +6,14 @@ use App\Models\Brand;
 use App\Models\Enums\UsedFor;
 use App\Services\Menus;
 use Beier\FilamentPages\Models\FilamentPage;
-use Blade;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
+use Filament\Navigation\NavigationItem;
+use Filament\Navigation\UserMenuItem;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\View\Compilers\BladeCompiler;
 use RyanChandler\FilamentNavigation\Facades\FilamentNavigation;
 use Shopper\Framework\Models\Shop\Product\Category;
 
@@ -42,21 +42,44 @@ class AppServiceProvider extends ServiceProvider
         View::share('usedForEnum', fn ($from): UsedFor => UsedFor::from($from));
 
         Filament::serving(function () {
-            // Using Vite
-            // Filament::registerViteTheme('resources/css/filament.css');
+            Filament::registerNavigationItems([
+                NavigationItem::make('manage-store')
+                    ->label('Manage Store')
+                    ->icon('heroicon-o-adjustments')
+                    ->activeIcon('heroicon-s-adjustments')
+                    ->url(route('shopper.dashboard'))
+                    ->openUrlInNewTab()
+                    ->group('Shop')
+                    ->sort(100),
+                NavigationItem::make('view-store')
+                    ->label('View Store')
+                    ->icon('heroicon-o-shopping-bag')
+                    ->activeIcon('heroicon-s-shopping-bag')
+                    ->url(route('home'))
+                    ->openUrlInNewTab()
+                    ->group('Shop')
+                    ->sort(101),
+            ]);
+            Filament::registerUserMenuItems([
+                UserMenuItem::make()
+                    ->label('Manage Store')
+                    ->icon('heroicon-o-adjustments')
+                    ->url(route('shopper.dashboard'))
+                    ->sort(100),
+                UserMenuItem::make()
+                    ->label('View Store')
+                    ->icon('heroicon-o-shopping-bag')
+                    ->url(route('home'))
+                    ->sort(101),
+            ]);
 
-            // Using Laravel Mix
-            // Filament::registerTheme(
-            //     mix('css/filament.css'),
-            // );
-
-            // ...
+            // Change Theme Colors
             $primaryColor = '#2a1baf'; // For example, put your tenant primary color here
             $secondaryColor = '#BBAA87'; // For example, put your tenant secondary color here
 
             Filament::pushMeta([
-                new HtmlString('<meta name="theme-primary-color" id="theme-primary-color" content="' . $primaryColor . '">' .
-                    '<meta name="theme-secondary-color" id="theme-secondary-color" content="' . $secondaryColor . '">'),
+                new HtmlString('<meta name="theme-primary-color" id="theme-primary-color" content="' . $primaryColor . '" />' .
+                    '<meta name="theme-secondary-color" id="theme-secondary-color" content="' . $secondaryColor . '" />'),
             ]);
         });
 
