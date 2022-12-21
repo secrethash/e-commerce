@@ -55,9 +55,12 @@ Route::get(config('shopper.system.dashboard'), function() {
 //     $order = Shopper\Framework\Models\Shop\Order\Order::latest()->first();
 //     return new OrderConfirmed($order, new \Illuminate\Support\Fluent());
 // });
-// Route::get('test/blade-components', function () {
-//     return \Blade::getClassComponentAliases();
-// });
+Route::get('test/shipping', function () {
+    $cart = new App\Services\Cart(App\Models\Cart::find(15));
+    $carrier = App\Models\Carrier::active()->first();
+    $address = App\Models\Address::first();
+    // Illuminate\Database\Eloquent\Builder
+});
 
 //*-> Authentication Routes
 require __DIR__.'/auth.php';

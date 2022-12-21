@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Shopper\Framework\Models\System\Country;
+
+class CountryState extends Model
+{
+    use HasFactory;
+
+    protected $table = 'country_states';
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+}

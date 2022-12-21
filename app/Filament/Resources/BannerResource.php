@@ -42,11 +42,11 @@ class BannerResource extends Resource
                 Forms\Components\Select::make('used_for')
                     ->label('Used For')
                     ->options(UsedFor::toArray())
+                    ->in(UsedFor::values())
                     ->required()
                     ->searchable(),
                 SpatieMediaLibraryFileUpload::make('banner')
-                    ->label('Banner Image')
-                    ->conversion('preview'),
+                    ->label('Banner Image'),
                 Forms\Components\TextInput::make('subtitle')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('title')

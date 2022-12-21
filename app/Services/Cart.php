@@ -2,12 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\Address;
 use App\Models\Cart as CartModel;
 use App\Models\User;
 use Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Session;
-use Shopper\Framework\Models\Shop\Carrier;
+use App\Models\Carrier;
 use App\Models\Product;
 
 class Cart {
@@ -173,20 +174,26 @@ class Cart {
         return $subtotal;
     }
 
-    public static function shippingTotal(CartModel $cart): float
+    public static function shippingTotal(CartModel $cart, ?Address $address = null): float
     {
-        if (static::isEmpty($cart)) {
+        if (
+            static::isEmpty($cart) OR
+            is_null($address) OR
+            !$cart->shipping
+        ) {
             return 0;
         }
 
-        $shipping = $cart->shipping?->shipping_amount;
-        return $shipping ? $shipping / 100 : 0;
+        $shipping = Shipping::make($cart->shipping, $address, $cart);
+        return $shipping->process()->getCharge();
+        // $shipping = $cart->shipping?->shipping_amount;
+        // return $shipping ? $shipping / 100 : 0;
     }
 
-    public static function total(CartModel $cart): float
+    public static function total(CartModel $cart, ?Address $shippingAddress): float
     {
         $subtotal = static::subtotal($cart);
-        $shipping = static::shippingTotal($cart);
+        $shipping = static::shippingTotal($cart, $shippingAddress);
 
         return $subtotal + $shipping;
     }

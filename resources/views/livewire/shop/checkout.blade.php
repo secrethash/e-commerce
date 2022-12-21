@@ -1,5 +1,7 @@
 <div>
-
+    @dump($selectedCarrier)
+    @dump($cart->shipping->toArray())
+    @dump($shippingAddress->toArray())
     <!-- Breadcrumb Area Start -->
     <div class="breadcrumb-area">
         <div class="container">
@@ -57,7 +59,7 @@
                                             Please Fix these <strong>Validation Errors</strong>:
                                             <ul>
                                                 @foreach ($errors->all() as $error)
-                                                    <li><strong>{{$loop->index + 1}}.</strong> {{$error}}</li>
+                                                    <li class="d-block"><strong>{{$loop->index + 1}}.</strong> {{$error}}</li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -174,7 +176,11 @@
                                         </span>
                                     @enderror
                                 </div>
-                                <div class="col-lg-12 mb-20px">
+                                <div @class([
+                                    "col-12",
+                                    "col-md-6" => $states?->count() >= 1,
+                                    "mb-20px",
+                                ])>
                                     <div class="form-floating">
                                         <select class="form-select @error('address.country_id'){{'is-invalid'}}@enderror"
                                             wire:model='address.country_id'
@@ -193,6 +199,27 @@
                                         </span>
                                     @enderror
                                 </div>
+                                @if ($states?->count() >= 1)
+                                    <div class="col-12 col-md-6 mb-20px">
+                                        <div class="form-floating">
+                                            <select class="form-select @error('address.country_state_id'){{'is-invalid'}}@enderror"
+                                                wire:model='address.country_state_id'
+                                                name="state"
+                                                id="state">
+                                                <option>Select a State</option>
+                                                @foreach ($states as $state)
+                                                    <option value="{{$state->id}}">{{$state->flag}} {{$state->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="state">State</label>
+                                        </div>
+                                        @error('address.country_state_id')
+                                            <span class="invalid-feedback show" role="alert">
+                                                <strong><x-ri-information-fill width="16px" /> {{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                @endif
                                 <div class="col-12 col-md-6 mb-20px">
                                     <div class="form-floating">
                                         <input class="form-control @error('address.street_address'){{'is-invalid'}}@enderror"
@@ -313,7 +340,7 @@
                                                     Shipping
                                                 </div>
                                                 <div class="d-block text-center">
-                                                    @if ($shippingTotal <= 0)
+                                                    @if ($carriers->count() >= 1 && $shippingTotal <= 0)
                                                         <small class="badge bg-success rounded-0">
                                                             {{'Free'}}
                                                         </small>
@@ -321,15 +348,19 @@
                                                 </div>
                                             </li>
                                             <li>
-                                                @foreach ($carriers as $carrier)
+                                                @forelse ($carriers as $carrier)
                                                     <div class="d-block form-check">
+                                                        @php
+                                                            $shipping = App\Services\Shipping::make($carrier, $shippingAddress, $cart);
+                                                            $shipping->process();
+                                                        @endphp
                                                         <label for="carrier-{{$carrier->slug}}" class="form-check-label">
                                                             {{$carrier->name}}
-                                                            @if($carrier->shipping_amount > 0)
+                                                            @if($shipping->getCharge() > 0)
                                                                 <span class="fw-bolder">
-                                                                    {{price_formatted($carrier->shipping_amount)}}
+                                                                    {{price_formatted($shipping->getCharge() * 100)}}
                                                                 </span>
-                                                            @elseif ($carrier->slug === $storePickup && $locations->count() <= 0)
+                                                            @elseif ($carrier->is_store_pickup && $locations->count() <= 0)
                                                                 <span class="badge bg-secondary rounded-0">
                                                                     {{'Not Available'}}
                                                                 </span>
@@ -347,7 +378,11 @@
                                                             @disabled($carrier->slug === $storePickup && $locations->count() <= 0)
                                                             id="carrier-{{$carrier->slug}}" />
                                                     </div>
-                                                @endforeach
+                                                @empty
+                                                    <div class="d-block p-2" style="border: dashed 2px var(--bs-gray-300);">
+                                                        <span>No Shipping Available</span>
+                                                    </div>
+                                                @endforelse
                                                 <div class="d-block mt-2 text-danger fw-bolder text-end">
                                                     @if ($shippingTotal > 0)
                                                         {{$formattedShippingTotal}}
@@ -440,7 +475,8 @@
                             <div class="Place-order mt-25">
                                 <button class="btn btn-lg btn-danger w-100 d-inline-flex justify-content-center align-items-center"
                                     wire:loading.attr='disabled'
-                                    wire:click='submit'>
+                                    wire:click='submit'
+                                    @disabled($carriers->count() <= 0)>
                                     <x-heroicon-s-check-circle class="me-2" width="22" wire:loading.remove wire:target='submit' />
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status" wire:loading wire:target='submit'>
                                         <span class="visually-hidden">Loading...</span>

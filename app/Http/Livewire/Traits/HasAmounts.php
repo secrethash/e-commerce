@@ -28,11 +28,12 @@ trait HasAmounts
     {
         $this->currency = shopper_currency();
         $this->subtotal = Cart::subtotal($this->cart);
-        $this->total = Cart::total($this->cart);
-        $this->shippingTotal = Cart::shippingTotal($this->cart);
+        $this->total = Cart::total($this->cart, $this->shippingAddress ?? null);
+        $this->shippingTotal = Cart::shippingTotal($this->cart, $this->shippingAddress ?? null);
         $this->formattedTotal = $this->formattedPrice($this->total * 100);
         $this->formattedSubtotal = $this->formattedPrice($this->subtotal * 100);
         $this->formattedShippingTotal = $this->formattedPrice($this->shippingTotal * 100);
+        $this->amountsArray = $this->getAmounts();
     }
 
     public function getFluentAmounts(): Fluent

@@ -20,10 +20,19 @@ enum UsedFor: string {
 
     public static function toArray(): array
     {
-        return [
-            static::SLIDER->value => static::SLIDER->text(),
-            static::OFFER_HOMEPAGE_SOLO->value => static::OFFER_HOMEPAGE_SOLO->text(),
-            static::OFFER_HOMEPAGE_DUO->value => static::OFFER_HOMEPAGE_DUO->text(),
-        ];
+        $array = [];
+        foreach (static::cases() as $case) {
+            $array[$case->value] = $case->text();
+        }
+        return $array;;
+    }
+
+    public static function values(): array
+    {
+        $array = [];
+        foreach (static::cases() as $case) {
+            $array[] = $case->value;
+        }
+        return $array;
     }
 }

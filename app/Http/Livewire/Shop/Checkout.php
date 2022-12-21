@@ -7,9 +7,11 @@ use App\Http\Livewire\Traits\HasAmounts;
 use App\Http\Livewire\Traits\InteractsWithCart;
 use App\Mail\OrderConfirmed;
 use App\Models\Cart;
+use App\Models\CountryState;
 use App\Models\Product;
 use App\Models\User;
 use App\Services\Cart as CartService;
+use App\Services\Shipping;
 use Auth;
 use Hash;
 use Illuminate\Database\Eloquent\Collection;
@@ -19,13 +21,14 @@ use Illuminate\Validation\Rules\RequiredIf;
 use Livewire\Component;
 use Mail;
 use Shopper\Framework\Facades\Shopper;
-use Shopper\Framework\Models\Shop\Carrier;
+use App\Models\Carrier;
 use Shopper\Framework\Models\Shop\Inventory\Inventory;
 use Shopper\Framework\Models\Shop\Order\Order;
 use Shopper\Framework\Models\Shop\Order\OrderItem;
 use Shopper\Framework\Models\Shop\PaymentMethod;
 use Shopper\Framework\Models\System\Country;
-use Shopper\Framework\Models\User\Address;
+use App\Models\Address;
+// use Shopper\Framework\Models\User\Address;
 
 class Checkout extends Component
 {
@@ -64,6 +67,7 @@ class Checkout extends Component
 
     public string $selectedPaymentMethod;
     public $selectedCountry;
+    public $states;
 
     public $store_location;
 
@@ -72,38 +76,58 @@ class Checkout extends Component
         'refresh-amount' => 'processAmounts',
     ];
 
-    protected $validationAttributes = [
-        'address.first_name' => 'First Name',
-        'address.last_name' => 'Last Name',
-        'address.company_name' => 'Company Name',
-        'address.country_id' => 'Country',
-        'address.street_address' => 'Address Line 1',
-        'address.street_address_plus' => 'Address Line 2',
-        'address.city' => 'City',
-        'address.zipcode' => 'Zipcode',
-        'address.phone_number' => 'Phone Number',
-        'store_location' => 'Pickup Location',
-    ];
-
     protected $messages = [
         'user.email.required_with' => 'The :Attribute field is required when create account is active.',
         'password.required_with' => 'The :Attribute field is required when create account is active.',
         'store_location.required_if' => 'The :Attribute field is required when selected shipping method is Store Pickup.'
     ];
 
-    protected function rules(): array
+    protected function addressValidationAttributes($prefix = 'address'): array
     {
         return [
-            'address' => ['array'],
-            'address.first_name' => ['required', 'alpha'],
-            'address.last_name' => ['string', 'nullable'],
-            'address.company_name' => ['string', 'nullable'],
-            'address.country_id' => ['required', 'numeric', 'exists:system_countries,id'],
-            'address.street_address' => ['required', 'string'],
-            'address.street_address_plus' => ['nullable', 'string'],
-            'address.city' => ['required', 'string'],
-            'address.zipcode' => ['required', 'string'],
-            'address.phone_number' => ['required', 'numeric'],
+            "{$prefix}.first_name" => "{$prefix} First Name",
+            "{$prefix}.last_name" => "{$prefix} Last Name",
+            "{$prefix}.company_name" => "{$prefix} Company Name",
+            "{$prefix}.country_id" => "{$prefix} Country",
+            "{$prefix}.street_address" => "{$prefix} Address Line 1",
+            "{$prefix}.street_address_plus" => "{$prefix} Address Line 2",
+            "{$prefix}.city" => "{$prefix} City",
+            "{$prefix}.zipcode" => "{$prefix} Zipcode",
+            "{$prefix}.phone_number" => "{$prefix} Phone Number",
+        ];
+    }
+
+    protected function validationAttributes()
+    {
+        return array_merge(
+            $this->addressValidationAttributes(),
+            $this->addressValidationAttributes('shippingAddress'),
+            [
+                'store_location' => 'Pickup Location',
+            ]
+        );
+    }
+
+    protected function addressRules($prefix = 'address'): array
+    {
+        return [
+            "{$prefix}" => ['array'],
+            "{$prefix}.first_name" => ['required', 'alpha'],
+            "{$prefix}.last_name" => ['string', 'nullable'],
+            "{$prefix}.company_name" => ['string', 'nullable'],
+            "{$prefix}.country_id" => ['required', 'numeric', 'exists:system_countries,id'],
+            "{$prefix}.street_address" => ['required', 'string'],
+            "{$prefix}.street_address_plus" => ['nullable', 'string'],
+            "{$prefix}.city" => ['required', 'string'],
+            "{$prefix}.country_state_id" => ['required', 'numeric', 'exists:system_countries,id'],
+            "{$prefix}.zipcode" => ['required', 'string'],
+            "{$prefix}.phone_number" => ['required', 'numeric'],
+        ];
+    }
+
+    protected function rules(): array
+    {
+        return array_merge($this->addressRules(), $this->addressRules('shippingAddress'), [
             'createAccount' => [],
             'user' => ['array'],
             'user.email' => ['required_with:createAccount'],
@@ -111,20 +135,22 @@ class Checkout extends Component
             'selectedPaymentMethod' => ['required', 'exists:payment_methods,slug'],
             'selectedCarrier' => ['required', 'exists:carriers,slug'],
             'store_location' => ['required_if:selectedCarrier,'.$this->storePickup],
-        ];
+        ]);
     }
 
     public function mount()
     {
         $this->selectUser();
-        $this->processAmounts();
         $this->paymentMethods = PaymentMethod::enabled()->latest()->get();
         $this->selectedPaymentMethod = $this->paymentMethods->first()?->slug;
         $this->selectAddress();
-        $this->countries = Country::all();
+        $this->shippingToBillingAddress();
+        // $this->processAmounts();
+        $this->countries = Country::orderBy('name')->get();
         $this->selectedCountry = $this->address->country ? Country::find($this->address->country_id) : null;
         $this->locations = Inventory::where('country_id', $this->address->country?->id)->get();
-        $this->carriers = Carrier::where('is_enabled', true)->get();
+        // $this->carriers = Carrier::where('is_enabled', true)->get();
+        // $this->carriers = Shipping::get($this->address, (new CartService($this->cart)));
         $this->createAccount = Auth::check() ? null : true;
         $this->selectCarrier();
         $this->calculateShipping();
@@ -135,20 +161,49 @@ class Checkout extends Component
         if ($this->address->country) {
             $this->locations = Inventory::where('country_id', $this->address->country_id)->get();
             $this->selectedCountry = Country::find($this->address->country_id);
+            $this->states = CountryState::where('country_id', $this->selectedCountry->id)->get();
         }
+        if ($this->shipToBilling) {
+            $this->shippingToBillingAddress();
+        }
+        $this->carriers = Shipping::get($this->shippingAddress, (new CartService($this->cart)));
         $this->selectCarrier();
+    }
+
+    // public function updatedShippingAddress()
+    // {
+    //     if ($this->shipToBilling) {
+    //         $this->shippingToBillingAddress();
+    //     }
+    // }
+
+    protected function verifyCarrierSelection($carrier)
+    {
+        $this->carriers = Shipping::get($this->shippingAddress, (new CartService($this->cart)));
+        if (is_string($carrier)) {
+            $carrier = Carrier::whereSlug($carrier)->first();
+        }
+
+        if ($carrier && $carrier->is_store_pickup) {
+            $notStorePickup = Carrier::whereIn('id', $this->carriers->pluck('id'))
+                ->where('is_store_pickup', false)->first();
+            $carrier = ($this->locations->count() <= 0) ? $notStorePickup : $carrier;
+        }
+        if ($carrier) {
+            $shipping = Shipping::make($carrier, $this->shippingAddress, $this->cart);
+            $this->selectedCarrier = $shipping->useable() ? $carrier->slug : $this->carriers->first()?->slug;
+        } else {
+            $carrier = $this->carriers->first();
+            $this->selectedCarrier = $carrier?->slug;
+        }
     }
 
     protected function selectCarrier(): void
     {
-        $carrier = $this->cart->shipping?->slug;
-        if ($carrier === $this->storePickup) {
-            $notStorePickup = Carrier::where('is_enabled', true)
-                ->whereNotIn('slug', [$this->storePickup])->first()?->slug;
-            $carrier = ($this->locations->count() <= 0) ? $notStorePickup : $carrier;
-        }
-        $this->selectedCarrier = $carrier ?? $this->carriers->first()?->slug;
-        $this->calculateShipping($carrier !== $this->storePickup);
+        // $this->carriers = Shipping::get($this->shippingAddress, (new CartService($this->cart)));
+        $carrier = $this->cart->shipping;
+        $this->verifyCarrierSelection($carrier);
+        $this->calculateShipping(!$carrier?->is_store_pickup);
     }
 
     protected function selectUser(): void
@@ -169,6 +224,7 @@ class Checkout extends Component
      */
     public function selectAddress($id = null): void
     {
+        /** @var \App\Models\Address $address */
         $address = null;
         if (!$id) {
             if (Auth::check()) {
@@ -188,6 +244,7 @@ class Checkout extends Component
             $this->createNewAddress();
         } else {
             $this->address = $address;
+            $this->states = CountryState::where('country_id', $address->country->id)->get();
         }
     }
 
@@ -245,18 +302,19 @@ class Checkout extends Component
         $this->selectedPaymentMethod = $method;
     }
 
-    public function updatedSelectedCarrier(): void
+    public function updatedSelectedCarrier($value): void
     {
+        $this->verifyCarrierSelection($value);
         $this->calculateShipping();
-        $this->selectCarrier();
     }
 
     public function calculateShipping($notify = true): void
     {
         CartService::shippingMethod($this->cart, $this->selectedCarrier);
+        // $this->processAmounts();
         $this->needsCartRefresh();
         if ($notify) {
-            $this->notify('info', 'Total Updated!', 'Your total has been updated.');
+            $this->notify('info', 'Shipping Total Updated!', 'Your Shipping total has been updated.');
         }
     }
 
@@ -266,7 +324,7 @@ class Checkout extends Component
         if (CartService::isEmpty($this->cart)) {
             return redirect()->route('shop.cart')->with('notice', [
                 [
-                    'type' => 'danger',
+                    'type' => 'error',
                     'heading' => 'Cart is Empty!',
                     'message' => 'No Products in your cart. Please add some products to your cart then proceed to checkout.',
                 ]
@@ -276,6 +334,15 @@ class Checkout extends Component
 
     public function submit()
     {
+        //? 0. Check Carrier Availability
+        if ($this->carriers->count() <= 0) {
+            $this->notify(
+                'error',
+                'No Shipping Available!',
+                'There are currently no Shipping providers available at your selected address.'
+            );
+        }
+
         //? 1. Validate
         $this->validate();
 

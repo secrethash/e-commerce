@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
                     ->activeIcon('heroicon-s-adjustments')
                     ->url(route('shopper.dashboard'))
                     ->openUrlInNewTab()
-                    ->group('Shop')
+                    ->group('shop')
                     ->sort(100),
                 NavigationItem::make('view-store')
                     ->label('View Store')
@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
                     ->activeIcon('heroicon-s-shopping-bag')
                     ->url(route('home'))
                     ->openUrlInNewTab()
-                    ->group('Shop')
+                    ->group('shop')
                     ->sort(101),
             ]);
             Filament::registerUserMenuItems([

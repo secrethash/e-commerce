@@ -67,6 +67,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasPermissionTo('can_view_backend');
     }
 
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+
     public function carts(): HasMany
     {
         return $this->hasMany(Cart::class);
