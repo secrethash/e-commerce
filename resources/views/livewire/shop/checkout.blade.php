@@ -1,7 +1,4 @@
 <div>
-    @dump($selectedCarrier)
-    @dump($cart->shipping->toArray())
-    @dump($shippingAddress->toArray())
     <!-- Breadcrumb Area Start -->
     <div class="breadcrumb-area">
         <div class="container">
