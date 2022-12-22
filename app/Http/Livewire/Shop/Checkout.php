@@ -108,34 +108,39 @@ class Checkout extends Component
         );
     }
 
-    protected function addressRules($prefix = 'address'): array
+    protected function addressRules($prefix = 'address', bool $required = true): array
     {
+        $requiredRule = $required ? 'required' : null;
         return [
             "{$prefix}" => ['array'],
-            "{$prefix}.first_name" => ['required', 'alpha'],
+            "{$prefix}.first_name" => [$requiredRule, 'alpha'],
             "{$prefix}.last_name" => ['string', 'nullable'],
             "{$prefix}.company_name" => ['string', 'nullable'],
-            "{$prefix}.country_id" => ['required', 'numeric', 'exists:system_countries,id'],
-            "{$prefix}.street_address" => ['required', 'string'],
+            "{$prefix}.country_id" => [$requiredRule, 'numeric', 'exists:system_countries,id'],
+            "{$prefix}.street_address" => [$requiredRule, 'string'],
             "{$prefix}.street_address_plus" => ['nullable', 'string'],
-            "{$prefix}.city" => ['required', 'string'],
-            "{$prefix}.country_state_id" => ['required', 'numeric', 'exists:system_countries,id'],
-            "{$prefix}.zipcode" => ['required', 'string'],
-            "{$prefix}.phone_number" => ['required', 'numeric'],
+            "{$prefix}.city" => [$requiredRule, 'string'],
+            "{$prefix}.country_state_id" => ['numeric', 'nullable', 'exists:system_countries,id'],
+            "{$prefix}.zipcode" => ['string'],
+            "{$prefix}.phone_number" => [$requiredRule, 'numeric'],
         ];
     }
 
     protected function rules(): array
     {
-        return array_merge($this->addressRules(), $this->addressRules('shippingAddress'), [
-            'createAccount' => [],
-            'user' => ['array'],
-            'user.email' => ['required_with:createAccount'],
-            'password' => ['required_with:createAccount', Password::min(8)->numbers()->symbols()->mixedCase()],
-            'selectedPaymentMethod' => ['required', 'exists:payment_methods,slug'],
-            'selectedCarrier' => ['required', 'exists:carriers,slug'],
-            'store_location' => ['required_if:selectedCarrier,'.$this->storePickup],
-        ]);
+        return array_merge(
+            $this->addressRules(),
+            $this->addressRules('shippingAddress', false),
+            [
+                'createAccount' => [],
+                'user' => ['array'],
+                'user.email' => ['required_with:createAccount'],
+                'password' => ['required_with:createAccount', Password::min(8)->numbers()->symbols()->mixedCase()],
+                'selectedPaymentMethod' => ['required', 'exists:payment_methods,slug'],
+                'selectedCarrier' => ['required', 'exists:carriers,slug'],
+                'store_location' => ['required_if:selectedCarrier,'.$this->storePickup],
+            ]
+        );
     }
 
     public function mount()
@@ -161,7 +166,10 @@ class Checkout extends Component
         if ($this->address->country) {
             $this->locations = Inventory::where('country_id', $this->address->country_id)->get();
             $this->selectedCountry = Country::find($this->address->country_id);
-            $this->states = CountryState::where('country_id', $this->selectedCountry->id)->get();
+            $states = $this->states = CountryState::where('country_id', $this->selectedCountry->id)->get();
+            if ($states->count() <= 0) {
+                $this->address->country_state_id = null;
+            }
         }
         if ($this->shipToBilling) {
             $this->shippingToBillingAddress();
@@ -308,7 +316,7 @@ class Checkout extends Component
         $this->calculateShipping();
     }
 
-    public function calculateShipping($notify = true): void
+    public function calculateShipping($notify = false): void
     {
         CartService::shippingMethod($this->cart, $this->selectedCarrier);
         // $this->processAmounts();

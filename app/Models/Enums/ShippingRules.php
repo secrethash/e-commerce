@@ -11,7 +11,9 @@ enum ShippingRules: string {
     case COUNTRY = 'country';
     case STATE = 'state';
     case PINCODE = 'pincode';
-    case FREE = 'free';
+    // case FREE = 'free';
+    case FREEBYCOUNTRY = 'free-by-country';
+    case FREEBYSTATE = 'free-by-state';
 
     public function label(): string
     {
@@ -20,7 +22,9 @@ enum ShippingRules: string {
             static::COUNTRY => 'Country',
             static::STATE => 'State',
             static::PINCODE => 'Pincode / Zipcode',
-            static::FREE => 'Free Shipping',
+            // static::FREE => 'Free Shipping',
+            static::FREEBYCOUNTRY => 'Free Shipping (by country)',
+            static::FREEBYSTATE => 'Free Shipping (by state)',
         };
     }
 
@@ -31,7 +35,9 @@ enum ShippingRules: string {
             static::COUNTRY => $prepend . ' ' . static::COUNTRY->label(),
             static::STATE => $prepend . ' ' . static::STATE->label(),
             static::PINCODE => $prepend . ' ' . static::PINCODE->label(),
-            static::FREE => static::FREE->label(),
+            // static::FREE => static::FREE->label(),
+            static::FREEBYCOUNTRY => static::FREEBYCOUNTRY->label(),
+            static::FREEBYSTATE => static::FREEBYSTATE->label(),
         };
     }
 
@@ -42,7 +48,9 @@ enum ShippingRules: string {
             static::COUNTRY => Country::class,
             static::STATE => CountryState::class,
             static::PINCODE => '',
-            static::FREE => '',
+            // static::FREE => '',
+            static::FREEBYCOUNTRY => Country::class,
+            static::FREEBYSTATE => CountryState::class,
         };
     }
 
@@ -53,7 +61,9 @@ enum ShippingRules: string {
             static::COUNTRY => 'name',
             static::STATE => 'name',
             static::PINCODE => '',
-            static::FREE => '',
+            // static::FREE => '',
+            static::FREEBYCOUNTRY => 'name',
+            static::FREEBYSTATE => 'name',
         };
     }
 
@@ -64,7 +74,9 @@ enum ShippingRules: string {
             static::COUNTRY => 'id',
             static::STATE => 'id',
             static::PINCODE => '',
-            static::FREE => '',
+            // static::FREE => '',
+            static::FREEBYCOUNTRY => 'id',
+            static::FREEBYSTATE => 'id',
         };
     }
 
@@ -79,9 +91,28 @@ enum ShippingRules: string {
                 'ownerColumn' => 'country_id',
             ],
             static::PINCODE => [],
-            static::FREE => [],
+            // static::FREE => [],
+            static::FREEBYCOUNTRY => [],
+            static::FREEBYSTATE => [
+                'column' => 'country_id',
+                'expression' => '',
+                'ownerColumn' => 'country_id',
+            ],
         };
         return (new Fluent($value ?? []));
+    }
+
+    public function freeable(): bool
+    {
+        return match($this)
+        {
+            static::COUNTRY => false,
+            static::STATE => false,
+            static::PINCODE => false,
+            // static::FREE => true,
+            static::FREEBYCOUNTRY => true,
+            static::FREEBYSTATE => true,
+        };
     }
 
     public static function toArray(): array

@@ -44,7 +44,8 @@ class PricingRelationManager extends RelationManager
                             ->required()
                             ->inline()
                             ->reactive(),
-                    ]),
+                    ])
+                    ->hidden(fn(RelationManager $livewire) => $livewire->ownerRecord->rule_type->freeable()),
                 Group::make()
                     ->schema(function (RelationManager $livewire) {
                         $owner = $livewire->ownerRecord;
@@ -90,12 +91,15 @@ class PricingRelationManager extends RelationManager
                                 ->label($rule->longLabel() ?? 'Value')
                                 ->required(),
                         ];
-                    })->reactive(),
+                    })->reactive()
+                    ->columnSpan(fn(RelationManager $livewire) => $livewire->ownerRecord->rule_type->freeable() ? 2 : 1),
                 TextInput::make('amount')
                     ->label(fn(callable $get) => 'Charge' . (filled($get('method')) ? ' in ' . CarrierCalculationMethod::from($get('method'))->identifiers() : null))
                     // ->prefix(fn(callable $get) => filled($get('method')) ? CarrierCalculationMethod::from($get('method'))->identifiers() : null)
                     ->numeric()
-                    ->required(),
+                    ->required()
+                    ->hidden(fn(RelationManager $livewire) => $livewire->ownerRecord->rule_type->freeable())
+                    ->dehydrated(fn(RelationManager $livewire) => !$livewire->ownerRecord->rule_type->freeable()),
                 Fieldset::make('Order Value')
                     ->schema([
                         TextInput::make('minimum_order')

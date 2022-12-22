@@ -153,6 +153,7 @@ namespace App\Models{
  * @property \App\Models\Enums\ShippingRules $rule_type
  * @property int|null $country_id
  * @property bool $is_store_pickup
+ * @property bool $limited_to_pricing
  * @property-read \Shopper\Framework\Models\System\Country|null $country
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\CarrierPricing[] $pricing
  * @property-read int|null $pricing_count
@@ -166,6 +167,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Carrier whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Carrier whereIsEnabled($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Carrier whereIsStorePickup($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Carrier whereLimitedToPricing($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Carrier whereLinkUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Carrier whereLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Carrier whereName($value)
@@ -188,7 +190,7 @@ namespace App\Models{
  * @property string|null $calculable_type
  * @property string|null $calculable_value
  * @property \App\Models\Enums\CarrierCalculationMethod|null $method
- * @property int|null $minimum_order
+ * @property int $minimum_order
  * @property int|null $maximum_order
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at

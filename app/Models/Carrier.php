@@ -20,6 +20,7 @@ class Carrier extends ShopCarrier
         'rule_type' => ShippingRules::class,
         'is_enabled' => 'bool',
         'is_store_pickup' => 'bool',
+        'limited_to_pricing' => 'bool',
     ];
 
     /**
@@ -29,7 +30,15 @@ class Carrier extends ShopCarrier
      */
     protected static function booted(): void
     {
-        static::saving(function(self $model) {
+        static::creating(function(self $model) {
+            $model->forceFill([
+                'slug' => slugify_model(
+                    self::class,
+                    "{$model->name}"
+                ),
+            ]);
+        });
+        static::updating(function(self $model) {
             $model->forceFill([
                 'slug' => slugify_model(
                     self::class,

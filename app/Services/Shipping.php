@@ -114,10 +114,109 @@ final class Shipping
     /**
      * Shipping rule for Free Shipping
      *
+     * @deprecated 1.1.0
      * @return boolean|integer
      */
     private function ruleFreeShipping(): bool|int
     {
+        $carrier = $this->carrier;
+        $subtotal = $this->cart->subtotal($this->cart->cart);
+
+        if ($carrier->rule_type->freeable()) {
+            return false;
+        }
+
+        $pricing = $carrier->pricing();
+
+        if ($pricing->count() >= 1) {
+            $pricing->where('minimum_order', '<=', $subtotal)
+                ->orWhere('maximum_order', '>=', $subtotal);
+            if ($pricing->count() >= 1) {
+                // return $this->calculate($pricing->first(), $subtotal)->charge;
+                return $this->calculateFlat(0, $subtotal)->charge;
+            }
+        }
+
+        return false;
+        // return $this->calculateFlat(0, $subtotal)->charge;
+    }
+
+    /**
+     * Shipping rule for Free Shipping
+     *
+     * @return boolean|integer
+     */
+    private function ruleFreeByStateShipping(): bool|int
+    {
+        $carrier = $this->carrier;
+        $address = $this->address;
+        $subtotal = $this->cart->subtotal($this->cart->cart);
+
+        if (
+            is_null($address->country_state_id) OR
+            !$carrier->country OR
+            $carrier->country_id != $address->country_id OR
+            !$carrier->rule_type->freeable()
+        ) {
+            return false;
+        }
+
+        /** @var \App\Models\CarrierPricing $pricing */
+        $pricing = $carrier->pricing()->whereHasMorph(
+            'calculable',
+            [CountryState::class],
+            function (Builder $query) use($address) {
+                $query->where('id', $address->country_state_id);
+            }
+        );
+
+        if ($pricing->count() >= 1) {
+            $pricing->where('minimum_order', '<=', $subtotal)
+                ->orWhere('maximum_order', '>=', $subtotal);
+            if ($pricing->count() >= 1) {
+                // return $this->calculate($pricing->first(), $subtotal)->charge;
+                return $this->calculateFlat(0, $subtotal)->charge;
+            }
+        }
+
+        // return $this->calculateFlat(0, $subtotal)->charge;
+        return false;
+    }
+
+    /**
+     * Shipping rule for Free Shipping
+     *
+     * @return boolean|integer
+     */
+    private function ruleFreeByCountryShipping(): bool|int
+    {
+        $carrier = $this->carrier;
+        $address = $this->address;
+        $subtotal = $this->cart->subtotal($this->cart->cart);
+
+        if (!$carrier->rule_type->freeable()) {
+            return false;
+        }
+
+        /** @var \App\Models\CarrierPricing $pricing */
+        $pricing = $carrier->pricing()->whereHasMorph(
+            'calculable',
+            [Country::class],
+            function (Builder $query) use($address) {
+                $query->where('id', $address->country_id);
+            }
+        );
+
+        if ($pricing->count() >= 1) {
+            $pricing->where('minimum_order', '<=', $subtotal)
+                ->orWhere('maximum_order', '>=', $subtotal);
+            if ($pricing->count() >= 1) {
+                // return $this->calculate($pricing->first(), $subtotal)->charge;
+                return $this->calculateFlat(0, $subtotal)->charge;
+            }
+        }
+
+        // return $this->calculateFlat(0, $subtotal)->charge;
         return false;
     }
 
@@ -153,7 +252,11 @@ final class Shipping
             }
         }
 
-        return $this->calculateFlat($this->carrier->shipping_amount, $subtotal)->charge;
+        if ($carrier->limited_to_pricing) {
+            return false;
+        }
+
+        return $this->calculateFlat($carrier->shipping_amount, $subtotal)->charge;
 
     }
 
@@ -194,7 +297,11 @@ final class Shipping
             }
         }
 
-        return $this->calculateFlat($this->carrier->shipping_amount, $subtotal)->charge;
+        if ($carrier->limited_to_pricing) {
+            return false;
+        }
+
+        return $this->calculateFlat($carrier->shipping_amount, $subtotal)->charge;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\CarrierResource\Pages;
 
 use App\Filament\Resources\CarrierResource;
+use App\Models\Enums\ShippingRules;
 use Filament\Facades\Filament;
 use Filament\Pages\Actions;
 use Filament\Pages\Actions\Action;
@@ -12,6 +13,15 @@ use Illuminate\Database\Eloquent\Model;
 class EditCarrier extends EditRecord
 {
     protected static string $resource = CarrierResource::class;
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if(isset($data['rule_type']) && ShippingRules::tryFrom($data['rule_type'])->freeable()) {
+            $data['shipping_amount'] = 0;
+        }
+
+        return $data;
+    }
 
     protected function getActions(): array
     {

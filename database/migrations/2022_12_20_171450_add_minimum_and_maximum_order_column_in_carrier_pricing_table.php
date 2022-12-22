@@ -18,7 +18,7 @@ return new class extends Migration
                 ->nullable()
                 ->after('calculable_type');
             $table->bigInteger('minimum_order')
-                ->nullable()
+                ->default(0)
                 ->after('calculable_type');
             $table->string('method')
                 ->default('flat')

@@ -11,11 +11,14 @@ use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\BadgeColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
@@ -42,7 +45,7 @@ class CarrierResource extends Resource
                     ->maxLength(255)
                     ->reactive()
                     ->lazy()
-                    ->afterStateUpdated(fn(callable $set, $state, $record) => $set('slug', slugify_model(Carrier::class, $state, $record->slug))),
+                    ->afterStateUpdated(fn(callable $set, $state, $record) => $set('slug', slugify_model(Carrier::class, $state, $record?->slug))),
                 Forms\Components\TextInput::make('slug')
                     ->maxLength(255)
                     ->disabled()
@@ -52,6 +55,8 @@ class CarrierResource extends Resource
                 Forms\Components\TextInput::make('shipping_amount')
                     ->label('Base Charge')
                     ->prefix(shopper_currency())
+                    ->disabled(fn(callable $get): ?bool => ShippingRules::tryFrom($get('rule_type'))?->freeable())
+                    ->dehydrated(fn(callable $get): ?bool => !ShippingRules::tryFrom($get('rule_type'))?->freeable())
                     ->required(),
                 Select::make('rule_type')
                     ->required()
@@ -64,7 +69,7 @@ class CarrierResource extends Resource
                         null
                     )
                     ->reactive()
-                    ->afterStateUpdated(null)
+                    ->afterStateUpdated(fn(callable $get, callable $set) => ShippingRules::tryFrom($get('rule_type'))?->freeable() ? $set('shipping_amount', '0') : null)
                     ->disabled(fn($record): bool => $record?->refresh()->pricing()->count() >= 1)
                     ->dehydrated(fn($record): bool => $record?->refresh()->pricing()->count() < 1),
                 Select::make('country_id')
@@ -72,15 +77,32 @@ class CarrierResource extends Resource
                     ->exists('system_countries', 'id')
                     ->options(Country::pluck('name', 'id'))
                     ->searchable()
-                    ->hidden(fn(callable $get) => $get('rule_type') !== ShippingRules::STATE->value)
+                    ->hidden(fn(callable $get) =>
+                        $get('rule_type') !== ShippingRules::STATE->value AND
+                        $get('rule_type') !== ShippingRules::FREEBYSTATE->value
+                    )
                     ->disabled(fn($record, callable $get): bool =>
                         $record?->refresh()->pricing()->count() >= 1 OR
-                        $get('rule_type') !== ShippingRules::STATE->value
+                        ($get('rule_type') !== ShippingRules::STATE->value AND
+                        $get('rule_type') !== ShippingRules::FREEBYSTATE->value)
                     )
                     ->dehydrated(fn($record, callable $get): bool =>
                         $record?->refresh()->pricing()->count() < 1 OR
-                        $get('rule_type') !== ShippingRules::STATE->value
+                        ($get('rule_type') !== ShippingRules::STATE->value AND
+                        $get('rule_type') !== ShippingRules::FREEBYSTATE->value)
                     ),
+                Section::make('Advance')
+                    ->schema([
+                        Toggle::make('limited_to_pricing')
+                            ->label('Limited to Pricing?')
+                            ->default(true)
+                            ->helperText('Limit the Shipping method availability to defined pricing rules only.'),
+                        Toggle::make('is_store_pickup')
+                            ->label('Store Pickup?')
+                            ->helperText('Does this shipping method supports store pickup?'),
+                    ])->collapsible()
+                    ->compact()
+                    ->columnSpan(1),
             ]);
     }
 
@@ -95,9 +117,14 @@ class CarrierResource extends Resource
                 Tables\Columns\TextColumn::make('rule_type')
                     ->label('Rule')
                     ->getStateUsing(fn($record) => $record->rule_type->longLabel()),
-                Tables\Columns\TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('description')
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('shipping_amount')
-                    ->label('Base Amount'),
+                    ->label('Base Charge'),
+                BadgeColumn::make('pricing_rules')
+                    ->label('Rules')
+                    ->getStateUsing(fn($record) => $record->pricing()->count()),
             ])
             ->filters([
                 //
