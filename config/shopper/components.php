@@ -110,8 +110,10 @@ return [
         'modals.update-value' => Livewire\Modals\UpdateValue::class,
         'modals.update-variant-stock' => Livewire\Modals\UpdateVariantStock::class,
 
-        'orders.browse' => Livewire\Orders\Browse::class,
-        'orders.show' => Livewire\Orders\Show::class,
+        // 'orders.browse' => Livewire\Orders\Browse::class,
+        // 'orders.show' => Livewire\Orders\Show::class,
+        'orders.browse' => Console\Orders\Browse::class,
+        'orders.show' => Console\Orders\Show::class,
 
         'products.browse' => Livewire\Products\Browse::class,
         // 'products.create' => Livewire\Products\Create::class,

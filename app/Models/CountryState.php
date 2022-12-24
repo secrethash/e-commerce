@@ -12,6 +12,10 @@ class CountryState extends Model
 
     protected $table = 'country_states';
 
+    protected $guarded = [
+        'id'
+    ];
+
     public function country()
     {
         return $this->belongsTo(Country::class, 'country_id');

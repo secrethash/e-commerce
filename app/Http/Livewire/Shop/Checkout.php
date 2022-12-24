@@ -78,6 +78,7 @@ class Checkout extends Component
 
     protected $messages = [
         'user.email.required_with' => 'The :Attribute field is required when create account is active.',
+        'user.email.unique' => 'This :Attribute is already registered with us. Please Login to your account and try again.',
         'password.required_with' => 'The :Attribute field is required when create account is active.',
         'store_location.required_if' => 'The :Attribute field is required when selected shipping method is Store Pickup.'
     ];
@@ -126,16 +127,38 @@ class Checkout extends Component
         ];
     }
 
+    protected function shippingAddressRules(): array
+    {
+        return [
+            "shippingAddress" => ['array'],
+            "shippingAddress.first_name" => [],
+            "shippingAddress.last_name" => [],
+            "shippingAddress.company_name" => [],
+            "shippingAddress.country_id" => [],
+            "shippingAddress.street_address" => [],
+            "shippingAddress.street_address_plus" => [],
+            "shippingAddress.city" => [],
+            "shippingAddress.country_state_id" => [],
+            "shippingAddress.zipcode" => [],
+            "shippingAddress.phone_number" => [],
+        ];
+    }
+
     protected function rules(): array
     {
+        $userEmailUnique = null;
+        if (!auth()->check()) {
+            $userEmailUnique = 'unique:users,email,'.auth()->user()?->email;
+        }
         return array_merge(
             $this->addressRules(),
-            $this->addressRules('shippingAddress', false),
+            // $this->addressRules('shippingAddress', false),
+            $this->shippingAddressRules(),
             [
                 'createAccount' => [],
                 'user' => ['array'],
-                'user.email' => ['required_with:createAccount'],
-                'password' => ['required_with:createAccount', Password::min(8)->numbers()->symbols()->mixedCase()],
+                'user.email' => ['required_with:createAccount', $userEmailUnique],
+                'password' => ['required_if:createAccount,true', Password::min(8)->numbers()->symbols()->mixedCase()],
                 'selectedPaymentMethod' => ['required', 'exists:payment_methods,slug'],
                 'selectedCarrier' => ['required', 'exists:carriers,slug'],
                 'store_location' => ['required_if:selectedCarrier,'.$this->storePickup],
@@ -321,9 +344,9 @@ class Checkout extends Component
         CartService::shippingMethod($this->cart, $this->selectedCarrier);
         // $this->processAmounts();
         $this->needsCartRefresh();
-        if ($notify) {
-            $this->notify('info', 'Shipping Total Updated!', 'Your Shipping total has been updated.');
-        }
+        // if ($notify) {
+        //     $this->notify('info', 'Shipping Total Updated!', 'Your Shipping total has been updated.');
+        // }
     }
 
     public function refreshCart()
