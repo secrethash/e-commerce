@@ -20,6 +20,18 @@ class Country extends SystemCountry
 
     protected $guarded = ['id'];
 
+    protected $fillable = [
+        'is_active',
+        'name',
+        'name_official',
+        'cca3',
+        'cca2',
+        'flag',
+        'latitude',
+        'longitude',
+        'currencies',
+    ];
+
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);

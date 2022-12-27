@@ -14,6 +14,7 @@ use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CountryResource extends Resource
@@ -73,10 +74,10 @@ class CountryResource extends Resource
             ->actions([
                 // Tables\Actions\EditAction::make(),
                 Action::make('activate')
-                    ->label(fn($record) => $record->is_active ? 'Decativate' : 'Activate')
-                    ->icon(fn($record) => $record->is_active ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
-                    ->color(fn($record) => $record->is_active ? 'danger' : 'success')
-                    ->action(fn($record) => $record->update([
+                    ->label(fn(Model $record) => $record->is_active ? 'Decativate' : 'Activate')
+                    ->icon(fn(Model $record) => $record->is_active ? 'heroicon-o-x-circle' : 'heroicon-o-check-circle')
+                    ->color(fn(Model $record) => $record->is_active ? 'danger' : 'success')
+                    ->action(fn(Model $record) => $record->update([
                         'is_active' => !$record->is_active,
                     ])),
             ])
@@ -85,15 +86,15 @@ class CountryResource extends Resource
                 BulkAction::make('Deactivate Selected')
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
-                    ->action(fn($records) => $records->each->update([
+                    ->action(fn($records) => $records->each(fn($record) => $record->update([
                         'is_active' => false,
-                    ])),
+                    ]))),
                 BulkAction::make('Activate Selected')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->action(fn($records) => $records->each->update([
+                    ->action(fn($records) => $records->each(fn($record) => $record->update([
                         'is_active' => true,
-                    ])),
+                    ]))),
             ]);
     }
 

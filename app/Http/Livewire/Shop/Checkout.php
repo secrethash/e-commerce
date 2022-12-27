@@ -26,8 +26,10 @@ use Shopper\Framework\Models\Shop\Inventory\Inventory;
 use Shopper\Framework\Models\Shop\Order\Order;
 use Shopper\Framework\Models\Shop\Order\OrderItem;
 use Shopper\Framework\Models\Shop\PaymentMethod;
-use Shopper\Framework\Models\System\Country;
+use App\Models\Country;
 use App\Models\Address;
+use Illuminate\Validation\Rule;
+
 // use Shopper\Framework\Models\User\Address;
 
 class Checkout extends Component
@@ -79,7 +81,7 @@ class Checkout extends Component
     protected $messages = [
         'user.email.required_with' => 'The :Attribute field is required when create account is active.',
         'user.email.unique' => 'This :Attribute is already registered with us. Please Login to your account and try again.',
-        'password.required_with' => 'The :Attribute field is required when create account is active.',
+        'password.required_if' => 'The :Attribute field is required when create account is active.',
         'store_location.required_if' => 'The :Attribute field is required when selected shipping method is Store Pickup.'
     ];
 
@@ -105,6 +107,7 @@ class Checkout extends Component
             $this->addressValidationAttributes('shippingAddress'),
             [
                 'store_location' => 'Pickup Location',
+                'selectedCarrier' => 'Shipping Method',
             ]
         );
     }
@@ -161,7 +164,8 @@ class Checkout extends Component
                 'password' => ['required_if:createAccount,true', Password::min(8)->numbers()->symbols()->mixedCase()],
                 'selectedPaymentMethod' => ['required', 'exists:payment_methods,slug'],
                 'selectedCarrier' => ['required', 'exists:carriers,slug'],
-                'store_location' => ['required_if:selectedCarrier,'.$this->storePickup],
+                // 'store_location' => ['required_if:selectedCarrier,'.$this->storePickup],
+                'store_location' => [Rule::requiredIf(fn() => Carrier::whereSlug($this->selectedCarrier)->first()->is_store_pickup)],
             ]
         );
     }
@@ -174,7 +178,7 @@ class Checkout extends Component
         $this->selectAddress();
         $this->shippingToBillingAddress();
         // $this->processAmounts();
-        $this->countries = Country::orderBy('name')->get();
+        $this->countries = Country::active()->orderBy('name')->get();
         $this->selectedCountry = $this->address->country ? Country::find($this->address->country_id) : null;
         $this->locations = Inventory::where('country_id', $this->address->country?->id)->get();
         // $this->carriers = Carrier::where('is_enabled', true)->get();
@@ -216,7 +220,7 @@ class Checkout extends Component
         }
 
         if ($carrier && $carrier->is_store_pickup) {
-            $notStorePickup = Carrier::whereIn('id', $this->carriers->pluck('id'))
+            $notStorePickup = Carrier::whereIn('id', $this->carriers->pluck('id')->toArray())
                 ->where('is_store_pickup', false)->first();
             $carrier = ($this->locations->count() <= 0) ? $notStorePickup : $carrier;
         }
@@ -383,16 +387,16 @@ class Checkout extends Component
             $this->user->last_name = $this->address->last_name;
             $this->user->password = Hash::make($this->password);
             $this->user->save();
-            Auth::login($this->user);
+            $this->createAccount ? Auth::login($this->user) : null;
         }
 
         //? 3. Process Addresses
-        $this->address->user_id = $this->address->user_id ?? $this->user->id;
+        $this->address->user_id = $this->user->id;
         $this->address->save();
         if ($this->shipToBilling) {
             $this->shippingToBillingAddress();
         }
-        $this->shippingAddress->user_id = $this->shippingAddress->user_id ?? $this->user->id;
+        $this->shippingAddress->user_id = $this->user->id;
         $this->shippingAddress->save();
 
         //? 4. Process Order

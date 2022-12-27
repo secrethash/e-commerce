@@ -49,11 +49,13 @@ class Cart {
         if ($user) {
             if (!$user->carts->first()) {
                 if (!$cart) {
+                    /** @var App\Models\Cart $cart */
                     $cart = (new self())->make()->cart;
                 }
                 $cart->user()->associate($user);
                 // $user->carts()->associate($cart);
             } elseif ($cart && $user->carts->count() >= 1 && $cart->isNot($user->carts->first())) {
+                // $cart->products()->detach();
                 $cart->delete();
                 $cart = $user->carts->first();
                 Session::forget('current_cart');

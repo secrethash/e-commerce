@@ -27,16 +27,9 @@ class ViewCountry extends ViewRecord
                     'secondary' : 'success'
                 )
                 ->action(function() use($record) {
-                    if ($record->pricing()->count() < 1 && !$record->is_active) {
-                        Filament::notify(
-                            'danger',
-                            'Please make sure there is atleast one Pricing Rule present before activating.'
-                        );
-                    } else {
-                        $record->update([
-                            'is_active' => !$record->is_active
-                        ]);
-                    }
+                    $record->update([
+                        'is_active' => !$record->is_active
+                    ]);
                 })
                 ->icon(fn() =>
                     $this->record->is_active ?

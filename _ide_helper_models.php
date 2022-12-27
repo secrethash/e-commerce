@@ -244,6 +244,40 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Country
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $name_official
+ * @property string $cca2
+ * @property string $cca3
+ * @property string $flag
+ * @property string $latitude
+ * @property string $longitude
+ * @property array $currencies
+ * @property bool $is_active
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\CountryState[] $states
+ * @property-read int|null $states_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Country active()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereCca2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereCca3($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereCurrencies($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereFlag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereNameOfficial($value)
+ */
+	class Country extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\CountryState
  *
  * @property int $id

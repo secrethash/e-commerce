@@ -35,6 +35,7 @@ class Cart extends Model
         static::creating(fn(Model $model) => $model->forceFill([
             'uuid' => Str::uuid(),
         ]));
+        static::deleting(fn(self $model) => $model->products()->detach());
     }
 
     /**
