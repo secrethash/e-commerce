@@ -427,6 +427,72 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Tax
+ *
+ * @property int $id
+ * @property int|null $tax_group_id
+ * @property string $slug
+ * @property string $name
+ * @property string $short_name
+ * @property string|null $description
+ * @property string $calculation_type
+ * @property int $rate
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\TaxGroup|null $group
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax active()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereCalculationType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereShortName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereTaxGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Tax whereUpdatedAt($value)
+ */
+	class Tax extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\TaxGroup
+ *
+ * @property int $id
+ * @property string $slug
+ * @property string $name
+ * @property string|null $description
+ * @property bool $is_default
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Tax[] $taxes
+ * @property-read int|null $taxes_count
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup active()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup default()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup whereIsDefault($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxGroup whereUpdatedAt($value)
+ */
+	class TaxGroup extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Testimonial
  *
  * @property int $id

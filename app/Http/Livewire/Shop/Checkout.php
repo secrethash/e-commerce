@@ -23,11 +23,13 @@ use Mail;
 use Shopper\Framework\Facades\Shopper;
 use App\Models\Carrier;
 use Shopper\Framework\Models\Shop\Inventory\Inventory;
-use Shopper\Framework\Models\Shop\Order\Order;
+// use Shopper\Framework\Models\Shop\Order\Order;
+use App\Models\Order;
 use Shopper\Framework\Models\Shop\Order\OrderItem;
 use Shopper\Framework\Models\Shop\PaymentMethod;
 use App\Models\Country;
 use App\Models\Address;
+use App\Models\Tax;
 use Illuminate\Validation\Rule;
 
 // use Shopper\Framework\Models\User\Address;
@@ -55,8 +57,12 @@ class Checkout extends Component
     public Collection $countries;
 
     public Collection $carriers;
+    public Collection $taxes;
 
-    public $selectedCarrier;
+    /** @var null|\App\Models\Carrier $selectedCarrier */
+    public $selectedCarrier; // model data
+    /** @var null|string $carrierSelected */
+    public $carrierSelected; // form data
 
     protected string $storePickup = 'store-pickup';
 
@@ -79,7 +85,7 @@ class Checkout extends Component
     ];
 
     protected $messages = [
-        'user.email.required_with' => 'The :Attribute field is required when create account is active.',
+        'user.email.required_with' => 'The :Attribute field is required.',
         'user.email.unique' => 'This :Attribute is already registered with us. Please Login to your account and try again.',
         'password.required_if' => 'The :Attribute field is required when create account is active.',
         'store_location.required_if' => 'The :Attribute field is required when selected shipping method is Store Pickup.'
@@ -107,7 +113,7 @@ class Checkout extends Component
             $this->addressValidationAttributes('shippingAddress'),
             [
                 'store_location' => 'Pickup Location',
-                'selectedCarrier' => 'Shipping Method',
+                'carrierSelected' => 'Shipping Method',
             ]
         );
     }
@@ -150,6 +156,8 @@ class Checkout extends Component
     protected function rules(): array
     {
         $userEmailUnique = null;
+        $selectedCarrier = $this->selectedCarrier;
+
         if (!auth()->check()) {
             $userEmailUnique = 'unique:users,email,'.auth()->user()?->email;
         }
@@ -163,9 +171,11 @@ class Checkout extends Component
                 'user.email' => ['required_with:createAccount', $userEmailUnique],
                 'password' => ['required_if:createAccount,true', Password::min(8)->numbers()->symbols()->mixedCase()],
                 'selectedPaymentMethod' => ['required', 'exists:payment_methods,slug'],
-                'selectedCarrier' => ['required', 'exists:carriers,slug'],
+                'carrierSelected' => ['required', 'exists:carriers,slug'],
                 // 'store_location' => ['required_if:selectedCarrier,'.$this->storePickup],
-                'store_location' => [Rule::requiredIf(fn() => Carrier::whereSlug($this->selectedCarrier)->first()->is_store_pickup)],
+                'store_location' => [Rule::requiredIf(function() use($selectedCarrier) {
+                    return $selectedCarrier?->is_store_pickup ? true : false;
+                })],
             ]
         );
     }
@@ -179,11 +189,12 @@ class Checkout extends Component
         $this->shippingToBillingAddress();
         // $this->processAmounts();
         $this->countries = Country::active()->orderBy('name')->get();
-        $this->selectedCountry = $this->address->country ? Country::find($this->address->country_id) : null;
+        $this->selectedCountry = Country::find($this->address->country_id) ?? Country::active()->first();
         $this->locations = Inventory::where('country_id', $this->address->country?->id)->get();
         // $this->carriers = Carrier::where('is_enabled', true)->get();
         // $this->carriers = Shipping::get($this->address, (new CartService($this->cart)));
         $this->createAccount = Auth::check() ? null : true;
+        $this->taxes = Tax::active()->get();
         $this->selectCarrier();
         $this->calculateShipping();
     }
@@ -191,16 +202,20 @@ class Checkout extends Component
     public function updatedAddress(): void
     {
         if ($this->address->country) {
-            $this->locations = Inventory::where('country_id', $this->address->country_id)->get();
-            $this->selectedCountry = Country::find($this->address->country_id);
-            $states = $this->states = CountryState::where('country_id', $this->selectedCountry->id)->get();
-            if ($states->count() <= 0) {
-                $this->address->country_state_id = null;
-            }
+            // $this->selectedCountry = Country::find($this->address->country_id);
         }
         if ($this->shipToBilling) {
             $this->shippingToBillingAddress();
         }
+
+        $this->selectedCountry = Country::find($this->address->country_id) ?? Country::active()->first();
+        $states = $this->states = CountryState::where('country_id', $this->selectedCountry->id)->get();
+        if ($states->count() <= 0) {
+            $this->address->country_state_id = null;
+        }
+
+        $this->locations = Inventory::where('country_id', $this->address->country_id)->get();
+
         $this->carriers = Shipping::get($this->shippingAddress, (new CartService($this->cart)));
         $this->selectCarrier();
     }
@@ -212,24 +227,21 @@ class Checkout extends Component
     //     }
     // }
 
-    protected function verifyCarrierSelection($carrier)
+    protected function verifyCarrierSelection(?Carrier $carrier = null)
     {
         $this->carriers = Shipping::get($this->shippingAddress, (new CartService($this->cart)));
-        if (is_string($carrier)) {
-            $carrier = Carrier::whereSlug($carrier)->first();
-        }
 
         if ($carrier && $carrier->is_store_pickup) {
             $notStorePickup = Carrier::whereIn('id', $this->carriers->pluck('id')->toArray())
                 ->where('is_store_pickup', false)->first();
             $carrier = ($this->locations->count() <= 0) ? $notStorePickup : $carrier;
         }
+
         if ($carrier) {
             $shipping = Shipping::make($carrier, $this->shippingAddress, $this->cart);
-            $this->selectedCarrier = $shipping->useable() ? $carrier->slug : $this->carriers->first()?->slug;
+            $this->selectedCarrier = $shipping->useable() ? $carrier : $this->carriers->first();
         } else {
-            $carrier = $this->carriers->first();
-            $this->selectedCarrier = $carrier?->slug;
+            $this->selectedCarrier = $carrier = $this->carriers->first();
         }
     }
 
@@ -238,7 +250,8 @@ class Checkout extends Component
         // $this->carriers = Shipping::get($this->shippingAddress, (new CartService($this->cart)));
         $carrier = $this->cart->shipping;
         $this->verifyCarrierSelection($carrier);
-        $this->calculateShipping(!$carrier?->is_store_pickup);
+        $this->calculateShipping();
+        $this->carrierSelected = $this->selectedCarrier?->slug;
     }
 
     protected function selectUser(): void
@@ -337,17 +350,17 @@ class Checkout extends Component
         $this->selectedPaymentMethod = $method;
     }
 
-    public function updatedSelectedCarrier($value): void
+    public function updatedCarrierSelected($value): void
     {
-        $this->verifyCarrierSelection($value);
+        $this->verifyCarrierSelection(Carrier::whereSlug($value)->first());
         $this->calculateShipping();
     }
 
     public function calculateShipping($notify = false): void
     {
         CartService::shippingMethod($this->cart, $this->selectedCarrier);
-        // $this->processAmounts();
-        $this->needsCartRefresh();
+        $this->processAmounts();
+        // $this->needsCartRefresh();
         // if ($notify) {
         //     $this->notify('info', 'Shipping Total Updated!', 'Your Shipping total has been updated.');
         // }
@@ -426,15 +439,16 @@ class Checkout extends Component
 
         $order = (new Order)->fill([
             'number' => order_number(),
-            'price_amount' => $this->total * 100,
+            'price_amount' => $this->total,
             'currency' => $this->currency,
             'shipping_total' => $this->shippingTotal,
-            'shipping_method' => $this->selectedCarrier,
+            'tax_total' => $this->taxed,
+            'shipping_method' => "{$this->selectedCarrier->name} ({$this->selectedCarrier->name})",
         ]);
         $order->customer()->associate($this->user);
         $order->paymentMethod()->associate($paymentMethod);
         $order->shippingAddress()->associate($this->shippingAddress);
-        if ($this->selectedCarrier === $this->storePickup) {
+        if ($this->selectedCarrier->is_store_pickup) {
             $store = Inventory::find($this->store_location);
             $order->fill([
                 'notes' => $order->notes."\n Customer Pickup Selected Store: {$store->name}",

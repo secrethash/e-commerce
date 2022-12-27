@@ -12,7 +12,8 @@ use App\Models\Enums\CarrierCalculationMethod;
 use App\Models\Enums\ShippingRules;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Shopper\Framework\Models\System\Country;
+// use Shopper\Framework\Models\System\Country;
+use App\Models\Country;
 
 final class Shipping
 {
@@ -133,7 +134,7 @@ final class Shipping
                 ->orWhere('maximum_order', '>=', $subtotal);
             if ($pricing->count() >= 1) {
                 // return $this->calculate($pricing->first(), $subtotal)->charge;
-                return $this->calculateFlat(0, $subtotal)->charge;
+                return $this->calculateFlat(0, $subtotal)->getCharge();
             }
         }
 
@@ -175,7 +176,7 @@ final class Shipping
                 ->orWhere('maximum_order', '>=', $subtotal);
             if ($pricing->count() >= 1) {
                 // return $this->calculate($pricing->first(), $subtotal)->charge;
-                return $this->calculateFlat(0, $subtotal)->charge;
+                return $this->calculateFlat(0, $subtotal)->getCharge();
             }
         }
 
@@ -212,7 +213,7 @@ final class Shipping
                 ->orWhere('maximum_order', '>=', $subtotal);
             if ($pricing->count() >= 1) {
                 // return $this->calculate($pricing->first(), $subtotal)->charge;
-                return $this->calculateFlat(0, $subtotal)->charge;
+                return $this->calculateFlat(0, $subtotal)->getCharge();
             }
         }
 
@@ -248,7 +249,7 @@ final class Shipping
             $pricing->where('minimum_order', '<=', $subtotal)
                 ->orWhere('maximum_order', '>=', $subtotal);
             if ($pricing->count() >= 1) {
-                return $this->calculate($pricing->first(), $subtotal)->charge;
+                return $this->calculate($pricing->first(), $subtotal)->getCharge();
             }
         }
 
@@ -256,7 +257,7 @@ final class Shipping
             return false;
         }
 
-        return $this->calculateFlat($carrier->shipping_amount, $subtotal)->charge;
+        return $this->calculateFlat($carrier->shipping_amount * 100, $subtotal)->getCharge();
 
     }
 
@@ -293,7 +294,7 @@ final class Shipping
             $pricing->where('minimum_order', '<=', $subtotal)
                 ->orWhere('maximum_order', '>=', $subtotal);
             if ($pricing->count() >= 1) {
-                return $this->calculate($pricing->first(), $subtotal)->charge;
+                return $this->calculate($pricing->first(), $subtotal)->getCharge();
             }
         }
 
@@ -301,7 +302,7 @@ final class Shipping
             return false;
         }
 
-        return $this->calculateFlat($carrier->shipping_amount, $subtotal)->charge;
+        return $this->calculateFlat($carrier->shipping_amount * 100, $subtotal)->getCharge();
     }
 
     /**
@@ -315,7 +316,7 @@ final class Shipping
     {
         $function = camel_case('calculate '.$price->method->value);
         // return $this->call($function, $price->amount, $amount);
-        return call_user_func([$this, $function], $price->amount, $amount);
+        return call_user_func([$this, $function], ($price->amount * 100), $amount);
     }
 
     private function calculateFlat (int $rate, int $amount): self
@@ -327,7 +328,7 @@ final class Shipping
 
     private function calculatePercent (int $rate, int $amount): self
     {
-        $charge = $this->charge = ($amount * $rate) / 100;
+        $charge = $this->charge = (($amount * ($rate / 100)) / 100);
         $this->shipping = $amount + $charge;
         return $this;
     }

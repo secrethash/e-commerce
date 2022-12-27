@@ -32,6 +32,8 @@ class Cart extends Model
      */
     protected static function booted()
     {
+        parent::boot();
+
         static::creating(fn(Model $model) => $model->forceFill([
             'uuid' => Str::uuid(),
         ]));

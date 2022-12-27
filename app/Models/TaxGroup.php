@@ -2,25 +2,39 @@
 
 namespace App\Models;
 
-use App\Models\Enums\ShippingRules;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Shopper\Framework\Models\Shop\Carrier as ShopCarrier;
-use Shopper\Framework\Models\System\Country;
 
-class Carrier extends ShopCarrier
+class TaxGroup extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'tax_groups';
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
     protected $casts = [
-        'rule_type' => ShippingRules::class,
-        'is_enabled' => 'bool',
-        'is_store_pickup' => 'bool',
-        'limited_to_pricing' => 'bool',
+        'is_default' => 'bool',
+        'is_active' => 'bool',
+    ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [
+        'id',
     ];
 
     /**
@@ -49,20 +63,28 @@ class Carrier extends ShopCarrier
                 ),
             ]);
         });
-    }
 
-    public function pricing(): HasMany
-    {
-        return $this->hasMany(CarrierPricing::class);
-    }
-
-    public function country()
-    {
-        return $this->belongsTo(Country::class, 'country_id');
+        static::created(function(self $model) {
+            if ($model->is_default) {
+                $basename = class_basename($model);
+                $basename::whereNotIn('id', [$model->id])
+                    ->update(['is_default' => false]);
+            }
+        });
     }
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('is_enabled', true);
+        return $query->where('is_active', true);
+    }
+
+    public function scopeDefault(Builder $query): Builder
+    {
+        return $query->where('is_default', true);
+    }
+
+    public function taxes(): HasMany
+    {
+        return $this->hasMany(Tax::class);
     }
 }

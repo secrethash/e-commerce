@@ -355,7 +355,8 @@
                                                             {{$carrier->name}}
                                                             @if($shipping->getCharge() > 0)
                                                                 <span class="fw-bolder">
-                                                                    {{price_formatted($shipping->getCharge() * 100)}}
+                                                                    {{-- @dump($shipping->getCharge()) --}}
+                                                                    {{price_formatted($shipping->getCharge())}}
                                                                 </span>
                                                             @elseif ($carrier->is_store_pickup && $locations->count() <= 0)
                                                                 <span class="badge bg-secondary rounded-0">
@@ -371,7 +372,7 @@
                                                             class="form-check-input"
                                                             name="shipping_method"
                                                             value="{{$carrier->slug}}"
-                                                            wire:model='selectedCarrier'
+                                                            wire:model='carrierSelected'
                                                             @disabled($carrier->slug === $storePickup && $locations->count() <= 0)
                                                             id="carrier-{{$carrier->slug}}" />
                                                     </div>
@@ -383,6 +384,37 @@
                                                 <div class="d-block mt-2 text-danger fw-bolder text-end">
                                                     @if ($shippingTotal > 0)
                                                         {{$formattedShippingTotal}}
+                                                    @endif
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <hr>
+                                    <div class="your-order-bottom mt-2">
+                                        <ul>
+                                            <li class="your-order-shipping">
+                                                <div class="d-block">
+                                                    Tax
+                                                </div>
+                                            </li>
+                                            <li>
+                                                @forelse ($taxes as $tax)
+                                                    <div class="d-block form-check">
+                                                        <span for="carrier-{{$tax->slug}}" class="form-check-label">
+                                                            <span class="fw-bolder">{{$tax->short_name}}</span>
+                                                            <span class="">
+                                                                {{price_formatted($taxation($tax, $subtotal / 100))}}
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                @empty
+                                                    <div class="d-block p-2" style="border: dashed 2px var(--bs-gray-300);">
+                                                        <span>No Tax Added</span>
+                                                    </div>
+                                                @endforelse
+                                                <div class="d-block mt-2 text-danger fw-bolder text-end">
+                                                    @if ($taxed > 0)
+                                                        {{$formattedTaxed}}
                                                     @endif
                                                 </div>
                                             </li>
@@ -447,7 +479,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if ($selectedCarrier === $storePickup && $address->country)
+                                @if ($selectedCarrier?->is_store_pickup && $address->country_id !== null)
                                     <hr class="my-4" />
                                     <div class="my-3">
                                         <h3>Choose a Pickup Point</h3>

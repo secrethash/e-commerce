@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Models\Brand;
 use App\Models\Enums\UsedFor;
+use App\Models\Tax;
 use App\Services\Menus;
+use App\Services\Taxation;
 use Beier\FilamentPages\Models\FilamentPage;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
@@ -39,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrapFive();
 
         View::share('customMenu', fn (): Menus => new Menus());
+        View::share('taxation', fn (Tax $tax, int $amount): int => Taxation::fromTax($tax, $amount));
         View::share('usedForEnum', fn ($from): UsedFor => UsedFor::from($from));
 
         Filament::serving(function () {
@@ -49,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
                     ->activeIcon('heroicon-s-adjustments')
                     ->url(route('shopper.dashboard'))
                     ->openUrlInNewTab()
-                    ->group('shop')
+                    ->group('extra')
                     ->sort(100),
                 NavigationItem::make('view-store')
                     ->label('View Store')
@@ -57,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
                     ->activeIcon('heroicon-s-shopping-bag')
                     ->url(route('home'))
                     ->openUrlInNewTab()
-                    ->group('shop')
+                    ->group('extra')
                     ->sort(101),
             ]);
             Filament::registerUserMenuItems([

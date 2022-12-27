@@ -2,25 +2,32 @@
 
 namespace App\Models;
 
-use App\Models\Enums\ShippingRules;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Shopper\Framework\Models\Shop\Carrier as ShopCarrier;
-use Shopper\Framework\Models\System\Country;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Carrier extends ShopCarrier
+class Tax extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
-
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
     protected $casts = [
-        'rule_type' => ShippingRules::class,
-        'is_enabled' => 'bool',
-        'is_store_pickup' => 'bool',
-        'limited_to_pricing' => 'bool',
+        'is_active' => 'bool',
+    ];
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [
+        'id',
     ];
 
     /**
@@ -51,18 +58,21 @@ class Carrier extends ShopCarrier
         });
     }
 
-    public function pricing(): HasMany
-    {
-        return $this->hasMany(CarrierPricing::class);
-    }
-
-    public function country()
-    {
-        return $this->belongsTo(Country::class, 'country_id');
-    }
-
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('is_enabled', true);
+        return $query->where('is_active', true);
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(TaxGroup::class);
+    }
+
+    public function rate(): Attribute
+    {
+        return Attribute::make(
+            fn($value) => $value / 100,
+            fn($value) => $value * 100
+        );
     }
 }

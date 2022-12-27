@@ -13,14 +13,17 @@ trait HasAmounts
 {
     use HasPrice;
 
-    public float $subtotal = 0;
+    public int $subtotal = 0;
     public string $formattedSubtotal;
 
-    public float $total = 0;
+    public int $total = 0;
     public string $formattedTotal;
 
-    public float $shippingTotal = 0;
+    public int $shippingTotal = 0;
     public string $formattedShippingTotal;
+
+    public int $taxed = 0;
+    public string $formattedTaxed;
 
     public string $currency;
 
@@ -30,9 +33,11 @@ trait HasAmounts
         $this->subtotal = Cart::subtotal($this->cart);
         $this->total = Cart::total($this->cart, $this->shippingAddress ?? null);
         $this->shippingTotal = Cart::shippingTotal($this->cart, $this->shippingAddress ?? null);
-        $this->formattedTotal = $this->formattedPrice($this->total * 100);
-        $this->formattedSubtotal = $this->formattedPrice($this->subtotal * 100);
-        $this->formattedShippingTotal = $this->formattedPrice($this->shippingTotal * 100);
+        $this->taxed = Cart::taxTotal($this->cart, $this->shippingAddress ?? null);
+        $this->formattedTotal = $this->formattedPrice($this->total);
+        $this->formattedSubtotal = $this->formattedPrice($this->subtotal);
+        $this->formattedShippingTotal = $this->formattedPrice($this->shippingTotal);
+        $this->formattedTaxed = $this->formattedPrice($this->taxed);
         $this->amountsArray = $this->getAmounts();
     }
 

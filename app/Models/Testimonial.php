@@ -37,6 +37,8 @@ class Testimonial extends Model implements HasMedia
      */
     protected static function booted(): void
     {
+        parent::boot();
+
         static::saving(function(self $model) {
             $model->forceFill([
                 'slug' => slugify_model(

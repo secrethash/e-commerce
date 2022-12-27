@@ -165,18 +165,18 @@ class Cart {
         return $cart->shipping;
     }
 
-    public static function subtotal(CartModel $cart): float
+    public static function subtotal(CartModel $cart): int
     {
         $subtotal = 0;
 
         foreach ($cart->products as $product) {
-            $subtotal += price_quantity($product->price_amount, $product->pivot->quantity);
+            $subtotal += price_quantity($product->price_amount * 100, $product->pivot->quantity);
         }
 
         return $subtotal;
     }
 
-    public static function shippingTotal(CartModel $cart, ?Address $address = null): float
+    public static function shippingTotal(CartModel $cart, ?Address $address = null): int
     {
         if (
             static::isEmpty($cart) OR
@@ -188,16 +188,25 @@ class Cart {
 
         $shipping = Shipping::make($cart->shipping, $address, $cart);
         return $shipping->process()->getCharge();
-        // $shipping = $cart->shipping?->shipping_amount;
-        // return $shipping ? $shipping / 100 : 0;
     }
 
-    public static function total(CartModel $cart, ?Address $shippingAddress): float
+    public static function taxTotal(CartModel $cart, ?Address $address = null): int
+    {
+        if (static::isEmpty($cart)) {
+            return 0;
+        }
+
+        $tax = Taxation::make(static::subtotal($cart, $address) / 100);
+        return $tax->processAll()->getTaxed();
+    }
+
+    public static function total(CartModel $cart, ?Address $shippingAddress): int
     {
         $subtotal = static::subtotal($cart);
         $shipping = static::shippingTotal($cart, $shippingAddress);
+        $taxed = static::taxTotal($cart, $shippingAddress);
 
-        return $subtotal + $shipping;
+        return $subtotal + $shipping + $taxed;
     }
 
     public static function isEmpty(CartModel $cart): bool

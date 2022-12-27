@@ -193,7 +193,7 @@
                 </div>
             </div>
             <div class="py-4 sm:pr-8">
-                <h3 class="text-lg leading-6 font-medium text-secondary-900 dark:text-white">{{ __('Shipping') }}</h3>
+                <h3 class="text-lg leading-6 font-medium text-secondary-900 dark:text-white">{{ __('Shipping + Tax') }}</h3>
                 <div class="mt-4">
                     @if($order->shipping_method)
                         <dl>
@@ -218,7 +218,7 @@
                                     {{ __('Tax') }}
                                 </dt>
                                 <dd class="mt-1 text-sm font-medium text-secondary-900 dark:text-white sm:mt-0 sm:col-span-2">
-                                    0.00
+                                    {{ shopper_money_format($order->tax_total) }}
                                 </dd>
                             </div>
                         </dl>
@@ -248,7 +248,7 @@
                     <div class="w-full sm:max-w-sm space-y-1 text-right text-secondary-700 dark:text-secondary-300">
                         <div class="bg-secondary-200 rounded-md p-4 dark:bg-secondary-800">
                             <span class="text-base leading-6 font-semibold text-secondary-900 dark:text-white">{{ __('Order total:') }} </span>
-                            {{ shopper_money_format($order->fullPriceWithShipping()) }}
+                            {{ shopper_money_format($order->fullPriceWithShipping() + $order->tax_total) }}
                         </div>
                     </div>
                 </div>
@@ -265,12 +265,12 @@
 
                         <x-slot name="content">
                             <div class="py-1">
-                                <x-shopper::dropdown-button role="menuitem">
+                                {{-- <x-shopper::dropdown-button role="menuitem">
                                     {{ __('Send invoice') }}
                                     <span class="inline-flex items-center ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-secondary-100 text-secondary-800 dark:bg-secondary-800 dark:text-secondary-300">
                                       {{ __('Soon') }}
                                     </span>
-                                </x-shopper::dropdown-button>
+                                </x-shopper::dropdown-button> --}}
                                 @if($order->isPending())
                                     <x-shopper::dropdown-button wire:click="register" role="menuitem">
                                         {{ __('Register') }}
