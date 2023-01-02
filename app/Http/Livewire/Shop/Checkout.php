@@ -131,7 +131,7 @@ class Checkout extends Component
             "{$prefix}.street_address_plus" => ['nullable', 'string'],
             "{$prefix}.city" => [$requiredRule, 'string'],
             "{$prefix}.country_state_id" => ['numeric', 'nullable', 'exists:system_countries,id'],
-            "{$prefix}.zipcode" => ['string'],
+            "{$prefix}.zipcode" => ['string', 'nullable'],
             "{$prefix}.phone_number" => [$requiredRule, 'numeric'],
         ];
     }
