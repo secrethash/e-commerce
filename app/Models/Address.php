@@ -11,6 +11,30 @@ class Address extends ShopperAddress
 {
     use HasFactory;
 
+    /**
+     * Bootstrap the model and its traits.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (self $address) {
+            /** @var \Illuminate\Database\Eloquent\Builder $userAddress */
+            $userAddress = $address->user->addresses()->where('type', $address->type);
+            if ($userAddress->count() >= 1) {
+                if ($address->is_default) {
+                    $userAddress->update([
+                        'is_default' => false,
+                    ]);
+                }
+            } else {
+                $address->forceFill([
+                    'is_default' => true,
+                ]);
+            }
+        });
+    }
+
     public function state(): BelongsTo
     {
         return $this->belongsTo(CountryState::class, 'country_state_id');
