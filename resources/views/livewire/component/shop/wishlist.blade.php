@@ -18,7 +18,7 @@
                         @forelse ($products as $product)
                             <li>
                                 <a href="{{route('shop.product', $product->slug)}}" class="image"><img
-                                        src="{{$product->getMedia('uploads')->first()->getUrl('thumb200x200')}}"
+                                        src="{{product_images($product)->thumb}}"
                                         alt="{{ $product->name }}"></a>
                                 <div class="content pe-2 pe-md-3">
                                     <a href="{{route('shop.product', $product->slug)}}" class="title">{{ $product->name }}</a>

@@ -8,7 +8,7 @@
     </div>
     <!--Cart info End -->
     <!-- OffCanvas Cart Start -->
-    <div id="offcanvas-cart-{{$for}}" class="offcanvas offcanvas-cart">
+    <div id="offcanvas-cart-{{$for}}" class="offcanvas offcanvas-cart" data-bs-backdrop="false">
         <div class="inner">
             <div class="head">
                 <span class="title">Cart</span>
@@ -19,7 +19,7 @@
                     @forelse ($products as $product)
                         <li>
                             <a href="{{route('shop.product', $product->slug)}}" class="image"><img
-                                    src="{{$product->getMedia('uploads')->first()->getUrl('thumb200x200')}}"
+                                    src="{{product_images($product)->thumb}}"
                                     alt="{{ $product->name }}"></a>
                             <div class="content pe-2 pe-md-3">
                                 <a href="{{route('shop.product', $product->slug)}}" class="title">{{ $product->name }}</a>
@@ -87,3 +87,32 @@
     </div>
     <!-- OffCanvas Cart End -->
 </div>
+
+@push('lw-scripts')
+    <script>
+
+        $(document).ready(function() {
+
+            var offcanvasElementList = [].slice.call(document.querySelectorAll('.offcanvas'))
+            var offcanvasList = offcanvasElementList.map(function (offcanvasEl) {
+                return new bootstrap.Offcanvas(offcanvasEl, {
+                    'backdrop': false,
+                    'scroll': true,
+                })
+            })
+
+            Livewire.on('reload-cart-component', function () {
+                console.log('Triggered Reload Cart Component');
+                var myOffcanvas = document.getElementById('offcanvas-cart-{{$for}}')
+                var bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(myOffcanvas, {
+                    'backdrop': false,
+                    'scroll': true,
+                })
+                // bsOffcanvas.hide();
+                bsOffcanvas.show();
+                // bsOffcanvas.toggle();
+            })
+        })
+
+    </script>
+@endpush

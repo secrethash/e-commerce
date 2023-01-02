@@ -29,7 +29,7 @@ trait InteractsWithCart
      */
     public function refreshCart(): void
     {
-        $this->cart = $this->cart->fresh(['products']);
+        $this->cart = $this->cart->fresh(['products', 'shipping']);
         $this->processAmounts();
     }
 

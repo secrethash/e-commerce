@@ -755,8 +755,8 @@ $(function() {
 
 
 
-    /*----------------------------  
-        All Category toggle  
+    /*----------------------------
+        All Category toggle
      ------------------------------*/
 
     $(".category-toggle").on("click", function(e) {
@@ -793,8 +793,8 @@ $(function() {
         $(".category-mega-menu-10").slideToggle("slow");
     });
 
-    /*-----------------------------  
-              Category more toggle  
+    /*-----------------------------
+              Category more toggle
         -------------------------------*/
 
     $(".category-menu li.hidden").hide();

@@ -21,6 +21,13 @@
 <!-- Main Activation JS -->
 <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
 
-@stack('lw-scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 @livewireScripts
+@stack('lw-scripts')
+
+<!-- BEGIN: Custom Components -->
+@include('components.notice')
+{{-- @livewire('common.notice.toastr') --}}
+<script src="{{ asset('frontend/assets/js/notice-toastr.js') }}"></script>
+

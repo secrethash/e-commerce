@@ -14,6 +14,7 @@
     'flags' => true, # Display Flags
     'cart' => true, # Display Add to Cart Button
     'product',
+    'key' => null,
 ])
 
 @php
@@ -38,15 +39,15 @@
                         </li> --}}
                         @livewire('actions.add-to-wishlist', [
                             'product' => $product
-                        ])
+                        ], key('add-to-wishlist-'.$key))
                         {{-- <li>
                             <a href="compare.html" title="Add to compare"><i class="icon-repeat"></i></a>
                         </li> --}}
-                        <li>
+                        {{-- <li>
                             <a class="quick_view" href="#" data-link-action="quickview" title="Quick view" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="icon-eye"></i>
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
             @endif
@@ -86,7 +87,7 @@
             </div> --}}
             @livewire('actions.add-to-cart', [
                 'product' => $product,
-            ])
+            ], key('add-to-cart-'.$key))
         @endif
         @if ($countdown)
             <div class="clockdiv d-flex">

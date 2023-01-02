@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Shop;
 
+use App\Http\Livewire\Common\Notice\CanNotify;
 use App\Http\Livewire\Traits\InteractsWithWishlist;
 use Livewire\Component;
 use App\Services\Wishlist as WishlistService;
@@ -13,6 +14,7 @@ class Wishlist extends Component
     use InteractsWithWishlist {
         refreshWishlist as baseRefreshWishlist;
     }
+    use CanNotify;
 
     public Model $wishlist;
 
@@ -34,6 +36,7 @@ class Wishlist extends Component
         WishlistService::remove([$productId]);
 
         $this->needsWishlistRefresh();
+        $this->notify('warning', 'Product Removed!', 'Product has been removed from your Wishlist!');
     }
 
     public function clearWishlist(): void
@@ -41,6 +44,7 @@ class Wishlist extends Component
         WishlistService::empty($this->wishlist);
 
         $this->needsWishlistRefresh();
+        $this->notify('warning', 'Wishlist Cleared!', 'All Products have been removed from your Wishlist!');
     }
 
     public function refreshWishlist(): void

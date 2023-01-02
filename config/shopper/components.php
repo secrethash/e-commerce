@@ -2,6 +2,7 @@
 
 use Shopper\Framework\Http\Livewire;
 use App\Http\Livewire\Console;
+use App\View\Components;
 
 return [
 
@@ -20,6 +21,14 @@ return [
     'blade' => [
         //
         // 'brands.create' => 'livewire.console.brands.create',
+        // 'layouts.footer' => [
+        //     'class' => Components\Layouts\Footer::class,
+        //     'alias' => null,
+        // ],
+        // [
+        //     'alias' => null,
+        //     'class' => Components\LearnMore::class,
+        // ],
     ],
 
     /*
@@ -101,8 +110,10 @@ return [
         'modals.update-value' => Livewire\Modals\UpdateValue::class,
         'modals.update-variant-stock' => Livewire\Modals\UpdateVariantStock::class,
 
-        'orders.browse' => Livewire\Orders\Browse::class,
-        'orders.show' => Livewire\Orders\Show::class,
+        // 'orders.browse' => Livewire\Orders\Browse::class,
+        // 'orders.show' => Livewire\Orders\Show::class,
+        'orders.browse' => Console\Orders\Browse::class,
+        'orders.show' => Console\Orders\Show::class,
 
         'products.browse' => Livewire\Products\Browse::class,
         // 'products.create' => Livewire\Products\Create::class,
@@ -151,9 +162,13 @@ return [
         'tables.categories-table' => Livewire\Tables\CategoriesTable::class,
         'tables.collections-table' => Livewire\Tables\CollectionsTable::class,
         'tables.customers-table' => Livewire\Tables\CustomersTable::class,
-        'tables.orders-table' => Livewire\Tables\OrdersTable::class,
+        // 'tables.orders-table' => Livewire\Tables\OrdersTable::class,
+        'tables.orders-table' => Console\Tables\OrdersTable::class,
+
         'tables.products-table' => Livewire\Tables\ProductsTable::class,
         'tables.reviews-table' => Livewire\Tables\ReviewsTable::class,
+
+        // 'learn-more' => ConsoleComponents\LearnMore::class,
     ],
 
     /*

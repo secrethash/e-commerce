@@ -7,7 +7,10 @@
     "require": {
         "php": "^8.0.2",
         "andreiio/blade-remix-icon": "^1.1",
+        "beier/filament-pages": "^0.2.0",
         "codeat3/blade-google-material-design-icons": "^1.15",
+        "filament/filament": "^2.0",
+        "filament/spatie-laravel-media-library-plugin": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
@@ -15,8 +18,12 @@
         "livewire/livewire": "^2.10",
         "maatwebsite/excel": "^3.1.42",
         "psr/simple-cache": "^2.0",
+        "ryangjchandler/filament-navigation": "^0.4.0",
         "shopper/framework": "^1.0",
-        "spatie/laravel-menu": "^4.1"
+        "spatie/laravel-menu": "^4.1",
+        "symfony/http-client": "^6.2",
+        "symfony/mailgun-mailer": "^6.2",
+        "uccellolabs/filament-theme-color": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",
@@ -49,7 +56,8 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan filament:upgrade"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

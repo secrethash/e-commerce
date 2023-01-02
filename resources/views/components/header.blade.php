@@ -10,11 +10,15 @@
                         <div class="follow d-flex">
                             <label>Follow Us:</label>
                             <ul class="link-follow">
-                                <li><a class="facebook ion-social-facebook" title="Facebook" href="#"></a></li>
-                                <li><a class="twitter ion-social-twitter" title="Twitter" href="#"></a></li>
-                                <li><a class="google ion-social-googleplus-outline" title="Google" href="#"></a>
-                                </li>
-                                <li><a class="youtube ion-social-youtube" title="Youtube" href="#"></a></li>
+                                @if(!blank(shopper_setting('shop_facebook_link')))
+                                    <li><a class="facebook ion-social-facebook" title="Facebook" href="{{shopper_setting('shop_facebook_link')}}"></a></li>
+                                @endif
+                                @if(!blank(shopper_setting('shop_twitter_link')))
+                                    <li><a class="twitter ion-social-twitter" title="Twitter" href="{{shopper_setting('shop_twitter_link')}}"></a></li>
+                                @endif
+                                @if(!blank(shopper_setting('shop_instagram_link')))
+                                    <li><a class="instagram ion-social-instagram-outline" title="Instagram" href="{{shopper_setting('shop_instagram_link')}}"></a></li>
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -47,14 +51,19 @@
                                     </button>
 
                                     <ul class="dropdown-menu animation slideDownIn" aria-labelledby="dropdownMenuButton">
-                                            <li><a href="#">My Account</a></li>
+                                            <li><a href="{{route('user.account')}}">My Account</a></li>
+                                            <li><a href="{{route('user.orders')}}">Order History</a></li>
+                                            @can('access_dashboard')
+                                                <li><a href="{{route('shopper.dashboard')}}">Console</a></li>
+                                            @endcan
+                                            @can('can_view_backend')
+                                                <li><a href="{{route('filament.pages.dashboard')}}">Admin</a></li>
+                                            @endcan
                                             <li><a href="{{route('logout.link')}}">Logout</a></li>
                                     </ul>
                                 @endauth
                             </div>
                         </li>
-
-
                     </ul>
                 </div>
             </div>
@@ -73,11 +82,15 @@
                         <div class="follow d-flex">
                             <label>Follow Us:</label>
                             <ul class="link-follow">
-                                <li><a class="facebook ion-social-facebook" title="Facebook" href="#"></a></li>
-                                <li><a class="twitter ion-social-twitter" title="Twitter" href="#"></a></li>
-                                <li><a class="google ion-social-googleplus-outline" title="Google" href="#"></a>
-                                </li>
-                                <li><a class="youtube ion-social-youtube" title="Youtube" href="#"></a></li>
+                                @if(!blank(shopper_setting('shop_facebook_link')))
+                                    <li><a class="facebook ion-social-facebook" title="Facebook" href="{{shopper_setting('shop_facebook_link')}}"></a></li>
+                                @endif
+                                @if(!blank(shopper_setting('shop_twitter_link')))
+                                    <li><a class="twitter ion-social-twitter" title="Twitter" href="{{shopper_setting('shop_twitter_link')}}"></a></li>
+                                @endif
+                                @if(!blank(shopper_setting('shop_instagram_link')))
+                                    <li><a class="instagram ion-social-instagram-outline" title="Instagram" href="{{shopper_setting('shop_instagram_link')}}"></a></li>
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -88,7 +101,6 @@
                                     @guest
                                         <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false" class="d-flex align-items-center justify-content-between">
-                                            {{-- <i class="icon-myaccount ion-android-person"></i> --}}
                                             <x-ri-login-circle-fill width="20" class="me-1" />
                                             <span>Login / Signup</span>
                                             <i class="ion-ios-arrow-down"></i>
@@ -109,13 +121,19 @@
                                         </button>
 
                                         <ul class="dropdown-menu animation slideDownIn" aria-labelledby="dropdownMenuButton">
-                                                <li><a href="#">My Account</a></li>
+                                                <li><a href="{{route('user.account')}}">My Account</a></li>
+                                                <li><a href="{{route('user.orders')}}">Order History</a></li>
+                                                @can('access_dashboard')
+                                                    <li><a href="{{route('shopper.dashboard')}}">Console</a></li>
+                                                @endcan
+                                                @can('can_view_backend')
+                                                    <li><a href="{{route('filament.pages.dashboard')}}">Admin</a></li>
+                                                @endcan
                                                 <li><a href="{{route('logout.link')}}">Logout</a></li>
                                         </ul>
                                     @endauth
                                 </div>
                             </li>
-
                         </ul>
                     </div>
                 </div>
@@ -131,29 +149,20 @@
                 <div class="col-md-3 d-flex">
                     <div class="logo align-self-center">
                         <a href="{{ route('home') }}"><img class="img-responsive" src="{{ asset('images/logo.svg') }}"
-                                {{-- src="{{asset('frontend/assets/images/logo/manarat-logo.png')}}" --}} alt="manarat-logo" width="250" /></a>
+                            alt="manarat-logo" width="250" /></a>
                     </div>
                 </div>
                 <div class="col-md-9 align-self-center">
                     <div class="header-right-element d-flex justify-content-between">
                         <div class="search-element media-body mr-20px">
-                            <form class="d-flex" action="#">
-                                <input type="text" placeholder="Search entire store here ..." />
-                                <button><i class="icon-search"></i></button>
-                            </form>
+                            <livewire:component.search />
                         </div>
                         <!--Cart info Start -->
                         <div class="header-tools d-flex align-items-center">
-                            {{-- <div class="cart-info d-flex align-self-center me-3">
-                                <a title="wishlist" href="#offcanvas-wishlist" class="heart offcanvas-toggle me-0" data-number="3">
-                                    <i class="icon-heart"></i>
-                                </a>
-                            </div> --}}
-                            @livewire('component.shop.wishlist')
-                            @livewire('component.shop.cart')
+                            @livewire('component.shop.wishlist', [], key('wishlist-xl'))
+                            @livewire('component.shop.cart', [], key('cart-xl'))
                         </div>
                         <!--Cart info End -->
-                        {{-- @livewire('component.shop.cart') --}}
                     </div>
                 </div>
             </div>
@@ -166,9 +175,8 @@
 
                 <div class="col-lg-12">
                     <div class="header-horizontal-menu">
-                        {!! \App\Services\Menus::main() !!}
+                        {!! $customMenu()->main() !!}
                     </div>
-
                 </div>
             </div>
             <!-- row -->
@@ -210,17 +218,11 @@
             <!-- Header Tools Start -->
             <div class="col-auto">
                 <div class="header-tools d-flex justify-content-end align-items-center">
-                    {{-- <div class="cart-info d-flex align-self-center me-3">
-                        <a title="wishlist" href="#offcanvas-wishlist" class="heart offcanvas-toggle me-0" data-number="3">
-                            <i class="icon-heart"></i>
-                        </a>
-                    </div> --}}
-                    @livewire('component.shop.wishlist', ['for' => 'mobile'])
-                    @livewire('component.shop.cart', ['for' => 'mobile'])
+                    @livewire('component.shop.wishlist', ['for' => 'mobile'], key('wishlist-mobile'))
+                    @livewire('component.shop.cart', ['for' => 'mobile'], key('cart-mobile'))
                 </div>
             </div>
             <!-- Header Tools End -->
-
         </div>
     </div>
 </div>
@@ -231,94 +233,13 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="search-element media-body">
-                    <form class="d-flex" action="#">
-                        <input type="text" placeholder="Enter your search key ... " />
-                        <button><i class="icon-search"></i></button>
-                    </form>
+                    <livewire:component.search />
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Search Category End -->
-<div class="mobile-category-nav d-lg-none mb-15px">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-
-                <!--=======  category menu  =======-->
-                <div class="hero-side-category">
-                    <!-- Category Toggle Wrap -->
-                    <div class="category-toggle-wrap">
-                        <!-- Category Toggle -->
-                        <button class="category-toggle"><i class="fa fa-bars"></i> All Categories</button>
-                    </div>
-
-                    <!-- Category Menu -->
-                    <nav class="category-menu">
-                        {!! \App\Services\Menus::categories() !!}
-                    </nav>
-                </div>
-
-                <!--=======  End of category menu =======-->
             </div>
         </div>
     </div>
 </div>
 <!-- Mobile Header Section End -->
-<!-- OffCanvas Wishlist Start -->
-{{-- <div id="offcanvas-wishlist" class="offcanvas offcanvas-wishlist">
-    <div class="inner">
-        <div class="head">
-            <span class="title">Wishlist</span>
-            <button class="offcanvas-close">×</button>
-        </div>
-        <div class="body customScroll">
-            <ul class="minicart-product-list">
-                <li>
-                    <a href="single-product.html" class="image"><img
-                            src="{{ asset('frontend/assets/images/product-image/1.jpg') }}"
-                            alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="single-product.html" class="title">Walnut Cutting Board</a>
-                        <span class="quantity-price">1 x <span class="amount">£91.86</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
-                <li>
-                    <a href="single-product.html" class="image"><img
-                            src="{{ asset('frontend/assets/images/product-image/2.jpg') }}"
-                            alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="single-product.html" class="title">Lucky Wooden Elephant</a>
-                        <span class="quantity-price">1 x <span class="amount">£453.28</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
-                <li>
-                    <a href="single-product.html" class="image"><img
-                            src="{{ asset('frontend/assets/images/product-image/3.jpg') }}"
-                            alt="Cart product Image"></a>
-                    <div class="content">
-                        <a href="single-product.html" class="title">Fish Cut Out Set</a>
-                        <span class="quantity-price">1 x <span class="amount">£87.34</span></span>
-                        <a href="#" class="remove">×</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="foot">
-            <div class="buttons">
-                <a href="wishlist.html" class="btn btn-dark btn-hover-primary mt-30px">view wishlist</a>
-            </div>
-        </div>
-    </div>
-</div> --}}
-<!-- OffCanvas Wishlist End -->
-
-{{-- <!-- OffCanvas Cart Start -->
-
-<!-- OffCanvas Cart End --> --}}
 
 <!-- OffCanvas Search Start -->
 <div id="offcanvas-mobile-menu" class="offcanvas offcanvas-mobile-menu">
@@ -327,39 +248,39 @@
             <span class="title">&nbsp;</span>
             <button class="offcanvas-close">×</button>
         </div>
-        <div class="offcanvas-menu-search-form">
-            <form action="#">
-                <input type="text" placeholder="Search...">
-                <button><i class="lnr lnr-magnifier"></i></button>
-            </form>
-        </div>
         <div class="offcanvas-menu">
-            {!! \App\Services\Menus::mainMobile() !!}
+            {!! $customMenu()->mainMobile() !!}
         </div>
         <!-- OffCanvas Menu End -->
         <div class="offcanvas-social mt-30px">
             <ul>
-                <li>
-                    <a href="#"><i class="ion-social-facebook"></i></a>
-                </li>
-                <li>
-                    <a href="#"><i class="ion-social-twitter"></i></a>
-                </li>
-                <li>
-                    <a href="#"><i class="ion-social-google"></i></a>
-                </li>
-                <li>
-                    <a href="#"><i class="ion-social-youtube"></i></a>
-                </li>
-                <li>
-                    <a href="#"><i class="ion-social-instagram"></i></a>
-                </li>
+                @if(!blank(shopper_setting('shop_facebook_link')))
+                    <li>
+                        <a title="Facebook" href="{{shopper_setting('shop_facebook_link')}}">
+                            <i class="ion-social-facebook"></i>
+                        </a>
+                    </li>
+                @endif
+                @if(!blank(shopper_setting('shop_twitter_link')))
+                    <li>
+                        <a title="Twitter" href="{{shopper_setting('shop_twitter_link')}}">
+                            <i class="ion-social-twitter"></i>
+                        </a>
+                    </li>
+                @endif
+                @if(!blank(shopper_setting('shop_instagram_link')))
+                    <li>
+                        <a title="Instagram" href="{{shopper_setting('shop_instagram_link')}}">
+                            <i class="ion-social-instagram"></i>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
 </div>
 <!-- OffCanvas Search End -->
 <div class="contact-link d-lg-none">
-    <a href="tel:(088)1234567">(088)1234567</a>
+    <a href="tel:{{shopper_setting('shop_phone_number')}}">{{shopper_setting('shop_phone_number')}}</a>
 </div>
 <div class="offcanvas-overlay"></div>

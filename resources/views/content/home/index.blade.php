@@ -1,18 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-sliders.home>
-        <x-sliders.home.slide :image="asset('frontend/assets/images/slider-image/sample-1.jpg')" animation="1" subtitle="Black Friday." subtitle-color="theme"
-            title="Car Brake Pads <br> Sale 50% Off"
-            content="Lets diagnose your vehicle's brake prodblems and offer solutions that fit your budget."
-            :button-action="route('home')" button-text="Shop Now" />
-        <x-sliders.home.slide :image="asset('frontend/assets/images/slider-image/sample-2.jpg')" animation="2" subtitle="New Arrivals." title="Quadrum <br> 1100MM Wheels"
-            content="Strong All-Season Perfomance for your CUV/SUV with a 60K warranty" :button-action="route('home')"
-            button-text="Shop Now" />
-        <x-sliders.home.slide :image="asset('frontend/assets/images/slider-image/sample-3.jpg')" animation="3" subtitle="T1 - series 2018." title="Led Headlight <br> Bulbs"
-            content="Headlights at low internet prices from the UK's leading vehicle headlights specialist"
-            :button-action="route('home')" button-text="Shop Now" />
-    </x-sliders.home>
+    @if(banner_exists($usedForEnum('slider')))
+        <x-sliders.home>
+            @foreach (banners($usedForEnum('slider')) as $slider)
+                <x-sliders.home.slide image="{{$slider->getFirstMediaUrl()}}"
+                    animation="{{Arr::random([1, 2, 3])}}"
+                    :subtitle="$slider->subtitle"
+                    :title="$slider->title"
+                    :content="$slider->content"
+                    :action="$slider->link"
+                    :button="$slider->link_text" />
+            @endforeach
+        </x-sliders.home>
+    @endif
 
     <!-- Static Area Start -->
     <div class="static-area mtb-60px">
@@ -94,21 +95,9 @@
     <x-sliders.products.new-arrivals title="<span>NEW</span> ARRIVALS">
         @foreach ($newArrivals as $newArrival)
             @php
-                $naImages = $newArrival->getMedia('uploads');
-                $newArrivalHover = null;
+                $newArrivalImages = product_images($newArrival);
             @endphp
-            @foreach ($naImages as $naImage)
-                @if ($loop->first)
-                    @php
-                        $newArrivalImage = $naImage->getUrl('thumb200x200');
-                    @endphp
-                @elseif($loop->index === 1)
-                    @php
-                        $newArrivalHover = $naImage->getUrl('thumb200x200');
-                    @endphp
-                @endif
-            @endforeach
-            <x-sliders.products.new-arrivals.slide :image="$newArrivalImage" :hover="$newArrivalHover" :new="true" :name="$newArrival->name"
+            <x-sliders.products.new-arrivals.slide :image="$newArrivalImages->thumb" :hover="$newArrivalImages->hover" :new="true" :name="$newArrival->name"
                 :ratings="$newArrival->ratingPercent()" currency="" :price="$newArrival->formattedPrice"
                 :link="route('shop.product', $newArrival->slug)" :product="$newArrival" />
         @endforeach
@@ -116,24 +105,36 @@
     <!-- New Arrival Area End -->
 
     <!-- Banner Area Start -->
-    <div class="banner-area mtb-60px">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 mb-lm-30px">
-                    <div class="banner-wrapper">
-                        <a href="#"><img src="{{ asset('frontend/assets/images/banner-image/1.webp') }}"
-                                alt="" /></a>
+    @if (banner_exists($usedForEnum('offer_homepage_duo'), 2))
+        <div class="banner-area mtb-60px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 mb-lm-30px">
+                        @php
+                            $banner1 = banner_single($usedForEnum('offer_homepage_duo'), true);
+                        @endphp
+                        <div class="banner-wrapper">
+                            <a href="{{ $banner1->link }}">
+                                <img src="{{ $banner1->getFirstMediaUrl() }}"
+                                    alt="{{ $banner1->link_text }}" />
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-6 ">
-                    <div class="banner-wrapper">
-                        <a href="#"><img src="{{ asset('frontend/assets/images/banner-image/2.webp') }}"
-                                alt="" /></a>
+                    <div class="col-md-6 ">
+                        <div class="banner-wrapper">
+                            @php
+                                $banner2 = banner_single($usedForEnum('offer_homepage_duo'), true, $banner1);
+                            @endphp
+                            <a href="{{ $banner2->link }}">
+                                <img src="{{ $banner2->getFirstMediaUrl() }}"
+                                    alt="{{ $banner2->link_text }}" />
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
     <!-- Banner Area End -->
     <!-- Custom Block Area Start -->
     <div class="custom-block-area">
@@ -144,333 +145,37 @@
                         <x-sliders.products.hot-deals.slide />
                     </x-sliders.products.hot-deals> --}}
                     <!-- Banner Area Start -->
-                    <div class="banner-area banner-style-2 mtb-60px">
-                        <div class="banner-wrapper">
-                            <a href="#"><img src="{{ asset('frontend/assets/images/banner-image/3.webp') }}"
-                                    alt="" /></a>
-                            <div class="text">
-                                <h3> <span class="theme-color">New</span> Led Headlight</h3>
-                                <h4 class="color-yellow">Cre-Xhp-50 Lamp Bead</h4>
-                                <p>Adjustable Bracket High Lumen 11390lms</p>
+
+                    @if (banner_exists($usedForEnum('offer_homepage_solo')))
+                        @php
+                            $bannerSolo = banner_single($usedForEnum('offer_homepage_solo'), true);
+                        @endphp
+                        <div class="banner-area banner-style-2 mtb-60px">
+                            <div class="banner-wrapper">
+                                <a href="{{ $bannerSolo->link }}">
+                                    <img src="{{ $bannerSolo->getFirstMediaUrl() }}"
+                                        alt="{{ $bannerSolo->link_text }}" />
+                                </a>
+                                <div class="text">
+                                    <h3>{!! $bannerSolo->title !!}</h3>
+                                    <h4 class="color-yellow">{!! $bannerSolo->subtitle !!}</h4>
+                                    <p>{!! $bannerSolo->content !!}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Banner Area End -->
+                        <!-- Banner Area End -->
+                    @endif
                     @if ($featured->count() >= 1)
                         <x-sliders.products.featured title="<span>FEATURED </span> PRODUCTS">
                             @foreach ($featured as $feat)
                                 @php
-                                    $ftImages = $feat->getMedia('uploads');
-                                    $featHover = null;
-                                    $featImage = null;
+                                    $featImages = product_images($feat);
                                 @endphp
-                                @foreach ($ftImages as $ftImage)
-                                    @if ($loop->first)
-                                        @php
-                                            $featImage = $ftImage->getUrl('thumb200x200');
-                                        @endphp
-                                    @elseif($loop->index === 1)
-                                        @php
-                                            $featHover = $ftImage->getUrl('thumb200x200');
-                                        @endphp
-                                    @else
-                                        @break
-                                    @endif
-                                @endforeach
-                                <x-sliders.products.featured.slide :image="$featImage" :hover="$featHover" :new="$feat->published_at > now()->subDays(15)" :name="$feat->name"
+                                <x-sliders.products.featured.slide :image="$featImages->thumb" :hover="$featImages->hover" :new="$feat->published_at > now()->subDays(15)" :name="$feat->name"
                                     :ratings="$feat->ratingPercent()" currency="" :price="$feat->formattedPrice" :link="route('shop.product', $feat->slug)" :product="$feat" />
                             @endforeach
                         </x-sliders.products.featured>
                     @endif
-                    {{-- <div class="feature-area mb-lm-60px">
-                        <div class="section-title">
-                            <h2><span>FEATURED </span> PRODUCTS</h2>
-                        </div>
-                        <div class="feature-slider-wrapper slider-nav-style-1">
-                            <div class="feature-slider-item">
-                                <article class="list-product text-left">
-                                    <div class="product-inner">
-                                        <div class="img-block">
-                                            <a href="#" class="thumbnail">
-                                                <img class="first-img"
-                                                    src="{{ asset('frontend/assets/images/product-image/13.jpg') }}"
-                                                    alt="" />
-                                                <img class="second-img"
-                                                    src="{{ asset('frontend/assets/images/product-image/13.jpg') }}"
-                                                    alt="" />
-                                            </a>
-                                            <div class="add-to-link">
-                                                <ul>
-                                                    <li>
-                                                        <a href="wishlist.html" title="Add to Wishlist"><i
-                                                                class="icon-heart"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="compare.html" title="Add to compare"><i
-                                                                class="icon-repeat"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="quick_view" href="#" data-link-action="quickview"
-                                                            title="Quick view" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModal">
-                                                            <i class="icon-eye"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="product-decs">
-                                            <h2><a href="#" class="product-link">Amazon Cloud Cam Security Camera</a>
-                                            </h2>
-                                            <div class="rating-product">
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                            </div>
-                                            <div class="pricing-meta">
-                                                <ul>
-                                                    <li class="current-price">£69.27</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="cart-btn">
-                                            <a href="#" class="add-to-curt" title="Add to cart"><i
-                                                    class="icon-shopping-cart"></i></a>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                            <div class="feature-slider-item">
-                                <article class="list-product text-left">
-                                    <div class="product-inner">
-                                        <div class="img-block">
-                                            <a href="#" class="thumbnail">
-                                                <img class="first-img"
-                                                    src="{{ asset('frontend/assets/images/product-image/14.jpg') }}"
-                                                    alt="" />
-                                                <img class="second-img"
-                                                    src="{{ asset('frontend/assets/images/product-image/14.jpg') }}"
-                                                    alt="" />
-                                            </a>
-                                            <div class="add-to-link">
-                                                <ul>
-                                                    <li>
-                                                        <a href="wishlist.html" title="Add to Wishlist"><i
-                                                                class="icon-heart"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="compare.html" title="Add to compare"><i
-                                                                class="icon-repeat"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="quick_view" href="#" data-link-action="quickview"
-                                                            title="Quick view" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModal">
-                                                            <i class="icon-eye"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <ul class="product-flag">
-                                                <li class="new discount">-7%</li>
-                                            </ul>
-                                        </div>
-                                        <div class="product-decs">
-                                            <h2><a href="#" class="product-link">Apple iPad with Retina Display
-                                                    MD510LL/A
-                                                </a></h2>
-                                            <div class="rating-product">
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                            </div>
-                                            <div class="pricing-meta">
-                                                <ul>
-                                                    <li class="current-price">£52.27</li>
-                                                    <li class="old-price">£59.72</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="cart-btn">
-                                            <a href="#" class="add-to-curt" title="Add to cart"><i
-                                                    class="icon-shopping-cart"></i></a>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                            <div class="feature-slider-item">
-                                <article class="list-product text-left">
-                                    <div class="product-inner">
-                                        <div class="img-block">
-                                            <a href="#" class="thumbnail">
-                                                <img class="first-img"
-                                                    src="{{ asset('frontend/assets/images/product-image/9.jpg') }}"
-                                                    alt="" />
-                                                <img class="second-img"
-                                                    src="{{ asset('frontend/assets/images/product-image/9.jpg') }}"
-                                                    alt="" />
-                                            </a>
-                                            <div class="add-to-link">
-                                                <ul>
-                                                    <li>
-                                                        <a href="wishlist.html" title="Add to Wishlist"><i
-                                                                class="icon-heart"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="compare.html" title="Add to compare"><i
-                                                                class="icon-repeat"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="quick_view" href="#" data-link-action="quickview"
-                                                            title="Quick view" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModal">
-                                                            <i class="icon-eye"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="product-decs">
-                                            <h2><a href="#" class="product-link">JBeats EP Wired On-Ear
-                                                    Headphone-Black</a>
-                                            </h2>
-                                            <div class="rating-product">
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                            </div>
-                                            <div class="pricing-meta">
-                                                <ul>
-                                                    <li class="current-price">£91.27</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="cart-btn">
-                                            <a href="#" class="add-to-curt" title="Add to cart"><i
-                                                    class="icon-shopping-cart"></i></a>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                            <div class="feature-slider-item">
-                                <article class="list-product text-left">
-                                    <div class="product-inner">
-                                        <div class="img-block">
-                                            <a href="#" class="thumbnail">
-                                                <img class="first-img"
-                                                    src="{{ asset('frontend/assets/images/product-image/15.jpg') }}"
-                                                    alt="" />
-                                                <img class="second-img"
-                                                    src="{{ asset('frontend/assets/images/product-image/11.jpg') }}"
-                                                    alt="" />
-                                            </a>
-                                            <div class="add-to-link">
-                                                <ul>
-                                                    <li>
-                                                        <a href="wishlist.html" title="Add to Wishlist"><i
-                                                                class="icon-heart"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="compare.html" title="Add to compare"><i
-                                                                class="icon-repeat"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="quick_view" href="#" data-link-action="quickview"
-                                                            title="Quick view" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModal">
-                                                            <i class="icon-eye"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="product-decs">
-                                            <h2><a href="#" class="product-link">Beats Solo Wireless On-Ear
-                                                    Headphone</a>
-                                            </h2>
-                                            <div class="rating-product">
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                            </div>
-                                            <div class="pricing-meta">
-                                                <ul>
-                                                    <li class="current-price">£182.27</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="cart-btn">
-                                            <a href="#" class="add-to-curt" title="Add to cart"><i
-                                                    class="icon-shopping-cart"></i></a>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                            <div class="feature-slider-item">
-                                <article class="list-product text-left">
-                                    <div class="product-inner">
-                                        <div class="img-block">
-                                            <a href="#" class="thumbnail">
-                                                <img class="first-img"
-                                                    src="{{ asset('frontend/assets/images/product-image/8.jpg') }}"
-                                                    alt="" />
-                                                <img class="second-img"
-                                                    src="{{ asset('frontend/assets/images/product-image/8.jpg') }}"
-                                                    alt="" />
-                                            </a>
-                                            <div class="add-to-link">
-                                                <ul>
-                                                    <li>
-                                                        <a href="wishlist.html" title="Add to Wishlist"><i
-                                                                class="icon-heart"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="compare.html" title="Add to compare"><i
-                                                                class="icon-repeat"></i></a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="quick_view" href="#" data-link-action="quickview"
-                                                            title="Quick view" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModal">
-                                                            <i class="icon-eye"></i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="product-decs">
-                                            <h2><a href="#" class="product-link">JBL Flip 3 Splashproof Portable
-                                                    Bluetooth</a></h2>
-                                            <div class="rating-product">
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                                <i class="ion-android-star"></i>
-                                            </div>
-                                            <div class="pricing-meta">
-                                                <ul>
-                                                    <li class="current-price">£453.28</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="cart-btn">
-                                            <a href="#" class="add-to-curt" title="Add to cart"><i
-                                                    class="icon-shopping-cart"></i></a>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                        </div>
-                    </div> --}}
                 </div>
                 <div class="col-lg-4 col-md-12">
                     <x-sliders.products.best-sellers title="<span> BEST  </span> SELLERS">
@@ -478,24 +183,10 @@
                             <x-sliders.products.best-sellers.wrapper>
                                 @foreach ($chunk as $bestSeller)
                                     @php
-                                        $bsImages = $bestSeller->getMedia('uploads');
-                                        $bestSellerHover = null;
-                                        $bs_i = $loop->index + 1;
+                                        $bsImages = product_images($bestSeller);
                                     @endphp
-                                    @foreach ($bsImages as $bsImage)
-                                        @if ($loop->first)
-                                            @php
-                                                $bestSellerImage = $bsImage->getUrl('thumb200x200');
-                                            @endphp
-                                        @elseif($loop->index === 1)
-                                            @php
-                                                $bestSellerHover = $bsImage->getUrl('thumb200x200');
-                                            @endphp
-                                        @endif
-                                    @endforeach
-
-                                    <x-sliders.products.best-sellers.slide :image="$bestSellerImage" :hover="$bestSellerHover"
-                                        :name="$bestSeller->name" discount="25%" :ratings="$bestSeller->ratingPercent()" currency=""
+                                    <x-sliders.products.best-sellers.slide :image="$bsImages->thumb" :hover="$bsImages->hover"
+                                        :name="$bestSeller->name" {{--discount="25%"--}} :ratings="$bestSeller->ratingPercent()" currency=""
                                         :price="$bestSeller->formattedPrice" :floats="false" {{-- :flags="false" --}} :cart="false"
                                         :link="route('shop.product', $bestSeller->slug)" :product="$bestSeller" />
                                 @endforeach
@@ -505,61 +196,31 @@
                     <!-- Testimonial Start -->
                     <div class="testimonial-area slider-dot-style-1 mtb-60px">
                         <div class="testimonial-slider-wrapper">
-                            <!-- Testimonial item Start -->
-                            <div class="testimonial-slider-item">
-                                <div class="testimonial-image">
-                                    <img src="{{ asset('frontend/assets/images/testimonial-image/1.png') }}"
-                                        alt="man-image">
+                            @foreach ($testimonials as $testimonial)
+                                <!-- Testimonial item Start -->
+                                <div class="testimonial-slider-item">
+                                    <div class="testimonial-image">
+                                        <img src="{{$testimonial->getMedia('default')->first()->getUrl('thumb')}}"
+                                            alt="{{$testimonial->author_name}}" width="120">
+                                    </div>
+                                    <div class="testimonial-content">
+                                        <p> {!! $testimonial->content !!}</p>
+                                    </div>
+                                    <div class="testimonial-author">
+                                        <h4>{{$testimonial->author_name}}</h4>
+                                    </div>
                                 </div>
-                                <div class="testimonial-content">
-                                    <a href="#"> This is Photoshops version of Lorem Ipsum. Proin gravida nibh vel
-                                        velit.Lorem ipsum dolor sit amet, consectetur adipiscing elit...</a>
-                                </div>
-                                <div class="testimonial-author">
-                                    <h4>Rebecka Filson</h4>
-                                </div>
-                            </div>
-                            <!-- Testimonial item End -->
-                            <!-- Testimonial item Start -->
-                            <div class="testimonial-slider-item">
-                                <div class="testimonial-image">
-                                    <img src="{{ asset('frontend/assets/images/testimonial-image/2.png') }}"
-                                        alt="man-image">
-                                </div>
-                                <div class="testimonial-content">
-                                    <a href="#"> Mauris blandit, metus a venenatis lacinia, felis enim tincidunt est,
-                                        condimentum vulputate orci augue eu metus. Fusce dictum, nis..</a>
-                                </div>
-                                <div class="testimonial-author">
-                                    <h4>Nathanael Jaworski</h4>
-                                </div>
-                            </div>
-                            <!-- Testimonial item End -->
-                            <!-- Testimonial item Start -->
-                            <div class="testimonial-slider-item">
-                                <div class="testimonial-image">
-                                    <img src="{{ asset('frontend/assets/images/testimonial-image/3.png') }}"
-                                        alt="man-image">
-                                </div>
-                                <div class="testimonial-content">
-                                    <a href="#"> Sed vel urna at dui iaculis gravida. Maecenas pretium, velit vitae
-                                        placerat
-                                        faucibus, velit quam facilisis elit, sit amet lacinia..</a>
-                                </div>
-                                <div class="testimonial-author">
-                                    <h4>Magdalena Valencia</h4>
-                                </div>
-                            </div>
-                            <!-- Testimonial item End -->
+                                <!-- Testimonial item End -->
+                            @endforeach
                         </div>
                     </div>
                     <!-- Testimonial End -->
                     <!-- Banner Area Start -->
                     {{-- <div class="banner-area mtb-60px">
-                    <div class="banner-wrapper">
-                        <a href="#"><img src="{{asset('frontend/assets/images/banner-image/4.jpg')}}" alt="" /></a>
-                    </div>
-                </div> --}}
+                        <div class="banner-wrapper">
+                            <a href="#"><img src="{{asset('frontend/assets/images/banner-image/4.jpg')}}" alt="" /></a>
+                        </div>
+                    </div> --}}
                     <!-- Banner Area End -->
                 </div>
             </div>
@@ -1828,39 +1489,5 @@
             <x-sliders.brands.image.slide :href="route('shop.index', ['brands' => $abrand->slug])" :src="$abrand->getFirstMediaUrl('uploads')" :alt="$abrand->slug" />
         @endforeach
     </x-sliders.brands.image>
-    {{-- <div class="brand-area mb-60px">
-        <div class="container">
-            <div class="brand-slider">
-                <div class="brand-slider-item">
-                    <a href="#"><img class=" img-responsive"
-                            src="{{ asset('frontend/assets/images/brand-logo/1.png') }}" alt="" /></a>
-                </div>
-                <div class="brand-slider-item">
-                    <a href="#"><img class=" img-responsive"
-                            src="{{ asset('frontend/assets/images/brand-logo/2.png') }}" alt="" /></a>
-                </div>
-                <div class="brand-slider-item">
-                    <a href="#"><img class=" img-responsive"
-                            src="{{ asset('frontend/assets/images/brand-logo/3.png') }}" alt="" /></a>
-                </div>
-                <div class="brand-slider-item">
-                    <a href="#"><img class=" img-responsive"
-                            src="{{ asset('frontend/assets/images/brand-logo/1.png') }}" alt="" /></a>
-                </div>
-                <div class="brand-slider-item">
-                    <a href="#"><img class=" img-responsive"
-                            src="{{ asset('frontend/assets/images/brand-logo/4.png') }}" alt="" /></a>
-                </div>
-                <div class="brand-slider-item">
-                    <a href="#"><img class=" img-responsive"
-                            src="{{ asset('frontend/assets/images/brand-logo/5.png') }}" alt="" /></a>
-                </div>
-                <div class="brand-slider-item">
-                    <a href="#"><img class=" img-responsive"
-                            src="{{ asset('frontend/assets/images/brand-logo/6.png') }}" alt="" /></a>
-                </div>
-            </div>
-        </div>
-    </div> --}}
     <!-- Brand area end -->
 @endsection

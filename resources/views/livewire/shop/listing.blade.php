@@ -1,5 +1,5 @@
 <div>
-
+    {{-- @dump($products) --}}
     <!-- Breadcrumb Area Start -->
     <div class="breadcrumb-area">
         <div class="container">
@@ -44,9 +44,9 @@
                             </a>
                         </div>
                         <div class="toolbar-amaount">
-                            <p>Showing 1 to 9 of 20 (3 Pages)</p>
+                            {{-- <p>Showing 1 to 9 of 20 (3 Pages)</p> --}}
                         </div>
-                        <div class="sorter">
+                        {{-- <div class="sorter">
                             <label for="input-limit">Sort By:</label>
                             <select>
                                 <option value="">Default</option>
@@ -59,15 +59,15 @@
                                 <option value="">Model (A - Z)</option>
                                 <option value="">Model (Z - A)</option>
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="limiter">
                             <label for="input-limit">Show:</label>
-                            <select>
-                                <option value="">9</option>
-                                <option value="">25</option>
-                                <option value=""> 50</option>
-                                <option value="">75</option>
-                                <option value="">100</option>
+                            <select wire:model='per_page'>
+                                <option value="9">9</option>
+                                <option value="25">25</option>
+                                <option value="50"> 50</option>
+                                <option value="75">75</option>
+                                <option value="100">100</option>
                             </select>
                         </div>
                         <!-- Right Side End -->
@@ -75,14 +75,44 @@
                     <!-- Shop Top Area End -->
 
                     @if ($resetFilter)
-                        <!-- Reset Filters -->
-                        <div class="d-block mb-3 me-2 text-end">
-                            <a href="{{ route('shop.index') }}" class="btn btn-small btn-dark rounded-pill">
-                                <x-heroicon-o-x-circle width="18" />
-                                {{ __('Reset Filter') }}
-                            </a>
+                        <div class="row justify-content-between align-items-end mb-3 mx-1">
+                            <div class="col">
+                                @if (!blank($brands))
+                                    <div class="d-block my-1">
+                                        <h6 class="fw-light ms-2">Brands</h6>
+                                        <button class="btn btn-danger btn-sm rounded-pill" type="button">
+                                            <x-heroicon-o-filter width="18" />
+                                            {{$brands}}
+                                            <span class="badge bg-light text-danger rounded-circle p-1">
+                                                <x-heroicon-s-x width="14" />
+                                            </span>
+                                        </button>
+                                    </div>
+                                @endif
+                                @if (!blank($searchQuery))
+                                    <div class="d-block my-1">
+                                        <h6 class="fw-light ms-2">Search</h6>
+                                        <button class="btn btn-primary btn-sm rounded-pill" type="button">
+                                            <x-heroicon-o-search width="18" />
+                                            {{$searchQuery}}
+                                            <span class="badge bg-light text-primary rounded-circle p-1">
+                                                <x-heroicon-s-x width="14" />
+                                            </span>
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="col d-flex justify-content-end align-items-start">
+                                <!-- Reset Filters -->
+                                <div class="d-block text-end">
+                                    <a href="{{ route('shop.index') }}" class="btn btn-small btn-dark rounded-pill">
+                                        <x-heroicon-o-x-circle width="18" />
+                                        {{ __('Reset Filter') }}
+                                    </a>
+                                </div>
+                                <!-- Reset Filters -->
+                            </div>
                         </div>
-                        <!-- Reset Filters -->
                     @endif
 
                     <!-- Shop Bottom Area Start -->
@@ -92,26 +122,11 @@
                             <x-shop.layouts.x1>
                                 @forelse ($products as $product)
                                     @php
-                                        $productImages = $product->getMedia('uploads');
-                                        $hover = null;
-                                        $image = null;
+                                        $images = product_images($product);
                                     @endphp
-                                    @foreach ($productImages as $productImage)
-                                        @if ($loop->first)
-                                            @php
-                                                $image = $productImage->getUrl('thumb200x200');
-                                            @endphp
-                                        @elseif($loop->index === 1)
-                                            @php
-                                                $hover = $productImage->getUrl('thumb200x200');
-                                            @endphp
-                                        @else
-                                            @break
-                                        @endif
-                                    @endforeach
-                                    <x-shop.layouts.x1.item :image="$image" :hover="$hover" :new="$product->published_at > now()->subDays(15)" :name="$product->name"
+                                    <x-shop.layouts.x1.item :image="$images->thumb" :hover="$images->hover" :new="$product->published_at > now()->subDays(15)" :name="$product->name"
                                         :ratings="$product->ratingPercent()" currency="" :price="$product->formattedPrice" :link="route('shop.product', $product->slug)"
-                                        :description="$product->description" :product="$product" />
+                                        :description="$product->description" :product="$product" :key="$product->slug" />
                                 @empty
                                     <x-shop.layouts.blank />
                                 @endforelse
@@ -122,26 +137,11 @@
                             <x-shop.layouts.x3>
                                 @forelse ($products as $product)
                                     @php
-                                        $productImages = $product->getMedia('uploads');
-                                        $hover = null;
-                                        $image = null;
+                                        $images = product_images($product);
                                     @endphp
-                                    @foreach ($productImages as $productImage)
-                                        @if ($loop->first)
-                                            @php
-                                                $image = $productImage->getUrl('thumb200x200');
-                                            @endphp
-                                        @elseif($loop->index === 1)
-                                            @php
-                                                $hover = $productImage->getUrl('thumb200x200');
-                                            @endphp
-                                        @else
-                                            @break
-                                        @endif
-                                    @endforeach
-                                    <x-shop.layouts.x3.item :image="$image" :hover="$hover" :new="$product->published_at > now()->subDays(15)" :name="$product->name"
+                                    <x-shop.layouts.x3.item :image="$images->thumb" :hover="$images->hover" :new="$product->published_at > now()->subDays(15)" :name="$product->name"
                                         :ratings="$product->ratingPercent()" currency="" :price="$product->formattedPrice" :link="route('shop.product', $product->slug)"
-                                        :product="$product" />
+                                        :product="$product" :key="$product->slug" />
                                 @empty
                                     <x-shop.layouts.blank />
                                 @endforelse
@@ -150,32 +150,8 @@
                         @endif
                         <!-- Shop Tab Content End -->
                         <!--  Pagination Area Start -->
-                        <div class="pro-pagination-style mtb-50px">
-                            <div class="pages">
-                                <ul>
-                                    <li>
-                                        <a class="prev" href="#">|<i class="ion-ios-arrow-left"></i></a>
-                                    </li>
-                                    <li>
-                                        <a class="prev" href="#"><i class="ion-ios-arrow-left"></i></a>
-                                    </li>
-                                    <li>
-                                        <a class="prev" href="#">1</a>
-                                    </li>
-                                    <li><a class="active" href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li>
-                                        <a class="next" href="#"><i class="ion-ios-arrow-right"></i></a>
-                                    </li>
-                                    <li>
-                                        <a class="next" href="#"><i class="ion-ios-arrow-right"></i>|</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="toolbar-amaount">
-                                <p>Showing 1 to 9 of 20 (3 Pages)</p>
-                            </div>
-                            {{-- {{ $products->links() }} --}}
+                        <div class="mtb-50px">
+                            {!! $products->links() !!}
                         </div>
                         <!--  Pagination Area End -->
                     </div>

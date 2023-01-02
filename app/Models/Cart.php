@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-// use Shopper\Framework\Models\Shop\Product\Product;
 use App\Models\Product;
-use Shopper\Framework\Models\Shop\Carrier;
+use App\Models\Carrier;
 use Str;
 
 class Cart extends Model
@@ -33,9 +32,12 @@ class Cart extends Model
      */
     protected static function booted()
     {
+        parent::boot();
+
         static::creating(fn(Model $model) => $model->forceFill([
             'uuid' => Str::uuid(),
         ]));
+        static::deleting(fn(self $model) => $model->products()->detach());
     }
 
     /**

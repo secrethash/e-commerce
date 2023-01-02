@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Component\Shop;
 
-use App\Http\Livewire\Traits\HasAmounts;
+use App\Http\Livewire\Common\Notice\CanNotify;
 use App\Http\Livewire\Traits\InteractsWithWishlist;
 use App\Models\Wishlist as WishlistModel;
 use App\Services\Wishlist as WishlistService;
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Wishlist extends Component
 {
-    // use HasAmounts;
+    use CanNotify;
     use InteractsWithWishlist {
         refreshWishlist as baseRefreshWishlist;
     }
@@ -44,6 +44,7 @@ class Wishlist extends Component
     {
         WishlistService::remove([$productId]);
         $this->needsWishlistRefresh();
+        $this->notify('warning', 'Product Removed!', 'Product has been removed from your Wishlist!');
     }
 
     public function refreshWishlist(): void

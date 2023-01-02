@@ -43,7 +43,7 @@
                                                     <td class="product-thumbnail pe-3">
                                                         <a href="{{route('shop.product', $product->slug)}}">
                                                             <img class="img-responsive" style="min-width: 60px;"
-                                                                src="{{$product->getMedia('uploads')->first()->getUrl('thumb200x200')}}"
+                                                                src="{{product_images($product)->thumb}}"
                                                                 alt="" />
                                                         </a>
                                                     </td>
@@ -167,7 +167,7 @@
                                             <h4 class="cart-bottom-title section-bg-gary-cart">Cart Total</h4>
                                         </div>
                                         <h5>Products Total <span>{{$formattedTotal}}</span></h5>
-                                        <div class="total-shipping">
+                                        {{-- <div class="total-shipping">
                                             <h5 class="mb-3">
                                                 Shipping Methods
                                                 <span class="text-end" wire:loading.remove wire:target='selectedCarrier'>
@@ -202,7 +202,7 @@
                                                     </label>
                                                 </div>
                                             @endforeach
-                                        </div>
+                                        </div> --}}
                                         <h4 class="grand-totall-title">Grand Total <span>{{$formattedTotal}}</span></h4>
                                         <a href="{{ route('shop.checkout') }}">Proceed to Checkout</a>
                                     </div>
