@@ -32,7 +32,7 @@ class Products {
         return Cache::remember('shop.bestsellers', 24*60*60, function () use($days, $limit, $definite) {
             $orderItems = OrderItem::where('created_at', '>', now()->subDays($days))->get();
             $orderItems->filter(function($item) {
-                return $item->order->isCompleted();
+                return $item->order?->isCompleted();
             });
             if ($orderItems->count() >= 1) {
                 $orderItems->groupBy('product_id');
