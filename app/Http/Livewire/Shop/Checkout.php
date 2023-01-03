@@ -30,7 +30,10 @@ use Shopper\Framework\Models\Shop\PaymentMethod;
 use App\Models\Country;
 use App\Models\Address;
 use App\Models\Tax;
+use Illuminate\Routing\Redirector;
 use Illuminate\Validation\Rule;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
 
 // use Shopper\Framework\Models\User\Address;
 
@@ -63,6 +66,8 @@ class Checkout extends Component
     public $selectedCarrier; // model data
     /** @var null|string $carrierSelected */
     public $carrierSelected; // form data
+
+    public $stripeClientSecret;
 
     protected string $storePickup = 'store-pickup';
 
@@ -197,6 +202,31 @@ class Checkout extends Component
         $this->taxes = Tax::active()->get();
         $this->selectCarrier();
         $this->calculateShipping();
+    }
+
+    public function validate($rules = null, $messages = [], $attributes = [])
+    {
+        parent::validate($rules, $messages, $attributes);
+        $this->emit('validated');
+    }
+
+    protected function setupStripe(): ?string
+    {
+        $stripePM = PaymentMethod::findBySlug('stripe');
+
+        if ($stripePM && $stripePM->is_enabled) {
+            Stripe::setApiKey(config('services.stripe.secret'));
+            // Create a PaymentIntent with amount and currency
+            $intent = PaymentIntent::create([
+                'amount' => $this->total,
+                'currency' => shopper_currency(),
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                ],
+            ]);
+            return $intent->client_secret;
+        }
+        return null;
     }
 
     public function updatedAddress(): void
@@ -426,11 +456,18 @@ class Checkout extends Component
 
     }
 
-    private function processOrder(): Order
+    private function processOrder(): Order|RedirectResponse|Redirector
     {
         //? 1. Create Order
         //? 2. Create Order Items & associate them to Order
-        return $this->processOrderItems($this->createOrder());
+        $order = $this->processOrderItems($this->createOrder());
+        if ($this->selectedPaymentMethod === 'stripe') {
+            $token = $this->setupStripe();
+            if (!is_null($token)) {
+                return redirect()->route('shop.checkout.payments.stripe', compact('order', 'token'));
+            }
+        }
+        return $order;
     }
 
     private function createOrder(): Order

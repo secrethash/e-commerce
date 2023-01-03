@@ -6,6 +6,7 @@ use App\Http\Controllers\Shop\{
     ListingController,
     ProductController,
 };
+use App\Http\Controllers\Shop\Payments\StripeController;
 use App\Http\Controllers\User\AccountController;
 use App\Http\Livewire\Shop\Wishlist;
 use App\Http\Livewire\User\Account;
@@ -28,6 +29,7 @@ Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/cart', [CheckoutController::class, 'cart'])->name('cart');
     Route::get('/wishlist', Wishlist::class)->name('wishlist')->middleware(['auth']);
     Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/payment/card/{order}/{token}', [StripeController::class, 'process'])->name('checkout.payments.stripe');
     Route::get('/checkout/{cart?}', [CheckoutController::class, 'checkout'])->name('checkout');
     Route::get('/{product}', ProductController::class)->name('product');
 });
@@ -36,9 +38,9 @@ Route::prefix('user')->name('user.')
     ->controller(AccountController::class)
     ->middleware(['auth'])
     ->group(function () {
-    Route::get('orders', 'orders')->name('orders');
-    Route::get('orders/{order}', 'orders')->name('orders.view');
-    Route::get('account', Account::class)->name('account');
+        Route::get('orders', 'orders')->name('orders');
+        Route::get('orders/{order}', 'orders')->name('orders.view');
+        Route::get('account', Account::class)->name('account');
 });
 
 Route::get(config('shopper.system.dashboard'), function() {
@@ -55,41 +57,41 @@ Route::get(config('shopper.system.dashboard'), function() {
 //     $order = Shopper\Framework\Models\Shop\Order\Order::latest()->first();
 //     return new OrderConfirmed($order, new \Illuminate\Support\Fluent());
 // });
-Route::get('test/shipping', function () {
-    $cart = new \App\Services\Cart(App\Models\Cart::find(15));
-    $carrier = \App\Models\Carrier::find(2);
-    $address = \App\Models\Address::first();
-    $subtotal = $cart->subtotal($cart->cart);
-    $charge = null;
-    //
-    if (!$carrier->rule_type->freeable()) {
-        dd($carrier);
-    }
-    dump($carrier->pricing);
-    /** @var \App\Models\CarrierPricing $pricing */
-    $pricing = $carrier->pricing()->whereHasMorph(
-        'calculable',
-        [\Shopper\Framework\Models\System\Country::class],
-        function (\Illuminate\Database\Eloquent\Builder $query) use($address) {
-            $query->where('id', $address->country_id);
-        }
-    );
-    dump($pricing->get());
-    if ($pricing->count() >= 1) {
-        $pricing->where('minimum_order', '<=', $subtotal)
-            ->orWhere('maximum_order', '>=', $subtotal);
-        if ($pricing->count() >= 1) {
-            $price = $pricing->first();
-            if ($price->method === App\Models\Enums\CarrierCalculationMethod::FLAT) {
-                $charge = $price->amount;
-            } elseif ($price->method === App\Models\Enums\CarrierCalculationMethod::PERCENTAGE) {
-                $charge = ($price->amount * $subtotal) / 100;
-            }
-        }
-    }
-    dump($carrier, $cart, $address, $subtotal);
-    dd($charge);
-});
+// Route::get('test/shipping', function () {
+//     $cart = new \App\Services\Cart(App\Models\Cart::find(15));
+//     $carrier = \App\Models\Carrier::find(2);
+//     $address = \App\Models\Address::first();
+//     $subtotal = $cart->subtotal($cart->cart);
+//     $charge = null;
+//     //
+//     if (!$carrier->rule_type->freeable()) {
+//         dd($carrier);
+//     }
+//     dump($carrier->pricing);
+//     /** @var \App\Models\CarrierPricing $pricing */
+//     $pricing = $carrier->pricing()->whereHasMorph(
+//         'calculable',
+//         [\Shopper\Framework\Models\System\Country::class],
+//         function (\Illuminate\Database\Eloquent\Builder $query) use($address) {
+//             $query->where('id', $address->country_id);
+//         }
+//     );
+//     dump($pricing->get());
+//     if ($pricing->count() >= 1) {
+//         $pricing->where('minimum_order', '<=', $subtotal)
+//             ->orWhere('maximum_order', '>=', $subtotal);
+//         if ($pricing->count() >= 1) {
+//             $price = $pricing->first();
+//             if ($price->method === App\Models\Enums\CarrierCalculationMethod::FLAT) {
+//                 $charge = $price->amount;
+//             } elseif ($price->method === App\Models\Enums\CarrierCalculationMethod::PERCENTAGE) {
+//                 $charge = ($price->amount * $subtotal) / 100;
+//             }
+//         }
+//     }
+//     dump($carrier, $cart, $address, $subtotal);
+//     dd($charge);
+// });
 
 //*-> Authentication Routes
 require __DIR__.'/auth.php';
