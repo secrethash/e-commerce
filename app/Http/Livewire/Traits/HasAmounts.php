@@ -55,6 +55,8 @@ trait HasAmounts
             'formattedTotal' =>$this->formattedTotal,
             'shippingTotal' => $this->shippingTotal,
             'formattedShippingTotal' =>$this->formattedShippingTotal,
+            'taxed' => $this->taxed,
+            'formattedTaxed' => $this->formattedTaxed,
             'currency' =>$this->currency,
         ];
     }

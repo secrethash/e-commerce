@@ -519,7 +519,7 @@
                                         <td class="item-col quantity"
                                             style="text-align:right; padding-right: 10px; border-top: 1px solid #cccccc;">
                                             <span class="total-space">Subtotal</span> <br />
-                                            {{-- <span class="total-space">Tax</span> <br /> --}}
+                                            <span class="total-space">Tax</span> <br />
                                             <span class="total-space">Shipping</span> <br />
                                             <span class="total-space"
                                                 style="font-weight: bold; color: #4d4d4d">Total</span>
@@ -527,7 +527,7 @@
                                         <td class="item-col price"
                                             style="text-align: left; border-top: 1px solid #cccccc;">
                                             <span class="total-space">{{$amounts->formattedSubtotal}}</span> <br />
-                                            {{-- <span class="total-space">$0.75</span> <br /> --}}
+                                            <span class="total-space">{{$amounts->formattedTaxed}}</span> <br />
                                             <span class="total-space">{{$amounts->formattedShippingTotal}}</span> <br />
                                             <span class="total-space"
                                                 style="font-weight:bold; color: #4d4d4d">{{$amounts->formattedTotal}}</span>
