@@ -18,6 +18,14 @@ echo "Deploying application ..."
 
     # Clear cache
     php artisan optimize:clear
+    # Clear Shopper Symlink
+    cd ./public
+    rm shopper
+    cd ../
+    php artisan shopper:link
+    php artisan storage:link --force
+    # Clear cache again
+    php artisan optimize:clear
     php artisan optimize
 
     # Note: If you're using queue workers, this is the place to restart them.
