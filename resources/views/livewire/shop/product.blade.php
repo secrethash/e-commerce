@@ -25,7 +25,7 @@
                         <div class="zoompro-wrap zoompro-2">
                             @foreach ($thumbs as $tmbIndex => $thumb)
                                 <div class="zoompro-border zoompro-span">
-                                    <img class="zoompro" src="{{ asset($thumb) }}"
+                                    <img class="zoompro" {{--src="{{ asset($thumb) }}"--}} src="{{ asset($images[$tmbIndex]) }}"
                                         data-zoom-image="{{ asset($images[$tmbIndex]) }}" alt="" width="400px" />
                                 </div>
                             @endforeach
@@ -174,7 +174,7 @@
             <div class="description-review-topbar nav">
                 <a data-bs-toggle="tab" href="#des-details1">Description</a>
                 <a class="active" data-bs-toggle="tab" href="#des-details2">Product Details</a>
-                <a data-bs-toggle="tab" href="#des-details3">Reviews (2)</a>
+                {{-- <a data-bs-toggle="tab" href="#des-details3">Reviews (2)</a> --}}
             </div>
             <div class="tab-content description-review-bottom">
                 <div id="des-details2" class="tab-pane active">
@@ -212,7 +212,7 @@
                         {!! $product->description !!}
                     </div>
                 </div>
-                <div id="des-details3" class="tab-pane">
+                {{-- <div id="des-details3" class="tab-pane">
                     <div class="row">
                         <div class="col-lg-7">
                             <div class="review-wrapper">
@@ -318,7 +318,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
