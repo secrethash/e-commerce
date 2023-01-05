@@ -38,6 +38,22 @@ class Product extends ShopperProduct implements HasMedia, ReviewRateable
         );
     }
 
+    public function oldPriceAmount(): Attribute
+    {
+        return Attribute::make(
+            fn($value) => $value / 100,
+            fn($value) => $value * 100
+        );
+    }
+
+    public function costAmount(): Attribute
+    {
+        return Attribute::make(
+            fn($value) => $value / 100,
+            fn($value) => $value * 100
+        );
+    }
+
     /**
      * Get the formatted price value.
      */

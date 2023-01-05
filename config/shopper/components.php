@@ -165,7 +165,8 @@ return [
         // 'tables.orders-table' => Livewire\Tables\OrdersTable::class,
         'tables.orders-table' => Console\Tables\OrdersTable::class,
 
-        'tables.products-table' => Livewire\Tables\ProductsTable::class,
+        // 'tables.products-table' => Livewire\Tables\ProductsTable::class,
+        'tables.products-table' => Console\Tables\ProductsTable::class,
         'tables.reviews-table' => Livewire\Tables\ReviewsTable::class,
 
         // 'learn-more' => ConsoleComponents\LearnMore::class,
