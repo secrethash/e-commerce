@@ -23,12 +23,19 @@
                 <div class="col-xl-6 col-lg-6 col-md-12">
                     <div class="product-details-img product-details-tab">
                         <div class="zoompro-wrap zoompro-2">
-                            @foreach ($thumbs as $tmbIndex => $thumb)
+                            @if($thumbs)
+                                @foreach ($thumbs as $tmbIndex => $thumb)
+                                    <div class="zoompro-border zoompro-span">
+                                        <img class="zoompro" {{--src="{{ asset($thumb) }}"--}} src="{{ asset($images[$tmbIndex]) }}"
+                                            data-zoom-image="{{ asset($images[$tmbIndex]) }}" alt="" width="400px" />
+                                    </div>
+                                @endforeach
+                            @else
                                 <div class="zoompro-border zoompro-span">
-                                    <img class="zoompro" {{--src="{{ asset($thumb) }}"--}} src="{{ asset($images[$tmbIndex]) }}"
-                                        data-zoom-image="{{ asset($images[$tmbIndex]) }}" alt="" width="400px" />
+                                    <img class="zoompro" src="{{ asset('frontend/assets/images/product-image/placeholder-images-image_large.webp') }}"
+                                        data-zoom-image="{{ asset('frontend/assets/images/product-image/placeholder-images-image_large.webp') }}" alt="" width="400px" />
                                 </div>
-                            @endforeach
+                            @endif
                             {{-- <div class="zoompro-border zoompro-span">
                                 <img class="zoompro" src="{{ asset('frontend/assets/images/product-image/6.jpg') }}"
                                     data-zoom-image="assets/images/product-image/zoom/5.jpg')}}" alt="" />
@@ -39,14 +46,21 @@
                             </div> --}}
                         </div>
                         <div id="gallery" class="product-dec-slider-2">
-
-                            @foreach ($thumbs as $tmbIndex => $thumb)
+                            @if($thumbs)
+                                @foreach ($thumbs as $tmbIndex => $thumb)
+                                    <div class="single-slide-item">
+                                        <img class="img-responsive" data-image="{{ asset($thumb) }}"
+                                            data-zoom-image="{{ asset($images[$tmbIndex]) }}"
+                                            src="{{ asset($thumb) }}" alt="" />
+                                    </div>
+                                @endforeach
+                            @else
                                 <div class="single-slide-item">
-                                    <img class="img-responsive" data-image="{{ asset($thumb) }}"
-                                        data-zoom-image="{{ asset($images[$tmbIndex]) }}"
-                                        src="{{ asset($thumb) }}" alt="" />
+                                    <img class="img-responsive" src="{{ asset('frontend/assets/images/product-image/placeholder-images-image_large.webp') }}"
+                                        data-image="{{ asset('frontend/assets/images/product-image/placeholder-images-image_large.webp') }}"
+                                        data-zoom-image="{{ asset('frontend/assets/images/product-image/placeholder-images-image_large.webp') }}" alt="" width="400px" />
                                 </div>
-                            @endforeach
+                            @endif
                             {{-- <div class="single-slide-item">
                                 <img class="img-responsive" data-image="assets/images/product-image/6.jpg')}}"
                                     data-zoom-image="assets/images/product-image/zoom/5.jpg')}}"
@@ -79,7 +93,7 @@
                                     <i class="ion-android-star"></i>
                                 --}}
                             </div>
-                            <span class="read-review"><a class="reviews" href="#">Read reviews (1)</a></span>
+                            {{-- <span class="read-review"><a class="reviews" href="#">Read reviews (1)</a></span> --}}
                         </div>
                         <div class="pricing-meta">
                             <ul>
@@ -88,7 +102,7 @@
                                     $product->price_amount !== $product->old_price_amount AND
                                     $product->price_amount < $product->old_price_amount
                                 )
-                                    <li class="old-price">{{$product->formattedPrice($product->old_price_amount)}}</li>
+                                    <li class="old-price">{{$product->formattedPrice($product->old_price_amount * 100)}}</li>
                                 @endif
                             </ul>
                         </div>

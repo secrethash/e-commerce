@@ -82,7 +82,7 @@ class Listing extends Component
     public function updatedSelectedBrands($value)
     {
         $this->brands = implode($this->multiDelimiter, $this->selectedBrands);
-        $this->notify('success', 'Filter Updated!', 'Brand Filter has been updated.');
+        // $this->notify('success', 'Filter Updated!', 'Brand Filter has been updated.');
         // $this->brands = urldecode($this->brands);
     }
 
