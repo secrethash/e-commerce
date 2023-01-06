@@ -86,7 +86,7 @@ if (!function_exists('product_images')) {
         }
 
         return new Fluent([
-            'thumb' => $thumb,
+            'thumb' => $thumb ?? asset('frontend/assets/images/product-image/placeholder-images-image_large.webp'),
             'hover' => $hover,
             'all' => $images,
         ]);
