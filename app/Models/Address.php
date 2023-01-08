@@ -43,10 +43,11 @@ class Address extends ShopperAddress
     /**
      * Return Address Full Name.
      */
-    public function getFullNameAttribute(): ?string
+    public function getFullNameAttribute(): string
     {
-        return $this->last_name
+        $fullname = $this->last_name
             ? $this->first_name . ' ' . $this->last_name
             : $this->first_name;
+        return $fullname ?? '';
     }
 }
