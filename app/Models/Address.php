@@ -39,4 +39,14 @@ class Address extends ShopperAddress
     {
         return $this->belongsTo(CountryState::class, 'country_state_id');
     }
+
+    /**
+     * Return Address Full Name.
+     */
+    public function getFullNameAttribute(): ?string
+    {
+        return $this->last_name
+            ? $this->first_name . ' ' . $this->last_name
+            : $this->first_name;
+    }
 }
