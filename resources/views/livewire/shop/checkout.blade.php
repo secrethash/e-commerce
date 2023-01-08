@@ -510,7 +510,7 @@
                                     <div class="spinner-grow spinner-grow-sm me-2" role="status" wire:loading wire:target='submit'>
                                         <span class="visually-hidden">Loading...</span>
                                     </div>
-                                    Place Order
+                                    Pay & Place Order
                                 </button>
                             </div>
                         </div>
@@ -521,3 +521,4 @@
     </div>
     <!-- checkout area end -->
 </div>
+

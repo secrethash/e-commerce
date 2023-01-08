@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Shopper\Framework\Models\Shop\Order\Order as ShopperOrder;
+use Shopper\Framework\Models\Shop\Order\OrderStatus;
 
 class Order extends ShopperOrder
 {
@@ -27,10 +28,22 @@ class Order extends ShopperOrder
         'price_amount',
         'user_id',
         'tax_total',
+        'amounts',
+    ];
+
+    protected $casts = [
+        'amounts' => 'array',
     ];
 
     // public function fullPriceWithShipping(): int
     // {
     //     return $this->total() + $this->shipping_total + $this->tax_total;
     // }
+
+    public function markAsPaid(): bool
+    {
+        return $this->update([
+            'status' => OrderStatus::PAID,
+        ]);
+    }
 }

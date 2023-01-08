@@ -49,6 +49,7 @@
         @yield('content')
         @include('components.footer')
         @include('includes.scripts')
+        @yield('scripts')
     </body>
 
 </html>
