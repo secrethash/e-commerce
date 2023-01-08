@@ -304,6 +304,63 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Order
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property string $number
+ * @property int|null $price_amount
+ * @property string $status
+ * @property string $currency
+ * @property int|null $shipping_total
+ * @property string|null $shipping_method
+ * @property string|null $notes
+ * @property array|null $amounts
+ * @property int|null $parent_order_id
+ * @property int|null $payment_method_id
+ * @property int|null $shipping_address_id
+ * @property int $user_id
+ * @property int|null $tax_total
+ * @property-read \App\Models\User $customer
+ * @property-read string $formatted_status
+ * @property-read string $status_classes
+ * @property-read string $total
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Shopper\Framework\Models\Shop\Order\OrderItem[] $items
+ * @property-read int|null $items_count
+ * @property-read \Shopper\Framework\Models\Shop\PaymentMethod|null $paymentMethod
+ * @property-read \Shopper\Framework\Models\Shop\Order\OrderRefund|null $refund
+ * @property-read \Shopper\Framework\Models\User\Address|null $shippingAddress
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Order onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereAmounts($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereNotes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereParentOrderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePaymentMethodId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePriceAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereShippingAddressId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereShippingMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereShippingTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereTaxTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|Order withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Order withoutTrashed()
+ */
+	class Order extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Product
  *
  * @property int $id

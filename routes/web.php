@@ -29,7 +29,8 @@ Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/cart', [CheckoutController::class, 'cart'])->name('cart');
     Route::get('/wishlist', Wishlist::class)->name('wishlist')->middleware(['auth']);
     Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
-    Route::get('/checkout/payment/card/{order}/{token}', [StripeController::class, 'process'])->name('checkout.payments.stripe');
+    Route::get('/checkout/payment/card/{order}/{token}/{payment}', [StripeController::class, 'process'])->name('checkout.payments.stripe');
+    Route::get('/checkout/payment/card/capture/{order}', [StripeController::class, 'capture'])->name('checkout.payments.stripe.capture');
     Route::get('/checkout/{cart?}', [CheckoutController::class, 'checkout'])->name('checkout');
     Route::get('/{product}', ProductController::class)->name('product');
 });

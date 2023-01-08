@@ -32,6 +32,7 @@ use App\Models\Address;
 use App\Models\Tax;
 use Illuminate\Routing\Redirector;
 use Illuminate\Validation\Rule;
+use Stripe\Checkout\Session;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 
@@ -188,7 +189,7 @@ class Checkout extends Component
     public function mount()
     {
         $this->selectUser();
-        $this->paymentMethods = PaymentMethod::enabled()->latest()->get();
+        $this->paymentMethods = PaymentMethod::enabled()->get();
         $this->selectedPaymentMethod = $this->paymentMethods->first()?->slug;
         $this->selectAddress();
         $this->shippingToBillingAddress();
@@ -210,7 +211,7 @@ class Checkout extends Component
         $this->emit('validated');
     }
 
-    protected function setupStripe(): ?string
+    protected function setupStripe(): ?PaymentIntent
     {
         $stripePM = PaymentMethod::findBySlug('stripe');
 
@@ -224,7 +225,8 @@ class Checkout extends Component
                     'enabled' => true,
                 ],
             ]);
-            return $intent->client_secret;
+            return $intent;
+            // return $intent->client_secret;
         }
         return null;
     }
@@ -445,6 +447,10 @@ class Checkout extends Component
         //? 4. Process Order
         $order = $this->processOrder();
 
+        if (!$order instanceof Order) {
+            return $order;
+        }
+
         //? 5. Send Mails
         Mail::to($this->user)->send(new OrderConfirmed($order, $this->getFluentAmounts()));
 
@@ -462,9 +468,14 @@ class Checkout extends Component
         //? 2. Create Order Items & associate them to Order
         $order = $this->processOrderItems($this->createOrder());
         if ($this->selectedPaymentMethod === 'stripe') {
-            $token = $this->setupStripe();
+            $stripe = $this->setupStripe();
+            $token = $stripe->client_secret;
             if (!is_null($token)) {
-                return redirect()->route('shop.checkout.payments.stripe', compact('order', 'token'));
+                return redirect()->route('shop.checkout.payments.stripe', [
+                    'order' => encrypt($order->id),
+                    'token' => encrypt($token),
+                    'payment' => encrypt($stripe->id),
+                ]);
             }
         }
         return $order;
@@ -481,6 +492,7 @@ class Checkout extends Component
             'shipping_total' => $this->shippingTotal,
             'tax_total' => $this->taxed,
             'shipping_method' => "{$this->selectedCarrier->name} ({$this->selectedCarrier->name})",
+            'amounts' => $this->getAmounts(),
         ]);
         $order->customer()->associate($this->user);
         $order->paymentMethod()->associate($paymentMethod);
