@@ -109,7 +109,15 @@
                         <div class="product-classify">
                             <ul>
                                 {{-- <li>Ex Tax:<span> £48.94</span></li> --}}
-                                <li>Brand <a href="{{route('shop.index', ['brands' => $product->brand->slug])}}">{{$product->brand->name}}</a></li>
+                                <li>Brand
+                                    @if ($product->brand)
+                                        <a href="{{route('shop.index', ['brands' => $product->brand->slug])}}">
+                                            {{$product->brand->name}}
+                                        </a>
+                                    @else
+                                        <span>N/A</span>
+                                    @endif
+                                </li>
                                 <li>SKU:<span> {{$product->sku}}</span></li>
                                 <li>Availability:<span>In Stock</span></li>
                             </ul>
