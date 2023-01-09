@@ -451,7 +451,8 @@ class Checkout extends Component
             return $order;
         }
 
-        //? 5. Send Mails
+        //? 5. Mark order as Registered & Send Mails
+        $order->markAsRegistered();
         Mail::to($this->user)->send(new OrderConfirmed($order, $this->getFluentAmounts()));
 
         //? 6. Clear Cart

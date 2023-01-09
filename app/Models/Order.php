@@ -46,4 +46,11 @@ class Order extends ShopperOrder
             'status' => OrderStatus::PAID,
         ]);
     }
+
+    public function markAsRegistered(): bool
+    {
+        return $this->update([
+            'status' => OrderStatus::REGISTER,
+        ]);
+    }
 }
