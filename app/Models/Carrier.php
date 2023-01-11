@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Shopper\Framework\Models\Shop\Carrier as ShopCarrier;
-use Shopper\Framework\Models\System\Country;
+// use Shopper\Framework\Models\System\Country;
+use App\Models\Country;
 
 class Carrier extends ShopCarrier
 {

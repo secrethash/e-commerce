@@ -22,7 +22,7 @@ use Filament\Tables\Columns\BadgeColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
-use Shopper\Framework\Models\System\Country;
+use App\Models\Country;
 
 class CarrierResource extends Resource
 {

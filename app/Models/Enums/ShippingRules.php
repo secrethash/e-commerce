@@ -4,7 +4,7 @@ namespace App\Models\Enums;
 
 use App\Models\CountryState;
 use Illuminate\Support\Fluent;
-use Shopper\Framework\Models\System\Country;
+use App\Models\Country;
 
 enum ShippingRules: string {
 
