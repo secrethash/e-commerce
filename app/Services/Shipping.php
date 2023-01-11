@@ -131,7 +131,8 @@ final class Shipping
 
         if ($pricing->count() >= 1) {
             $pricing->where('minimum_order', '<=', $subtotal)
-                ->orWhere('maximum_order', '>=', $subtotal);
+                ->where('maximum_order', '>=', $subtotal);
+                // ->orWhere('maximum_order', '>=', $subtotal);
             if ($pricing->count() >= 1) {
                 // return $this->calculate($pricing->first(), $subtotal)->charge;
                 return $this->calculateFlat(0, $subtotal)->getCharge();
@@ -173,7 +174,8 @@ final class Shipping
 
         if ($pricing->count() >= 1) {
             $pricing->where('minimum_order', '<=', $subtotal)
-                ->orWhere('maximum_order', '>=', $subtotal);
+                ->where('maximum_order', '>=', $subtotal);
+                // ->orWhere('maximum_order', '>=', $subtotal);
             if ($pricing->count() >= 1) {
                 // return $this->calculate($pricing->first(), $subtotal)->charge;
                 return $this->calculateFlat(0, $subtotal)->getCharge();
@@ -210,7 +212,8 @@ final class Shipping
 
         if ($pricing->count() >= 1) {
             $pricing->where('minimum_order', '<=', $subtotal)
-                ->orWhere('maximum_order', '>=', $subtotal);
+                ->where('maximum_order', '>=', $subtotal);
+                // ->orWhere('maximum_order', '>=', $subtotal);
             if ($pricing->count() >= 1) {
                 // return $this->calculate($pricing->first(), $subtotal)->charge;
                 return $this->calculateFlat(0, $subtotal)->getCharge();
@@ -247,7 +250,8 @@ final class Shipping
 
         if ($pricing->count() >= 1) {
             $pricing->where('minimum_order', '<=', $subtotal)
-                ->orWhere('maximum_order', '>=', $subtotal);
+                ->where('maximum_order', '>=', $subtotal);
+                // ->orWhere('maximum_order', '>=', $subtotal);
             if ($pricing->count() >= 1) {
                 return $this->calculate($pricing->first(), $subtotal)->getCharge();
             }
@@ -289,14 +293,21 @@ final class Shipping
                 $query->where('id', $address->country_state_id);
             }
         );
+        // logger()->debug("Country State ID: {$address->country_state_id}");
+        // logger()->debug("Address: {$address}");
+        // logger()->debug("Pricing: {$pricing->get()}");
 
         if ($pricing->count() >= 1) {
             $pricing->where('minimum_order', '<=', $subtotal)
-                ->orWhere('maximum_order', '>=', $subtotal);
+                ->where('maximum_order', '>=', $subtotal);
+                // ->orWhere('maximum_order', '>=', $subtotal);
             if ($pricing->count() >= 1) {
+                // logger()->debug("Pricing Get: {$pricing->get()}");
+                // logger()->debug("Pricing First: {$pricing->first()}");
                 return $this->calculate($pricing->first(), $subtotal)->getCharge();
             }
         }
+
 
         if ($carrier->limited_to_pricing) {
             return false;
