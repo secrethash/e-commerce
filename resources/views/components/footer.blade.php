@@ -54,13 +54,13 @@
                                 <div class="social-info">
                                     <ul class="link-follow">
                                         @if(!blank(shopper_setting('shop_facebook_link')))
-                                            <li><a class="facebook ion-social-facebook" title="Facebook" href="{{shopper_setting('shop_facebook_link')}}"><span>facebook</span></a></li>
+                                            <li><a class="facebook ion-social-facebook" title="Facebook" href="{{shopper_setting('shop_facebook_link')}}" target="_blank"><span>facebook</span></a></li>
                                         @endif
                                         @if(!blank(shopper_setting('shop_twitter_link')))
-                                            <li><a class="twitter ion-social-twitter" title="Twitter" href="{{shopper_setting('shop_twitter_link')}}"><span>twitter</span></a></li>
+                                            <li><a class="twitter ion-social-twitter" title="Twitter" href="{{shopper_setting('shop_twitter_link')}}" target="_blank"><span>twitter</span></a></li>
                                         @endif
                                         @if(!blank(shopper_setting('shop_instagram_link')))
-                                            <li><a class="instagram ion-social-instagram-outline" title="Instagram" href="{{shopper_setting('shop_instagram_link')}}"><span>instagram </span></a></li>
+                                            <li><a class="instagram ion-social-instagram-outline" title="Instagram" href="{{shopper_setting('shop_instagram_link')}}" target="_blank"><span>instagram </span></a></li>
                                         @endif
                                     </ul>
                                 </div>
