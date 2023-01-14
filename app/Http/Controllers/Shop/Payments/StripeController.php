@@ -54,6 +54,7 @@ class StripeController extends Controller
 
         //? 7. Update Order
         $order->markAsPaid();
+        $order->markAsRegistered();
 
         //? 8. Redirect
         return redirect()->route('shop.checkout.success', encrypt($order->number));

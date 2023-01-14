@@ -1,10 +1,10 @@
+public/shopper
 /node_modules
 /public/build
 /public/hot
 /public/storage
 /public/avatars
 /public/uploads
-/public/shopper
 /storage/*.key
 /vendor
 .env
