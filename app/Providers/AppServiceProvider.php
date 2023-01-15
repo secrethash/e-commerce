@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\ServiceProvider;
 use RyanChandler\FilamentNavigation\Facades\FilamentNavigation;
+use Shopper\Framework\Models\Shop\Order\OrderStatus;
 use Shopper\Framework\Models\Shop\Product\Category;
 
 class AppServiceProvider extends ServiceProvider
@@ -43,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
         View::share('customMenu', fn (): Menus => new Menus());
         View::share('taxation', fn (Tax $tax, int $amount): int => Taxation::fromTax($tax, $amount));
         View::share('usedForEnum', fn ($from): UsedFor => UsedFor::from($from));
+        View::share('orderStatus', OrderStatus::class);
 
         Filament::serving(function () {
             Filament::registerNavigationItems([

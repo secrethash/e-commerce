@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Http\Request;
+use Shopper\Framework\Models\Shop\Order\Order;
 
 class AccountController extends Controller
 {
@@ -16,7 +17,13 @@ class AccountController extends Controller
 
     public function orders()
     {
-        $orders = Auth::user()->orders()->paginate(12);
+        $orders = Auth::user()->orders()->latest()->paginate(12);
         return view('content.user.orders', compact('orders'));
+    }
+
+    public function orderDetails($order)
+    {
+        $order = Order::where('number', $order)->first();
+        return view('content.user.order-details', compact('order'));
     }
 }
