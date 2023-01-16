@@ -12,7 +12,9 @@ use Shopper\Framework\Models\Shop\Order\OrderStatus;
 // use App\Models\Order;
 // use App\Models\Enums\OrderStatus;
 use App\Models\Address;
+use App\Services\Orders;
 use Illuminate\Support\Fluent;
+use Str;
 use WireUi\Traits\Actions;
 
 class Show extends Component
@@ -110,6 +112,13 @@ class Show extends Component
         $this->order->markAsCompleted();
 
         $this->notification()->success(__('Updated Status'), __('This order is marked as complete.'));
+    }
+
+    public function downloadInvoice()
+    {
+        $file = Orders::make($this->order)->pdfInvoice();
+        $filename = Str::snake(config('app.name')."-{$this->order->number}").'.pdf';
+        return response()->download($file, $filename);
     }
 
     public function render(): View

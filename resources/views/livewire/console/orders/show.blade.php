@@ -289,10 +289,10 @@
 
                         <x-slot name="content">
                             <div class="py-1">
-                                <x-shopper::dropdown-button role="menuitem">
-                                    {{ __('Send invoice') }}
+                                <x-shopper::dropdown-button wire:click="downloadInvoice" role="menuitem">
+                                    {{ __('Invoice') }}
                                     <span class="inline-flex items-center ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-secondary-100 text-secondary-800 dark:bg-secondary-800 dark:text-secondary-300">
-                                      {{ __('Soon') }}
+                                      {{ __('pdf') }}
                                     </span>
                                 </x-shopper::dropdown-button>
                                 @if($order->isPending())

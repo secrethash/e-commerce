@@ -46,7 +46,12 @@
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
-                            <span class="fw-bolder">Total</span>
+                            <span class="fw-bolder">
+                                Total <br>
+                                @if (!$order->isPaid())
+                                    <small class="fw-normal text-danger">to be paid</small>
+                                @endif
+                            </span>
                             <strong class="text-success">{{shopper_money_format($order->fullPriceWithShipping() + $order->tax_total)}}</strong>
                         </div>
                     </div>
@@ -55,10 +60,16 @@
                     </div>
                     <div class="col-12 col-lg-4">
                         <h6 class="card-title text-center">Actions</h6>
-                        <button type="button" class="btn btn-outline-primary rounded-0 w-100">
+                        <a href="{{$invoiceUrl}}" class="btn btn-outline-primary rounded-0 w-100 my-2">
                             <x-ri-file-download-fill width="18" />
                             Download Invoice
-                        </button>
+                        </a>
+                        {{-- @if (!$order->isPaid())
+                            <a href="{{route('sh')}}" class="btn btn-success rounded-0 w-100 my-2">
+                                <x-ri-secure-payment-fill width="18" />
+                                Pay Now
+                            </a>
+                        @endif --}}
                     </div>
                 </div>
             </div>

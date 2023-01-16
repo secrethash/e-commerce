@@ -40,8 +40,13 @@ Route::prefix('user')->name('user.')
     ->middleware(['auth'])
     ->group(function () {
         Route::get('orders', 'orders')->name('orders');
+        Route::get('orders/invoice/{order}', 'orderInvoice')
+            ->name('orders.invoice')
+            ->middleware(['signed']);
         Route::get('orders/{order}', 'orderDetails')->name('orders.view');
         Route::get('account', Account::class)->name('account');
+        Route::get('downloads/invoice/{order}', 'orderDownloadInvoice')->name('orders.download.invoice');
+        // Route::get('invoice/{order}', 'orderInvoice');
 });
 
 Route::get(config('shopper.system.dashboard'), function() {

@@ -35,5 +35,11 @@ return [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
+    'pdf' => [
+        'provider' => env('PDF_SERVICE_PROVIDER'),
+        'api' => env('PDF_SERVICE_API'),
+        'endpoint' => env('PDF_SERVICE_ENDPOINT'),
+        'storage' => env('PDF_SERVICE_STORAGE'),
+    ],
 
 ];
