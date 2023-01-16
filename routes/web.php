@@ -37,16 +37,19 @@ Route::prefix('shop')->name('shop.')->group(function () {
 
 Route::prefix('user')->name('user.')
     ->controller(AccountController::class)
-    ->middleware(['auth'])
     ->group(function () {
-        Route::get('orders', 'orders')->name('orders');
-        Route::get('orders/invoice/{order}', 'orderInvoice')
-            ->name('orders.invoice')
-            ->middleware(['signed']);
-        Route::get('orders/{order}', 'orderDetails')->name('orders.view');
-        Route::get('account', Account::class)->name('account');
-        Route::get('downloads/invoice/{order}', 'orderDownloadInvoice')->name('orders.download.invoice');
-        // Route::get('invoice/{order}', 'orderInvoice');
+        Route::middleware(['signed'])->group(function() {
+            Route::get('orders/invoice/{order}', 'orderInvoice')
+                ->name('orders.invoice');
+            Route::get('downloads/invoice/{order}', 'orderDownloadInvoice')
+                ->name('orders.download.invoice');
+        });
+        Route::middleware(['auth'])->group(function() {
+            Route::get('orders', 'orders')->name('orders');
+            Route::get('orders/{order}', 'orderDetails')->name('orders.view');
+            Route::get('account', Account::class)->name('account');
+            // Route::get('invoice/{order}', 'orderInvoice');
+        });
 });
 
 Route::get(config('shopper.system.dashboard'), function() {
