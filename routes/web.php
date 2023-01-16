@@ -40,8 +40,13 @@ Route::prefix('user')->name('user.')
     ->middleware(['auth'])
     ->group(function () {
         Route::get('orders', 'orders')->name('orders');
-        Route::get('orders/{order}', 'orders')->name('orders.view');
+        Route::get('orders/invoice/{order}', 'orderInvoice')
+            ->name('orders.invoice')
+            ->middleware(['signed']);
+        Route::get('orders/{order}', 'orderDetails')->name('orders.view');
         Route::get('account', Account::class)->name('account');
+        Route::get('downloads/invoice/{order}', 'orderDownloadInvoice')->name('orders.download.invoice');
+        // Route::get('invoice/{order}', 'orderInvoice');
 });
 
 Route::get(config('shopper.system.dashboard'), function() {
@@ -49,50 +54,7 @@ Route::get(config('shopper.system.dashboard'), function() {
 })->middleware(['auth']);
 
 //!-> Test Routes
-// Route::get('test/dynamic-menu', function() {
-//     $menu = RyanChandler\FilamentNavigation\Facades\FilamentNavigation::get('main-menu');
-//     $item = new Fluent($menu->items[array_key_last($menu->items)]);
-//     dd($item->label, $item->children, $item, $item->children ? true : false);
-// });
-// Route::get('test/mail', function() {
-//     $order = Shopper\Framework\Models\Shop\Order\Order::latest()->first();
-//     return new OrderConfirmed($order, new \Illuminate\Support\Fluent());
-// });
-// Route::get('test/shipping', function () {
-//     $cart = new \App\Services\Cart(App\Models\Cart::find(15));
-//     $carrier = \App\Models\Carrier::find(2);
-//     $address = \App\Models\Address::first();
-//     $subtotal = $cart->subtotal($cart->cart);
-//     $charge = null;
-//     //
-//     if (!$carrier->rule_type->freeable()) {
-//         dd($carrier);
-//     }
-//     dump($carrier->pricing);
-//     /** @var \App\Models\CarrierPricing $pricing */
-//     $pricing = $carrier->pricing()->whereHasMorph(
-//         'calculable',
-//         [\Shopper\Framework\Models\System\Country::class],
-//         function (\Illuminate\Database\Eloquent\Builder $query) use($address) {
-//             $query->where('id', $address->country_id);
-//         }
-//     );
-//     dump($pricing->get());
-//     if ($pricing->count() >= 1) {
-//         $pricing->where('minimum_order', '<=', $subtotal)
-//             ->orWhere('maximum_order', '>=', $subtotal);
-//         if ($pricing->count() >= 1) {
-//             $price = $pricing->first();
-//             if ($price->method === App\Models\Enums\CarrierCalculationMethod::FLAT) {
-//                 $charge = $price->amount;
-//             } elseif ($price->method === App\Models\Enums\CarrierCalculationMethod::PERCENTAGE) {
-//                 $charge = ($price->amount * $subtotal) / 100;
-//             }
-//         }
-//     }
-//     dump($carrier, $cart, $address, $subtotal);
-//     dd($charge);
-// });
+
 
 //*-> Authentication Routes
 require __DIR__.'/auth.php';

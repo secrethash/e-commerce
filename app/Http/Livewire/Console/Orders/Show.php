@@ -2,12 +2,19 @@
 
 namespace App\Http\Livewire\Console\Orders;
 
+use App\Mail\OrderConfirmed;
 use Livewire\Component;
 use Illuminate\Contracts\View\View;
 use Livewire\WithPagination;
+use Mail;
 use Shopper\Framework\Models\Shop\Order\Order;
 use Shopper\Framework\Models\Shop\Order\OrderStatus;
-use Shopper\Framework\Models\User\Address;
+// use App\Models\Order;
+// use App\Models\Enums\OrderStatus;
+use App\Models\Address;
+use App\Services\Orders;
+use Illuminate\Support\Fluent;
+use Str;
 use WireUi\Traits\Actions;
 
 class Show extends Component
@@ -49,28 +56,69 @@ class Show extends Component
 
     public function register()
     {
-        $this->order->update(['status' => OrderStatus::REGISTER]);
-
-        // TODO Send notification to the customer about order registration.
+        // $this->order->update(['status' => OrderStatus::REGISTER]);
+        $this->order->markAsRegistered();
+        Mail::to($this->order->customer)->send(new OrderConfirmed($this->order, new Fluent($this->order->amounts)));
 
         $this->notification()->success(
             __('Updated Status'),
-            __('This order has been marked as register and notification has been sent to the customer by email.')
+            __('This order has been marked as confirmed and notification has been sent to the customer by email.')
+        );
+    }
+
+    public function shipped()
+    {
+        // $this->order->update(['status' => OrderStatus::SHIPPED]);
+        $this->order->markAsShipped();
+        // Mail::to($this->order->customer)->send(new OrderConfirmed($this->order, new Fluent($this->order->amounts)));
+
+        $this->notification()->success(
+            __('Updated Status'),
+            __('This order has been marked as shipped.')
         );
     }
 
     public function markPaid()
     {
-        $this->order->update(['status' => OrderStatus::PAID]);
+        // $this->order->update(['is_paid' => true]);
+        $this->order->markAsPaid();
 
         $this->notification()->success(__('Updated Status'), __('This order is marked as paid!'));
     }
 
+    public function markOutForDelivery()
+    {
+        // $this->order->update(['status' => OrderStatus::DELIVERY]);
+        $this->order->markAsOutForDelivery();
+
+        $this->notification()->success(__('Updated Status'), __('This order is marked as Out For Delivery!'));
+    }
+
+    public function markDeliveredAndPaid()
+    {
+        // $this->order->update([
+        //     'is_paid' => true,
+        //     'status' => OrderStatus::COMPLETED,
+        // ]);
+        $this->order->markAsPaid();
+        $this->order->markAsCompleted();
+
+        $this->notification()->success(__('Updated Status'), __('This order is marked as delivered & paid!'));
+    }
+
     public function markComplete()
     {
-        $this->order->update(['status' => OrderStatus::COMPLETED]);
+        // $this->order->update(['status' => OrderStatus::COMPLETED]);
+        $this->order->markAsCompleted();
 
         $this->notification()->success(__('Updated Status'), __('This order is marked as complete.'));
+    }
+
+    public function downloadInvoice()
+    {
+        $file = Orders::make($this->order)->pdfInvoice();
+        $filename = Str::snake(config('app.name')."-{$this->order->number}").'.pdf';
+        return response()->download($file, $filename);
     }
 
     public function render(): View

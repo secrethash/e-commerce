@@ -19,7 +19,7 @@
         "maatwebsite/excel": "^3.1.42",
         "psr/simple-cache": "^2.0",
         "ryangjchandler/filament-navigation": "^0.4.0",
-        "shopper/framework": "^1.0",
+        "secrethash/shopper-framework": "dev-main",
         "spatie/laravel-menu": "^4.1",
         "symfony/http-client": "^6.2",
         "symfony/mailgun-mailer": "^6.2",

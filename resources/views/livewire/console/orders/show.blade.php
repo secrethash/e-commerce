@@ -55,20 +55,37 @@
                                 <div class="py-1">
                                     @if($order->isPending())
                                         <x-shopper::dropdown-button wire:click="register" role="menuitem">
-                                            {{ __('Register') }}
+                                            {{ __('Confirm') }}
                                         </x-shopper::dropdown-button>
                                     @endif
 
                                     @if($order->isPending() || $order->isRegister())
+                                        <x-shopper::dropdown-button wire:click="shipped" role="menuitem">
+                                            {{ __('Ship Order') }}
+                                        </x-shopper::dropdown-button>
+                                    @endif
+                                    @if($order->isShipped())
+                                        <x-shopper::dropdown-button wire:click="markOutForDelivery" role="menuitem">
+                                            {{ __('Mark as Out for Delivery') }}
+                                        </x-shopper::dropdown-button>
+                                    @endif
+                                    @if(($order->isPending() || $order->isRegister()) && !$order->isPaid())
                                         <x-shopper::dropdown-button wire:click="markPaid" role="menuitem">
                                             {{ __('Mark as paid') }}
                                         </x-shopper::dropdown-button>
                                     @endif
 
-                                    @if($order->isPaid())
+                                    @if($order->isPaid() && ($order->isShipped() OR $order->isOutForDelivery()))
                                         <x-shopper::dropdown-button wire:click="markComplete" role="menuitem">
                                             <x-heroicon-o-check-circle class="mr-3 h-5 w-5 text-secondary-400 dark:text-secondary-500 group-hover:text-secondary-500 dark:text-secondary-500" />
-                                            {{ __('Mark complete') }}
+                                            {{ __('Mark delivered') }}
+                                        </x-shopper::dropdown-button>
+                                    @endif
+
+                                    @if(!$order->isPaid() && ($order->isShipped() OR $order->isOutForDelivery()))
+                                        <x-shopper::dropdown-button wire:click="markDeliveredAndPaid" role="menuitem">
+                                            {{-- <x-heroicon-o-check-circle class="mr-3 h-5 w-5 text-secondary-400 dark:text-secondary-500 group-hover:text-secondary-500 dark:text-secondary-500" /> --}}
+                                            {{ __('Mark delivered & paid') }}
                                         </x-shopper::dropdown-button>
                                     @endif
 
@@ -249,6 +266,13 @@
                         <div class="bg-secondary-200 rounded-md p-4 dark:bg-secondary-800">
                             <span class="text-base leading-6 font-semibold text-secondary-900 dark:text-white">{{ __('Order total:') }} </span>
                             {{ shopper_money_format($order->fullPriceWithShipping() + $order->tax_total) }}
+                            @if($order->isPaid())
+                                <div class="space-x-2">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 border-2 rounded-full text-xs font-medium border-green-200 bg-green-100 text-green-800">
+                                        {{ __('Paid') }}
+                                    </span>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -265,18 +289,18 @@
 
                         <x-slot name="content">
                             <div class="py-1">
-                                {{-- <x-shopper::dropdown-button role="menuitem">
-                                    {{ __('Send invoice') }}
+                                <x-shopper::dropdown-button wire:click="downloadInvoice" role="menuitem">
+                                    {{ __('Invoice') }}
                                     <span class="inline-flex items-center ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-secondary-100 text-secondary-800 dark:bg-secondary-800 dark:text-secondary-300">
-                                      {{ __('Soon') }}
+                                      {{ __('pdf') }}
                                     </span>
-                                </x-shopper::dropdown-button> --}}
+                                </x-shopper::dropdown-button>
                                 @if($order->isPending())
                                     <x-shopper::dropdown-button wire:click="register" role="menuitem">
-                                        {{ __('Register') }}
+                                        {{ __('Confirm') }}
                                     </x-shopper::dropdown-button>
                                 @endif
-                                @if($order->isPending() || $order->isRegister())
+                                @if(($order->isPending() || $order->isRegister()) && !$order->isPaid())
                                     <x-shopper::dropdown-button wire:click="markPaid" role="menuitem">
                                         {{ __('Mark as paid') }}
                                     </x-shopper::dropdown-button>

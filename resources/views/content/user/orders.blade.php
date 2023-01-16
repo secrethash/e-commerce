@@ -14,7 +14,7 @@
                             $maxItems = 1;
                             $firstItem = $order->items->first();
                             $image = asset('frontend/assets/images/product-image/placeholder-images-collection-6_large.webp');
-                            $image = $firstItem?->product->getMedia('uploads')->first()->getUrl('thumb200x200') ?? $image;
+                            $image = $firstItem?->product->getMedia('uploads')->first()?->getUrl('thumb200x200') ?? $image;
                         @endphp
                         <div class="col-12 col-md-3">
                             <div class="card px-0">
@@ -59,7 +59,7 @@
                                             @endforeach
                                         </ul>
                                     </p>
-                                    <a href="#" class="btn btn-dark btn-lg w-100 mb-0 rounded-0 stretched-link">
+                                    <a href="{{route('user.orders.view', $order->number)}}" class="btn btn-dark btn-lg w-100 mb-0 rounded-0 stretched-link">
                                         View Order
                                         <x-heroicon-s-arrow-circle-right width="18" />
                                     </a>

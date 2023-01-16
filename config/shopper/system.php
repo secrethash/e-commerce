@@ -100,7 +100,7 @@ return [
 
     'controllers' => [
 
-        'namespace' => 'App\\Http\\Controllers\\Shopper',
+        'namespace' => 'App\\Http\\Controllers\\Console',
 
     ],
 
@@ -204,5 +204,7 @@ return [
     */
 
     'barcode_type' => 'C128',
+
+    'admin_backend' => 'filament.pages.dashboard',
 
 ];

@@ -11,13 +11,13 @@
                             <label>Follow Us:</label>
                             <ul class="link-follow">
                                 @if(!blank(shopper_setting('shop_facebook_link')))
-                                    <li><a class="facebook ion-social-facebook" title="Facebook" href="{{shopper_setting('shop_facebook_link')}}"></a></li>
+                                    <li><a class="facebook ion-social-facebook" title="Facebook" href="{{shopper_setting('shop_facebook_link')}}" target="_blank"></a></li>
                                 @endif
                                 @if(!blank(shopper_setting('shop_twitter_link')))
-                                    <li><a class="twitter ion-social-twitter" title="Twitter" href="{{shopper_setting('shop_twitter_link')}}"></a></li>
+                                    <li><a class="twitter ion-social-twitter" title="Twitter" href="{{shopper_setting('shop_twitter_link')}}" target="_blank"></a></li>
                                 @endif
                                 @if(!blank(shopper_setting('shop_instagram_link')))
-                                    <li><a class="instagram ion-social-instagram-outline" title="Instagram" href="{{shopper_setting('shop_instagram_link')}}"></a></li>
+                                    <li><a class="instagram ion-social-instagram-outline" title="Instagram" href="{{shopper_setting('shop_instagram_link')}}" target="_blank"></a></li>
                                 @endif
                             </ul>
                         </div>
@@ -54,10 +54,10 @@
                                             <li><a href="{{route('user.account')}}">My Account</a></li>
                                             <li><a href="{{route('user.orders')}}">Order History</a></li>
                                             @can('access_dashboard')
-                                                <li><a href="{{route('shopper.dashboard')}}">Console</a></li>
+                                                <li><a href="{{route('shopper.dashboard')}}" target="_blank">Console</a></li>
                                             @endcan
                                             @can('can_view_backend')
-                                                <li><a href="{{route('filament.pages.dashboard')}}">Admin</a></li>
+                                                <li><a href="{{route('filament.pages.dashboard')}}" target="_blank">Admin</a></li>
                                             @endcan
                                             <li><a href="{{route('logout.link')}}">Logout</a></li>
                                     </ul>
@@ -83,13 +83,13 @@
                             <label>Follow Us:</label>
                             <ul class="link-follow">
                                 @if(!blank(shopper_setting('shop_facebook_link')))
-                                    <li><a class="facebook ion-social-facebook" title="Facebook" href="{{shopper_setting('shop_facebook_link')}}"></a></li>
+                                    <li><a class="facebook ion-social-facebook" title="Facebook" href="{{shopper_setting('shop_facebook_link')}}" target="_blank"></a></li>
                                 @endif
                                 @if(!blank(shopper_setting('shop_twitter_link')))
-                                    <li><a class="twitter ion-social-twitter" title="Twitter" href="{{shopper_setting('shop_twitter_link')}}"></a></li>
+                                    <li><a class="twitter ion-social-twitter" title="Twitter" href="{{shopper_setting('shop_twitter_link')}}" target="_blank"></a></li>
                                 @endif
                                 @if(!blank(shopper_setting('shop_instagram_link')))
-                                    <li><a class="instagram ion-social-instagram-outline" title="Instagram" href="{{shopper_setting('shop_instagram_link')}}"></a></li>
+                                    <li><a class="instagram ion-social-instagram-outline" title="Instagram" href="{{shopper_setting('shop_instagram_link')}}" target="_blank"></a></li>
                                 @endif
                             </ul>
                         </div>
@@ -124,10 +124,10 @@
                                                 <li><a href="{{route('user.account')}}">My Account</a></li>
                                                 <li><a href="{{route('user.orders')}}">Order History</a></li>
                                                 @can('access_dashboard')
-                                                    <li><a href="{{route('shopper.dashboard')}}">Console</a></li>
+                                                    <li><a href="{{route('shopper.dashboard')}}" target="_blank">Console</a></li>
                                                 @endcan
                                                 @can('can_view_backend')
-                                                    <li><a href="{{route('filament.pages.dashboard')}}">Admin</a></li>
+                                                    <li><a href="{{route('filament.pages.dashboard')}}" target="_blank">Admin</a></li>
                                                 @endcan
                                                 <li><a href="{{route('logout.link')}}">Logout</a></li>
                                         </ul>
@@ -256,21 +256,21 @@
             <ul>
                 @if(!blank(shopper_setting('shop_facebook_link')))
                     <li>
-                        <a title="Facebook" href="{{shopper_setting('shop_facebook_link')}}">
+                        <a title="Facebook" href="{{shopper_setting('shop_facebook_link')}}" target="_blank">
                             <i class="ion-social-facebook"></i>
                         </a>
                     </li>
                 @endif
                 @if(!blank(shopper_setting('shop_twitter_link')))
                     <li>
-                        <a title="Twitter" href="{{shopper_setting('shop_twitter_link')}}">
+                        <a title="Twitter" href="{{shopper_setting('shop_twitter_link')}}" target="_blank">
                             <i class="ion-social-twitter"></i>
                         </a>
                     </li>
                 @endif
                 @if(!blank(shopper_setting('shop_instagram_link')))
                     <li>
-                        <a title="Instagram" href="{{shopper_setting('shop_instagram_link')}}">
+                        <a title="Instagram" href="{{shopper_setting('shop_instagram_link')}}" target="_blank">
                             <i class="ion-social-instagram"></i>
                         </a>
                     </li>

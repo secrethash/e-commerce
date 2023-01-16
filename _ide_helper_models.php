@@ -31,7 +31,7 @@ namespace App\Models{
  * @property int|null $country_state_id
  * @property int $user_id
  * @property-read \Shopper\Framework\Models\System\Country|null $country
- * @property-read string|null $full_name
+ * @property-read string $full_name
  * @property-read \App\Models\CountryState|null $state
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Address newModelQuery()
@@ -154,7 +154,7 @@ namespace App\Models{
  * @property int|null $country_id
  * @property bool $is_store_pickup
  * @property bool $limited_to_pricing
- * @property-read \Shopper\Framework\Models\System\Country|null $country
+ * @property-read \App\Models\Country|null $country
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\CarrierPricing[] $pricing
  * @property-read int|null $pricing_count
  * @method static \Illuminate\Database\Eloquent\Builder|Carrier active()
@@ -323,6 +323,7 @@ namespace App\Models{
  * @property int|null $shipping_address_id
  * @property int $user_id
  * @property int|null $tax_total
+ * @property bool $is_paid
  * @property-read \App\Models\User $customer
  * @property-read string $formatted_status
  * @property-read string $status_classes
@@ -341,6 +342,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereIsPaid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereParentOrderId($value)
