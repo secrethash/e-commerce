@@ -17,7 +17,7 @@
                                 <p class="phone"><span class="call us">Products & Sales</span> <a href="tel:{{ shopper_setting('shop_phone_number')}}"> Call: {{ shopper_setting('shop_phone_number')}}</a></p>
                                 </div>
                                 <div class="contact-us-btn">
-                                    <a href="contact">Contact us</a>
+                                    <a href="mailto:{{shopper_setting('shop_email')}}">Contact us</a>
                                 </div>
                             </div>
                         </div>

@@ -12,9 +12,12 @@
                             @if($order->shippingAddress->company_name)
                                 {{ $order->shippingAddress->company_name }}<br>
                             @endif
-                            {{ $order->shippingAddress->street_address }}<br>
-                            {{ $order->shippingAddress->zipcode }} {{ $order->shippingAddress->city }}<br>
-                            {{ $order->shippingAddress->country->name }}<br>
+                            {{ $order->shippingAddress->street_address }},<br>
+                            {{ $order->shippingAddress->city }},<br>
+                            @if ($order->shippingAddress->state)
+                                {{ $order->shippingAddress->state->name }},<br>
+                            @endif
+                            {{ $order->shippingAddress->country->name }} - {{ $order->shippingAddress->zipcode }}<br>
                             @if($order->shippingAddress->phone_number)
                                 <span>{{ $order->shippingAddress->phone_number }}</span>
                             @endif
@@ -58,12 +61,16 @@
                     <div class="col d-none d-lg-block text-center">
                         <div class="vr h-100"></div>
                     </div>
-                    <div class="col-12 col-lg-4">
-                        <h6 class="card-title text-center">Actions</h6>
-                        <a href="{{$invoiceUrl}}" class="btn btn-outline-primary rounded-0 w-100 my-2">
-                            <x-ri-file-download-fill width="18" />
-                            Download Invoice
-                        </a>
+                    <div class="col-12 col-lg-4 text-center">
+                        <h6 class="card-title">Actions</h6>
+                        @if ($order->status === $orderStatus::CANCELLED)
+                            <span class="text-danger fw-bold">This order was cancelled.</span>
+                        @else
+                            <a href="{{$invoiceUrl}}" class="btn btn-outline-primary rounded-0 w-100 my-2">
+                                <x-ri-file-download-fill width="18" />
+                                Download Invoice
+                            </a>
+                        @endif
                         {{-- @if (!$order->isPaid())
                             <a href="{{route('sh')}}" class="btn btn-success rounded-0 w-100 my-2">
                                 <x-ri-secure-payment-fill width="18" />
@@ -83,47 +90,57 @@
                         <div class="events">
                             <ol>
                                 <ul>
+
                                     <li>
                                         @if ($order->status === $orderStatus::REGISTER)
                                             <a href="#0" class="selected">{{$orderStatus::values()[$orderStatus::REGISTER]}}</a>
                                         @elseif (
                                             $order->status === $orderStatus::SHIPPED OR
                                             $order->status === $orderStatus::DELIVERY OR
-                                            $order->status === $orderStatus::COMPLETED
+                                            $order->status === $orderStatus::COMPLETED OR
+                                            $order->status === $orderStatus::CANCELLED
                                         )
                                             <span class="selected">{{$orderStatus::values()[$orderStatus::REGISTER]}}</span>
                                         @else
                                             <span>{{$orderStatus::values()[$orderStatus::REGISTER]}}</span>
                                         @endif
                                     </li>
-                                    <li>
-                                        @if ($order->status === $orderStatus::SHIPPED)
-                                            <a href="#0" class="selected">{{$orderStatus::values()[$orderStatus::SHIPPED]}}</a>
-                                        @elseif (
-                                            $order->status === $orderStatus::DELIVERY OR
-                                            $order->status === $orderStatus::COMPLETED
-                                        )
-                                            <span class="selected">{{$orderStatus::values()[$orderStatus::SHIPPED]}}</span>
-                                        @else
-                                            <span>{{$orderStatus::values()[$orderStatus::SHIPPED]}}</span>
-                                        @endif
-                                    </li>
-                                    <li>
-                                        @if ($order->status === $orderStatus::DELIVERY)
-                                            <a href="#0" class="selected">{{$orderStatus::values()[$orderStatus::DELIVERY]}}</a>
-                                        @elseif ($order->status === $orderStatus::COMPLETED)
-                                            <span class="selected">{{$orderStatus::values()[$orderStatus::DELIVERY]}}</span>
-                                        @else
-                                            <span>{{$orderStatus::values()[$orderStatus::DELIVERY]}}</span>
-                                        @endif
-                                    </li>
-                                    <li>
-                                        @if ($order->status === $orderStatus::COMPLETED)
-                                            <span class="selected">{{$orderStatus::values()[$orderStatus::COMPLETED]}}</span>
-                                        @else
-                                            <span>{{$orderStatus::values()[$orderStatus::COMPLETED]}}</span>
-                                        @endif
-                                    </li>
+                                    @if ($order->status === $orderStatus::CANCELLED)
+                                        <li></li>
+                                        <li></li>
+                                        <li>
+                                            <a href="#0" class="cancelled">{{$orderStatus::values()[$orderStatus::CANCELLED]}}</a>
+                                        </li>
+                                    @else
+                                        <li>
+                                            @if ($order->status === $orderStatus::SHIPPED)
+                                                <a href="#0" class="selected">{{$orderStatus::values()[$orderStatus::SHIPPED]}}</a>
+                                            @elseif (
+                                                $order->status === $orderStatus::DELIVERY OR
+                                                $order->status === $orderStatus::COMPLETED
+                                            )
+                                                <span class="selected">{{$orderStatus::values()[$orderStatus::SHIPPED]}}</span>
+                                            @else
+                                                <span>{{$orderStatus::values()[$orderStatus::SHIPPED]}}</span>
+                                            @endif
+                                        </li>
+                                        <li>
+                                            @if ($order->status === $orderStatus::DELIVERY)
+                                                <a href="#0" class="selected">{{$orderStatus::values()[$orderStatus::DELIVERY]}}</a>
+                                            @elseif ($order->status === $orderStatus::COMPLETED)
+                                                <span class="selected">{{$orderStatus::values()[$orderStatus::DELIVERY]}}</span>
+                                            @else
+                                                <span>{{$orderStatus::values()[$orderStatus::DELIVERY]}}</span>
+                                            @endif
+                                        </li>
+                                        <li>
+                                            @if ($order->status === $orderStatus::COMPLETED)
+                                                <span class="selected">{{$orderStatus::values()[$orderStatus::COMPLETED]}}</span>
+                                            @else
+                                                <span>{{$orderStatus::values()[$orderStatus::COMPLETED]}}</span>
+                                            @endif
+                                        </li>
+                                    @endif
                                 </ul>
                             </ol>
                         </div>

@@ -123,10 +123,12 @@ class Show extends Component
 
     public function render(): View
     {
+        $invoiceURL = Orders::make($this->order)->generateSignedInvoice(30);
         return view('livewire.console.orders.show', [
             'items' => $this->order->items()->with('product')->simplePaginate($this->perPage),
             'nextOrder' => Order::query()->where('id', '>', $this->order->id)->oldest('id')->first() ?? null,
             'prevOrder' => Order::query()->where('id', '<', $this->order->id)->latest('id')->first() ?? null,
+            'invoiceURL' => $invoiceURL,
             'billingAddress' => Address::query()
                 ->where('user_id', $this->order->customer->id)
                 ->where('type', Address::TYPE_BILLING)

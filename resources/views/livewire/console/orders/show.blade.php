@@ -289,6 +289,9 @@
 
                         <x-slot name="content">
                             <div class="py-1">
+                                <x-shopper::dropdown-link :href="$invoiceURL" role="menuitem" target="_blank">
+                                    {{ __('Print Invoice') }}
+                                </x-shopper::dropdown-link>
                                 <x-shopper::dropdown-button wire:click="downloadInvoice" role="menuitem">
                                     {{ __('Invoice') }}
                                     <span class="inline-flex items-center ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-secondary-100 text-secondary-800 dark:bg-secondary-800 dark:text-secondary-300">
@@ -305,7 +308,7 @@
                                         {{ __('Mark as paid') }}
                                     </x-shopper::dropdown-button>
                                 @endif
-                                @if($order->isPaid())
+                                @if($order->isPaid() && !$order->isCompleted())
                                     <x-shopper::dropdown-button wire:click="markComplete" role="menuitem">
                                         {{ __('Mark complete') }}
                                     </x-shopper::dropdown-button>

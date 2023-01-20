@@ -526,6 +526,9 @@ legend.custom-fieldset {
   }
 
   .timeline .events ul li a.selected {
+    color: var(--bs-success);
+  }
+  .timeline .events ul li a.cancelled {
     color: var(--bs-primary);
   }
 
@@ -560,16 +563,25 @@ legend.custom-fieldset {
   }
 
   .timeline .events ul li a:hover::after {
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
+    background-color: var(--bs-success);
+    border-color: var(--bs-success);
   }
 
   .timeline .events ul li a.selected:after {
+    background-color: var(--bs-success);
+    border-color: var(--bs-success);
+  }
+
+  .timeline .events ul li span.selected:after {
+    background-color: var(--bs-success);
+    border-color: var(--bs-success);
+  }
+  .timeline .events ul li a.cancelled:after {
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
   }
 
-  .timeline .events ul li span.selected:after {
+  .timeline .events ul li span.cancelled:after {
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
   }

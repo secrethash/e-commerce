@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Console\Tables;
 
+use App\Services\Orders;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
@@ -89,6 +90,12 @@ class OrdersTable extends DataTableComponent
                 ->format(function ($value, $column, $row) {
                     return view('shopper::livewire.tables.cells.orders.customer')->with('customer', $row->customer);
                 }),
+            Column::make('Invoice')
+                ->addClass('text-right')
+                ->format(function ($value, $column, $row) {
+                    $invoice = Orders::make($row)->generateSignedInvoice(30);
+                    return "<a href='".$invoice."' class='text-blue-800 dark:text-gray-400 text-center' target='_blank'>Print Invoice</a>";
+                })->asHtml(),
             Column::make('Purchased')
                 ->format(function ($value, $column, $row) {
                     return view('shopper::livewire.tables.cells.orders.purchased')->with('order', $row);
