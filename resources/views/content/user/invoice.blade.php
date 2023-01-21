@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{asset('frontend/assets/css/invoice/invoice.css')}}">
 </head>
 
-<body>
+<body onload="window.print()">
 
     <div class="web-container">
 
