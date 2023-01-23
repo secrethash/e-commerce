@@ -28,20 +28,32 @@
 
         <table class="invoice-info-container">
             <tr>
-                <td rowspan="2" class="client-name">
-                    {{ $order->shippingAddress->full_name }}
+                <td class="client-name">
+                    {{ shopper_setting('shop_legal_name') }} <br>
+                    @if (filled(shopper_setting('shop_trn')))
+                        <div>
+                            <small>
+                                <span class="focus">TRN:</span>
+                                <span>{{ shopper_setting('shop_trn') }}</span>
+                            </small>
+                        </div>
+                    @endif
                 </td>
                 <td>
                     <h3 style="margin-bottom: 2px;text-decoration: underline;">Shipping Address:</h3>
-                    @if($order->shippingAddress->company_name)
-                        {{ $order->shippingAddress->company_name }}
-                    @else
-                        {{ $order->shippingAddress->full_name }}
-                    @endif
                 </td>
             </tr>
             <tr>
                 <td>
+                    {{ shopper_setting('shop_street_address') }}, <br>
+                    {{ shopper_setting('shop_city') }} - {{ shopper_setting('shop_zipcode') }},<br>
+                    {{ Shopper\Framework\Models\System\Country::find(shopper_setting('shop_country_id'))->name }}
+                </td>
+                <td>
+                    @if(filled($order->shippingAddress->company_name))
+                        {{ $order->shippingAddress->company_name }} <br>
+                    @endif
+                    {{ $order->shippingAddress->full_name }} <br>
                     {{ $order->shippingAddress->street_address }} <br>
                     {{ $order->shippingAddress->city }} - {{ $order->shippingAddress->zipcode }}
                 </td>

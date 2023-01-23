@@ -44,7 +44,7 @@ table tr td:last-child {
 }
 
 .logo-container {
-  margin: 20px 0 70px 0;
+  margin: 20px 0 20px 0;
 }
 
 .invoice-info-container {
@@ -55,8 +55,19 @@ table tr td:last-child {
 }
 
 .client-name {
-  font-size: 1.5em;
+    font-size: 1.5em;
+    vertical-align: top;
+}
+.client-name div {
+  display: block;
+}
+.client-name div small {
+  font-size: .5em;
   vertical-align: top;
+}
+.client-name div span.focus {
+  font-weight: 800;
+  text-decoration: underline;
 }
 
 .line-items-container {

@@ -6249,12 +6249,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/secrethash/custom-shopper-framework.git",
-                "reference": "983eece30a58e7355832decb17fa2c31ccf8259c"
+                "reference": "88e1f319019d80189b1faf3334fa33bd146f2439"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/secrethash/custom-shopper-framework/zipball/983eece30a58e7355832decb17fa2c31ccf8259c",
-                "reference": "983eece30a58e7355832decb17fa2c31ccf8259c",
+                "url": "https://api.github.com/repos/secrethash/custom-shopper-framework/zipball/88e1f319019d80189b1faf3334fa33bd146f2439",
+                "reference": "88e1f319019d80189b1faf3334fa33bd146f2439",
                 "shasum": ""
             },
             "require": {
@@ -6353,7 +6353,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2023-01-16T17:44:26+00:00"
+            "time": "2023-01-23T17:12:35+00:00"
         },
         {
             "name": "spatie/image",

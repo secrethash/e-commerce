@@ -12,7 +12,7 @@
                                     <a href="index"><img class="img-responsive" src="{{asset('frontend/assets/images/logo/manarat-logo-dark.png')}}" alt="logo.png" /></a>
                                 </div>
                                 <div class="need_help">
-                                <p class="add"><span class="address">Address</span>{{ Shopper\Framework\Models\System\Country::find(shopper_setting('shop_country_id'))->flag }} {{ shopper_setting('shop_street_address') }}, {{ shopper_setting('shop_city') }} - {{ shopper_setting('shop_zip_code') }}, {{ Shopper\Framework\Models\System\Country::find(shopper_setting('shop_country_id'))->name }}</p>
+                                <p class="add"><span class="address">Address</span>{{ Shopper\Framework\Models\System\Country::find(shopper_setting('shop_country_id'))->flag }} {{ shopper_setting('shop_street_address') }}, {{ shopper_setting('shop_city') }} - {{ shopper_setting('shop_zipcode') }}, {{ Shopper\Framework\Models\System\Country::find(shopper_setting('shop_country_id'))->name }}</p>
                                 <p class="phone"><span class="call us">Need Help?</span> <a href="tel:{{ shopper_setting('shop_phone_number')}}"> Call: {{ shopper_setting('shop_phone_number')}}</a></p>
                                 <p class="phone"><span class="call us">Products & Sales</span> <a href="tel:{{ shopper_setting('shop_phone_number')}}"> Call: {{ shopper_setting('shop_phone_number')}}</a></p>
                                 </div>
