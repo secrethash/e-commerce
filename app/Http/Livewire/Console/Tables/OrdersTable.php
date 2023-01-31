@@ -54,10 +54,7 @@ class OrdersTable extends DataTableComponent
     {
         return [
             'status' => Filter::make('Status')
-                ->select(array_merge(
-                    ['' => __('Any')],
-                    OrderStatus::values()
-                )),
+                ->multiSelect(OrderStatus::values()),
         ];
     }
 
@@ -111,6 +108,7 @@ class OrdersTable extends DataTableComponent
     public function query(): Builder
     {
         return Order::query()->with(['customer', 'items'])->withCount('items')
-            ->when($this->getFilter('status'), fn ($query, $status) => $query->where('status', $status));
+            ->when($this->getFilter('status'), fn ($query, $status) => $query->whereIn('status', $status))
+            ->when($this->getFilter('search'), fn ($query, $term) => $query->where('number', 'like', '%'.$term.'%'));
     }
 }
