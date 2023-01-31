@@ -16,7 +16,7 @@ class Automate {
         Order::where('status', OrderStatus::PENDING)
             ->where('updated_at', '<', now()->subMinutes(self::GRACE_TIME))
             ->update([
-                'status' => OrderStatus::CANCELLED,
+                'status' => OrderStatus::FAILED,
             ]);
         return;
     }

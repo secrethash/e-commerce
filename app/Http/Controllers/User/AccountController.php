@@ -8,6 +8,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Response;
 use Shopper\Framework\Models\Shop\Order\Order;
+use Shopper\Framework\Models\Shop\Order\OrderStatus;
 use Str;
 
 class AccountController extends Controller
@@ -20,13 +21,18 @@ class AccountController extends Controller
 
     public function orders()
     {
-        $orders = Auth::user()->orders()->latest()->paginate(12);
+        $orders = Auth::user()->orders()
+            ->latest()
+            ->whereNotIn('status', [OrderStatus::PENDING, OrderStatus::FAILED])
+            ->paginate(12);
         return view('content.user.orders', compact('orders'));
     }
 
     public function orderDetails($order)
     {
-        $order = Order::where('number', $order)->first();
+        $order = Order::where('number', $order)
+            ->whereNotIn('status', [OrderStatus::PENDING, OrderStatus::FAILED])
+            ->firstOrFail();
         $invoiceUrl = Orders::make($order)->generateSignedDownloadInvoice(30);
         return view('content.user.order-details', compact('order', 'invoiceUrl'));
     }
